@@ -124,6 +124,27 @@
         .vc-num { flex-shrink:0; width:14px; height:14px; border-radius:50%; background:#00205b; color:#fff; font-size:7.5px; font-weight:900; display:flex; align-items:center; justify-content:center; }
         .vc-title { font-size:10px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
+
+        /* ── ECM / HiDrive 스타일 ── */
+        .ecm-table th { border-right:1px solid #d2d6de; border-bottom:1px solid #d2d6de; padding:6px 10px; background:#eef1f5; font-weight:bold; color:#333; text-align:center; font-size:12px; }
+        .ecm-table td { border-right:1px solid #ececec; border-bottom:1px solid #ececec; padding:6px 10px; font-size:12px; color:#444; }
+        .ecm-table tr:hover td { background-color:#e8f4fd; }
+        .ecm-input { border:1px solid #c0c4cc; padding:4px 8px; font-size:12px; border-radius:2px; outline:none; }
+        .ecm-input:focus { border-color:#0ea5e9; }
+        .ecm-btn { border:1px solid #babbbc; background:linear-gradient(to bottom,#ffffff,#f0f0f0); color:#333; padding:4px 12px; font-size:12px; border-radius:2px; cursor:pointer; display:inline-flex; justify-content:center; align-items:center; gap:4px; }
+        .ecm-btn:hover { background:#e6e6e6; }
+        .ecm-btn-primary { border:1px solid #1a3352; background:#20385c; color:#fff; }
+        .ecm-btn-primary:hover { background:#162843; }
+        /* bridge-tab */
+        .bridge-tab { position:relative; transition:all .2s; }
+        .bridge-tab::after { content:''; position:absolute; bottom:-2px; left:0; width:100%; height:3px; background:transparent; transition:background .2s; }
+        .bridge-tab.active { font-weight:800; color:#00205b; }
+        .bridge-tab.active::after { background:#00205b; }
+        .status-wait { background:#fef2f2; color:#ef4444; border:1px solid #fecaca; }
+        .status-done { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+        .status-archived { background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; }
+        /* 글로스 아이템 */
+        .gloss-item { position:relative; overflow:hidden; }
         /* ── 업로드 드롭존 ── */
         .dropzone { border:2px dashed #cbd5e1; transition:all .2s; }
         .dropzone:hover, .dropzone.drag { border-color:#3eb49b; background:#f0fdf4; }
@@ -1552,361 +1573,484 @@
 <!-- ================================================================ -->
 <!-- VIEW 7: 통합 FAQ (업그레이드)                                     -->
 <!-- ================================================================ -->
+<!-- ================================================================ -->
+<!-- VIEW 7: Hi-Bridge Q&A (통합 FAQ 대체)                            -->
+<!-- ================================================================ -->
 <div id="view-faq" class="view flex-col flex-1 overflow-hidden">
-    <!-- 상단 바 -->
-    <div class="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-1.5 text-xs text-gray-500">
-            <span onclick="nav('home')" class="hover:text-hi-navy cursor-pointer">HI-VE 홈</span>
-            <span class="text-[9px] text-gray-400">›</span>
-            <span class="text-hi-navy font-bold">통합 FAQ</span>
+
+    <!-- 페이지 헤더 (현장 노하우와 동일 스타일) -->
+    <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
+        <div class="absolute inset-0 overflow-hidden opacity-10">
+            <svg width="100%" height="100%"><defs><pattern id="hb-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#hb-hex)"/></svg>
         </div>
-        <button onclick="openFaqRegister()" class="bg-hi-navy hover:bg-hi-navy/90 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition border border-hi-navy">
-            + FAQ 등록 <span class="text-[9px] text-hi-org font-black">+1 Hi-Point</span>
-        </button>
+        <div class="relative z-10">
+            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 통합 Q&A</div>
+            <h1 class="text-xl font-black mb-0.5">Hi-Bridge — 현장 Q&A</h1>
+            <p class="text-xs" style="color:#93c5fd">현장의 질문을 본사 전문가가 답변하고, 우수 답변은 전사 지식으로 아카이빙됩니다.</p>
+        </div>
+        <div class="relative z-10 flex gap-2 shrink-0">
+            <button onclick="openAskModal()" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
+                🙋 현장 질문하기
+            </button>
+            <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">
+                ☁️ 하이드라이브 검색
+            </button>
+        </div>
     </div>
 
-    <!-- 검색 + 카테고리 필터 -->
-    <div class="bg-white border-b border-gray-100 px-6 py-3 shrink-0">
-        <div class="flex gap-2 mb-3">
-            <div class="relative flex-1">
-                <span class="absolute left-3 top-2 text-gray-400 text-xs">🔍</span>
-                <input type="text" id="faq-search" placeholder="질문 또는 키워드로 검색..." oninput="filterFaq()"
-                    class="w-full border border-gray-300 rounded-lg pl-8 pr-3 py-2 text-xs outline-none focus:border-hi-navy transition bg-gray-50">
+    <!-- 대시보드 통계 -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0 grid grid-cols-4 gap-3">
+        <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3 border border-gray-100">
+            <span class="text-2xl">📝</span>
+            <div>
+                <div class="text-[9px] text-gray-500 font-bold tracking-wide">누적 질문</div>
+                <div class="text-lg font-black text-gray-800">5,241<span class="text-xs font-normal text-gray-400 ml-1">건</span></div>
             </div>
-            <select id="faq-sort" class="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none text-gray-600 bg-white">
-                <option>최신 등록 순</option><option>하이파이브! 많은 순</option><option>조회 많은 순</option>
+        </div>
+        <div class="flex items-center gap-3 bg-blue-50 rounded-xl p-3 border border-blue-100">
+            <span class="text-2xl">✅</span>
+            <div>
+                <div class="text-[9px] text-blue-600 font-bold tracking-wide">답변 완료</div>
+                <div class="text-lg font-black text-blue-700">5,129<span class="text-xs font-normal text-blue-400 ml-1">건</span></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 bg-red-50 rounded-xl p-3 border border-red-100">
+            <span class="text-2xl">🚨</span>
+            <div>
+                <div class="text-[9px] text-red-600 font-bold tracking-wide">답변 대기</div>
+                <div class="text-lg font-black text-red-700">112<span class="text-xs font-normal text-red-400 ml-1">건</span></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 bg-orange-50 rounded-xl p-3 border border-orange-100">
+            <span class="text-2xl">👑</span>
+            <div>
+                <div class="text-[9px] text-orange-600 font-bold tracking-wide">아카이브 (채택)</div>
+                <div class="text-lg font-black text-orange-700">3,492<span class="text-xs font-normal text-orange-400 ml-1">건</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 탭 + 검색 -->
+    <div class="bg-white border-b border-gray-200 px-6 pt-3 flex items-end justify-between shrink-0">
+        <div class="flex gap-5">
+            <button id="tab-solved" onclick="switchBridgeTab('solved')" class="bridge-tab active pb-2.5 text-sm text-gray-500 hover:text-gray-800 transition">
+                ✅ 답변 완료 <span class="ml-1 bg-blue-100 text-blue-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">5,129</span>
+            </button>
+            <button id="tab-wait" onclick="switchBridgeTab('wait')" class="bridge-tab pb-2.5 text-sm text-gray-500 hover:text-gray-800 transition">
+                🚨 답변 대기 <span class="ml-1 bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">112</span>
+            </button>
+        </div>
+        <div class="flex items-center gap-2 pb-2.5">
+            <div class="relative">
+                <input type="text" placeholder="질문 검색..." class="border border-gray-200 rounded-lg pl-7 pr-3 py-1.5 text-xs outline-none focus:border-hi-navy bg-gray-50 w-44">
+                <span class="absolute left-2.5 top-2 text-gray-400 text-[10px]">🔍</span>
+            </div>
+            <select class="border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-500 outline-none bg-white">
+                <option>전체 카테고리</option><option>영업/마케팅</option><option>보상/손해사정</option><option>계약관리</option>
             </select>
         </div>
-        <!-- 가치사슬 필터 칩 -->
-        <div class="flex gap-1.5 flex-wrap">
-            <button onclick="setFaqCat('전체',this)" class="faq-cat-btn active text-[10px] px-2.5 py-1 rounded-full border bg-hi-navy text-white border-hi-navy transition font-bold">전체</button>
-            <button onclick="setFaqCat('영업/마케팅',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[영업/마케팅]</button>
-            <button onclick="setFaqCat('상품개발',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[상품개발]</button>
-            <button onclick="setFaqCat('언더라이팅',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[언더라이팅]</button>
-            <button onclick="setFaqCat('계약관리',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[계약관리]</button>
-            <button onclick="setFaqCat('보상/손해',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[보상/손해]</button>
-            <button onclick="setFaqCat('고객서비스',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[고객서비스]</button>
-            <button onclick="setFaqCat('IT/디지털',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[IT/디지털]</button>
-            <button onclick="setFaqCat('HI-VE',this)" class="faq-cat-btn text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">[HI-VE 사용법]</button>
-        </div>
     </div>
 
-    <!-- FAQ 목록 -->
-    <div class="flex-1 overflow-y-auto msb px-6 py-4">
-        <div id="faq-list" class="space-y-2 max-w-3xl">
+    <!-- Q&A 리스트 -->
+    <div class="flex-1 overflow-y-auto msb px-6 py-4 bg-gray-50">
 
-            <!-- FAQ 아이템 (데이터 속성으로 필터링) -->
-            <details class="faq-item bg-white rounded-xl border border-gray-200 overflow-hidden group" data-cat="HI-VE">
-                <summary class="flex items-center gap-3 px-4 py-3.5 cursor-pointer list-none hover:bg-gray-50 transition">
-                    <span class="text-[9px] font-black bg-hi-navy/10 text-hi-navy px-2 py-0.5 rounded shrink-0 border border-hi-navy/20">[HI-VE 사용법]</span>
-                    <span class="text-xs font-bold text-gray-800 flex-1">Hi-Point(Hi-Cell)은 어떻게 적립하나요?</span>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-400 shrink-0">
-                        <span>조회 128</span>
-                        <span class="text-hi-org font-bold">👍 34</span>
-                        <span class="group-open:rotate-180 transition-transform inline-block">▾</span>
+        <!-- 답변 완료 탭 -->
+        <div id="list-solved" class="space-y-3 max-w-4xl mx-auto">
+
+            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="status-archived text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">👑 채택 아카이빙</span>
+                        <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] px-2 py-0.5 rounded-full font-bold">영업/마케팅</span>
                     </div>
-                </summary>
-                <div class="px-4 pb-4 pt-1 border-t border-gray-100">
-                    <p class="text-xs text-gray-600 leading-relaxed">자료를 등록하면 1 Hi-Point, 하이파이브! 10회 달성(아카이빙)되면 추가 Hi-Point가 자동 지급됩니다. FAQ와 용어 사전 등록도 각 1 Hi-Point가 지급되며, 본사 퀘스트 채택 시 최대 500 Hi-Point를 받을 수 있습니다. 적립된 Hi-Point는 1셀 = ₩1,000 기준으로 복지포인트로 교환 가능합니다.</p>
-                    <div class="mt-2.5 flex items-center gap-2">
-                        <button class="text-[10px] border border-gray-200 text-gray-500 px-2.5 py-1 rounded-lg hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (34)</button>
-                        <span class="text-[9px] text-gray-400">장기계약관리부 · 2026-05-07</span>
-                    </div>
+                    <span class="text-[10px] text-gray-400 shrink-0">2026-05-06</span>
                 </div>
-            </details>
-
-            <details class="faq-item bg-white rounded-xl border border-gray-200 overflow-hidden group" data-cat="영업/마케팅">
-                <summary class="flex items-center gap-3 px-4 py-3.5 cursor-pointer list-none hover:bg-gray-50 transition">
-                    <span class="text-[9px] font-black bg-hi-navy/10 text-hi-navy px-2 py-0.5 rounded shrink-0 border border-hi-navy/20">[영업/마케팅]</span>
-                    <span class="text-xs font-bold text-gray-800 flex-1">실손의료비 5세대 개정 시 고객에게 어떻게 설명해야 하나요?</span>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-400 shrink-0">
+                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 5세대 실손 전환 상담 시 병력 고지 기간은 1년인가요, 5년인가요?</h3>
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 채택 답변 (장기계약관리부)</div>
+                    <p class="text-xs text-gray-600 leading-relaxed">5세대 실손 전환 시 고지 의무 기간은 <strong>직전 1년</strong>이 맞습니다. 전산상 5년이 표시되는 것은 시스템 UI 오류로 현재 개선 요청 중이며, 고객 안내는 매뉴얼 기준인 1년으로 하시면 됩니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-pt flex items-center justify-center text-white font-bold text-[9px]">김</div>
+                        <span>김현장 매니저 (강남지점)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
                         <span>조회 342</span>
-                        <span class="text-hi-org font-bold">👍 67</span>
-                        <span class="group-open:rotate-180 transition-transform inline-block">▾</span>
-                    </div>
-                </summary>
-                <div class="px-4 pb-4 pt-1 border-t border-gray-100">
-                    <p class="text-xs text-gray-600 leading-relaxed">"고객님, 이번 개정으로 자기부담금 구조가 변경되었습니다. 핵심은 급여 치료 20%, 비급여 30%로 단순화된 부분입니다." 핵심 변경점을 3가지 이내로 요약하여 전달하는 것이 효과적입니다. 관련 화법 스크립트는 지식자산 > 영업/마케팅에서 확인하세요.</p>
-                    <div class="mt-2.5 flex items-center gap-2">
-                        <button class="text-[10px] border border-gray-200 text-gray-500 px-2.5 py-1 rounded-lg hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (67)</button>
-                        <span class="text-[9px] text-gray-400">이현대 과장 · 2026-05-04</span>
+                        <span class="text-orange-500 font-bold">❤ 하이파이브! 89</span>
                     </div>
                 </div>
-            </details>
-
-            <details class="faq-item bg-white rounded-xl border border-gray-200 overflow-hidden group" data-cat="계약관리">
-                <summary class="flex items-center gap-3 px-4 py-3.5 cursor-pointer list-none hover:bg-gray-50 transition">
-                    <span class="text-[9px] font-black bg-hi-org/15 text-orange-700 px-2 py-0.5 rounded shrink-0 border border-hi-org/30">[계약관리]</span>
-                    <span class="text-xs font-bold text-gray-800 flex-1">청약 철회 가능 기간과 계약 취소의 차이는 무엇인가요?</span>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-400 shrink-0">
-                        <span>조회 287</span>
-                        <span class="text-hi-org font-bold">👍 52</span>
-                        <span class="group-open:rotate-180 transition-transform inline-block">▾</span>
-                    </div>
-                </summary>
-                <div class="px-4 pb-4 pt-1 border-t border-gray-100">
-                    <p class="text-xs text-gray-600 leading-relaxed"><strong>청약 철회</strong>는 청약일로부터 15일(청약서 수령일로부터 15일) 이내 보험료 전액 환급. <strong>계약 취소</strong>는 사기·강박 등 의사표시 하자로 인한 계약 무효화로 소멸시효 5년. 가장 큰 차이는 계약 취소의 경우 보험사귀책 여부에 따라 이자 반환 의무가 달라집니다.</p>
-                    <div class="mt-2.5 flex items-center gap-2">
-                        <button class="text-[10px] border border-gray-200 text-gray-500 px-2.5 py-1 rounded-lg hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (52)</button>
-                        <span class="text-[9px] text-gray-400">장기계약관리부 · 2026-04-28</span>
-                    </div>
-                </div>
-            </details>
-
-            <details class="faq-item bg-white rounded-xl border border-gray-200 overflow-hidden group" data-cat="HI-VE">
-                <summary class="flex items-center gap-3 px-4 py-3.5 cursor-pointer list-none hover:bg-gray-50 transition">
-                    <span class="text-[9px] font-black bg-hi-navy/10 text-hi-navy px-2 py-0.5 rounded shrink-0 border border-hi-navy/20">[HI-VE 사용법]</span>
-                    <span class="text-xs font-bold text-gray-800 flex-1">아카이빙이란 무엇이고 어떤 혜택이 있나요?</span>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-400 shrink-0">
-                        <span>조회 198</span>
-                        <span class="text-hi-org font-bold">👍 41</span>
-                        <span class="group-open:rotate-180 transition-transform inline-block">▾</span>
-                    </div>
-                </summary>
-                <div class="px-4 pb-4 pt-1 border-t border-gray-100">
-                    <p class="text-xs text-gray-600 leading-relaxed">동료들의 하이파이브!가 10회 이상 쌓이면 해당 자료는 👑 인증 뱃지와 함께 아카이빙 처리됩니다. 아카이빙된 자료는 HI-VE 전체 지식 자산으로 영구 보존되고, 창작자에게는 추가 Hi-Point 보상이 지급됩니다. 이후 자료 다운로드 1건당 설정가의 70%가 창작자에게 Hi-Point로 지급됩니다.</p>
-                    <div class="mt-2.5 flex items-center gap-2">
-                        <button class="text-[10px] border border-gray-200 text-gray-500 px-2.5 py-1 rounded-lg hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (41)</button>
-                        <span class="text-[9px] text-gray-400">HI-VE 운영팀 · 2026-04-20</span>
-                    </div>
-                </div>
-            </details>
-
-            <details class="faq-item bg-white rounded-xl border border-gray-200 overflow-hidden group" data-cat="보상/손해">
-                <summary class="flex items-center gap-3 px-4 py-3.5 cursor-pointer list-none hover:bg-gray-50 transition">
-                    <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-2 py-0.5 rounded shrink-0 border border-gray-200">[보상/손해]</span>
-                    <span class="text-xs font-bold text-gray-800 flex-1">자동차 사고 시 현장출동 기준은 무엇인가요?</span>
-                    <div class="flex items-center gap-3 text-[9px] text-gray-400 shrink-0">
-                        <span>조회 215</span>
-                        <span class="text-hi-org font-bold">👍 38</span>
-                        <span class="group-open:rotate-180 transition-transform inline-block">▾</span>
-                    </div>
-                </summary>
-                <div class="px-4 pb-4 pt-1 border-t border-gray-100">
-                    <p class="text-xs text-gray-600 leading-relaxed">인적 피해 사고, 차량 이동 불가 시, 사고 책임 불명확 시 출동을 원칙으로 합니다. 단, 물적 피해만 있고 당사자간 합의가 가능한 경우 비출동 처리 가능합니다. 야간·공휴일의 경우 콜센터 연결 후 출동 여부를 결정합니다.</p>
-                    <div class="mt-2.5 flex items-center gap-2">
-                        <button class="text-[10px] border border-gray-200 text-gray-500 px-2.5 py-1 rounded-lg hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (38)</button>
-                        <span class="text-[9px] text-gray-400">자동차보상팀 · 2026-04-15</span>
-                    </div>
-                </div>
-            </details>
-
-        </div>
-    </div>
-
-    <!-- FAQ 등록 모달 -->
-    <div id="faq-register-modal" class="modal-bg" onclick="if(event.target===this)closeFaqRegister()">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4">
-            <div class="bg-hi-navy text-white p-4 rounded-t-2xl flex items-center justify-between">
-                <div>
-                    <h3 class="font-black text-sm">FAQ 등록하기</h3>
-                    <p class="text-[10px] text-blue-100 mt-0.5">등록 시 <strong class="text-hi-org">Hi-Point 1개</strong>가 즉시 지급됩니다</p>
-                </div>
-                <button onclick="closeFaqRegister()" class="text-white/60 hover:text-white text-lg">✕</button>
             </div>
-            <div class="p-4 space-y-3">
-                <div>
-                    <label class="text-[10px] text-gray-500 font-bold mb-1 block">가치사슬 분류 *</label>
-                    <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
-                        <option>HI-VE 사용법</option><option>영업/마케팅</option><option>상품개발/계리</option>
-                        <option>언더라이팅/심사</option><option>계약관리/보전</option><option>보상/손해사정</option>
-                        <option>고객서비스</option><option>IT/디지털</option><option>인사/조직관리</option>
-                    </select>
+
+            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="status-archived text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">👑 채택 아카이빙</span>
+                        <span class="bg-green-50 text-green-700 border border-green-100 text-[9px] px-2 py-0.5 rounded-full font-bold">보상/손해사정</span>
+                    </div>
+                    <span class="text-[10px] text-gray-400 shrink-0">2026-05-02</span>
                 </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 font-bold mb-1 block">질문 *</label>
-                    <input type="text" placeholder="궁금한 점이나 현장에서 자주 받는 질문을 입력하세요" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 자동차 사고 현장에서 쌍방과실인 경우 현장출동 기준이 어떻게 되나요?</h3>
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 채택 답변 (자동차보상팀)</div>
+                    <p class="text-xs text-gray-600 leading-relaxed">쌍방과실의 경우 과실 비율이 불명확하거나 당사자 간 합의가 어려운 상황이라면 출동 원칙입니다. 현장에서 과실 비율이 대략 확인되고 당사자 합의가 가능하다면 비출동 처리도 가능합니다.</p>
                 </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 font-bold mb-1 block">답변 *</label>
-                    <textarea rows="4" placeholder="명확하고 실용적인 답변을 작성해주세요" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none"></textarea>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[9px]">박</div>
+                        <span>박현장 대리 (부산지점)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span>조회 187</span>
+                        <span class="text-orange-500 font-bold">❤ 하이파이브! 54</span>
+                    </div>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="closeFaqRegister()" class="flex-1 border border-gray-200 text-gray-500 text-xs font-bold py-2.5 rounded-lg hover:bg-gray-50">취소</button>
-                    <button onclick="submitFaq()" class="flex-1 bg-hi-navy text-white text-xs font-bold py-2.5 rounded-lg hover:bg-hi-navy/90 transition">등록 (+1 Hi-Point)</button>
+            </div>
+
+            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="status-done text-[9px] font-bold px-2 py-0.5 rounded-md">✅ 답변 완료</span>
+                        <span class="bg-purple-50 text-purple-700 border border-purple-100 text-[9px] px-2 py-0.5 rounded-full font-bold">계약관리</span>
+                    </div>
+                    <span class="text-[10px] text-gray-400 shrink-0">2026-04-28</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 청약 철회 후 재청약 시 동일 보험료 적용이 가능한가요?</h3>
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
+                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 답변 완료 (장기계약관리부)</div>
+                    <p class="text-xs text-gray-600 leading-relaxed">청약 철회 후 재청약은 신규 청약과 동일하게 처리되므로, 재청약 시점의 나이와 위험률이 적용됩니다. 동일 보험료 보장은 어렵습니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-[9px]">이</div>
+                        <span>이현장 주임 (서울지점)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span>조회 124</span>
+                        <span class="text-orange-500 font-bold">❤ 하이파이브! 31</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 답변 대기 탭 -->
+        <div id="list-wait" class="hidden space-y-3 max-w-4xl mx-auto">
+
+            <div onclick="openDetailModal('unsolved')" class="kcard bg-white rounded-xl border-2 border-red-200 p-5 shadow-sm cursor-pointer">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="status-wait text-[9px] font-bold px-2 py-1 rounded-md flex items-center gap-1 animate-pulse">🚨 긴급 — 답변 대기</span>
+                        <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] px-2 py-0.5 rounded-full font-bold">@장기계약관리부 지정</span>
+                    </div>
+                    <span class="text-[10px] text-red-500 font-bold shrink-0">15분 전 등록</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 5세대 실손 전환 시, 과거 병력 고지 기간 문의 (고객 대기 중)</h3>
+                <p class="text-xs text-gray-500 mb-3 leading-relaxed">매뉴얼에는 직전 1년이라 되어있는데 전산에는 5년이 뜨고 있어 고객 안내에 혼선이 있습니다. 빠른 확인 부탁드립니다.</p>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-pt flex items-center justify-center text-white font-bold text-[9px]">김</div>
+                        <span>김현장 매니저 (강남지점)</span>
+                    </div>
+                    <button onclick="event.stopPropagation();openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">
+                        ☁️ 관련 문서 하이드라이브 검색
+                    </button>
+                </div>
+            </div>
+
+            <div onclick="openDetailModal('unsolved')" class="kcard bg-white rounded-xl border border-orange-200 p-5 shadow-sm cursor-pointer">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="status-wait text-[9px] font-bold px-2 py-0.5 rounded-md">🚨 답변 대기</span>
+                        <span class="bg-green-50 text-green-700 border border-green-100 text-[9px] px-2 py-0.5 rounded-full font-bold">보상/손해사정</span>
+                    </div>
+                    <span class="text-[10px] text-gray-400 shrink-0">2시간 전 등록</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 전기차 배터리 손상 보험금 산정 기준이 어떻게 되나요?</h3>
+                <p class="text-xs text-gray-500 mb-3 leading-relaxed">전기차 사고 처리 중인데 고전압 배터리 손상에 대한 공식 산정 기준이 불명확합니다. 관련 내규나 기준이 있으면 알려주세요.</p>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[9px]">최</div>
+                        <span>최현장 과장 (대전지점)</span>
+                    </div>
+                    <button onclick="event.stopPropagation();openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">
+                        ☁️ 관련 문서 하이드라이브 검색
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Q&A 질문 등록 모달 -->
+    <div id="modal-ask" class="modal-bg" onclick="if(event.target===this)closeAskModal()">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col">
+            <div class="text-white p-5 rounded-t-2xl flex justify-between items-center shrink-0" style="background:#00205b">
+                <div>
+                    <h3 class="font-black text-base flex items-center gap-2">🙋 현장 질문 등록</h3>
+                    <p class="text-xs text-blue-200 mt-0.5">질문을 등록하면 본사 담당 부서로 알림이 전달됩니다.</p>
+                </div>
+                <button onclick="closeAskModal()" class="flex items-center justify-center text-white font-bold transition hover:bg-white/20 rounded-lg" style="width:32px;height:32px;font-size:18px;border:1.5px solid rgba(255,255,255,0.4)">✕</button>
+            </div>
+            <div class="p-5 space-y-4 overflow-y-auto msb">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-700 mb-1 block">업무 카테고리 *</label>
+                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
+                            <option>선택하세요</option><option>영업/마케팅</option><option>보상/손해사정</option><option>계약관리</option><option>언더라이팅</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-700 mb-1 block">답변 요청 부서</label>
+                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
+                            <option>지정 안함 (전체 공개)</option><option>장기계약관리부</option><option>자동차보상팀</option><option>상품개발팀</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-700 mb-1 block">질문 제목 *</label>
+                    <input type="text" placeholder="질문의 요지를 한 줄로 명확하게 적어주세요." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-700 mb-1 block">상세 내용 * <span class="text-[9px] text-red-400 font-normal">고객 정보(주민번호 등)는 절대 포함하지 마세요.</span></label>
+                    <textarea rows="5" placeholder="- 현상/상황:&#10;- 궁금한 점:&#10;- 급한 정도:" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
+                </div>
+                <label class="flex items-center gap-2 bg-red-50 border border-red-100 p-2.5 rounded-lg cursor-pointer">
+                    <input type="checkbox" class="w-4 h-4 accent-red-500">
+                    <span class="text-xs font-bold text-red-600">🚨 긴급 — 현장 고객 대기 중 (즉시 답변 필요)</span>
+                </label>
+            </div>
+            <div class="p-4 border-t border-gray-200 bg-gray-50 flex gap-2 rounded-b-2xl shrink-0">
+                <button onclick="closeAskModal()" class="flex-1 bg-white border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
+                <button onclick="submitAsk()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#00205b">질문 등록하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Q&A 상세 모달 -->
+    <div id="modal-qa-detail" class="modal-bg" onclick="if(event.target===this)closeQADetail()">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col">
+            <div class="p-5 pb-4 border-b border-gray-100 shrink-0">
+                <div class="flex justify-between items-start mb-3">
+                    <div id="qa-badge-area" class="flex items-center gap-2 flex-wrap"></div>
+                    <button onclick="closeQADetail()" class="flex items-center justify-center text-gray-500 hover:text-gray-800 rounded-lg transition" style="width:28px;height:28px;font-size:16px;border:1px solid #e5e7eb">✕</button>
+                </div>
+                <h2 id="qa-title" class="text-base font-black text-gray-900 mb-3"></h2>
+                <div id="qa-content" class="bg-gray-50 rounded-xl p-4 text-xs text-gray-700 leading-relaxed border border-gray-100 whitespace-pre-line"></div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400 mt-3">
+                    <div id="qa-author" class="flex items-center gap-1.5"></div>
+                    <button onclick="openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">☁️ 하이드라이브 검색</button>
+                </div>
+            </div>
+            <div id="qa-answer-section" class="p-5 overflow-y-auto msb flex-1 bg-gray-50 space-y-3"></div>
+        </div>
+    </div>
+
 </div><!-- /view-faq -->
 
 
 <!-- ================================================================ -->
 <!-- VIEW 10: 보험 용어 사전                                           -->
 <!-- ================================================================ -->
+<!-- ================================================================ -->
+<!-- VIEW 10: 보험 용어 사전 (Hi-Bridge Glossary)                      -->
+<!-- ================================================================ -->
 <div id="view-glossary" class="view flex-col flex-1 overflow-hidden">
-    <div class="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-1.5 text-xs text-gray-500">
-            <span onclick="nav('home')" class="hover:text-hi-navy cursor-pointer">HI-VE 홈</span>
-            <span class="text-[9px] text-gray-400">›</span>
-            <span class="text-hi-navy font-bold">보험 용어 사전</span>
+
+    <!-- 페이지 헤더 -->
+    <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
+        <div class="absolute inset-0 overflow-hidden opacity-10">
+            <svg width="100%" height="100%"><defs><pattern id="gl-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#gl-hex)"/></svg>
         </div>
-        <button onclick="openGlossaryRegister()" class="bg-hi-navy hover:bg-hi-navy/90 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition border border-hi-navy">
-            + 용어 등록 <span class="text-[9px] text-hi-org font-black">+1 Hi-Point</span>
-        </button>
+        <div class="relative z-10">
+            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 보험 용어 사전</div>
+            <h1 class="text-xl font-black mb-0.5">보험 용어 사전</h1>
+            <p class="text-xs" style="color:#93c5fd">실무에서 헷갈리는 보험 용어, 함께 정의하고 공유합니다. 하이드라이브에서 본문 전체 검색도 가능합니다.</p>
+        </div>
+        <div class="relative z-10 flex gap-2 shrink-0">
+            <button onclick="openGlossaryRegister()" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
+                ✍️ 용어 등록 <span class="text-[9px] font-black" style="color:#ff9e1b">+1 Hi-Point</span>
+            </button>
+            <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">
+                ☁️ 하이드라이브 검색
+            </button>
+        </div>
     </div>
 
-    <!-- 검색 + 필터 -->
-    <div class="bg-white border-b border-gray-100 px-6 py-3 shrink-0">
-        <div class="flex gap-2 mb-3">
+    <!-- 검색 + 필터 패널 -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
+        <!-- HiDrive 연동 안내 배너 -->
+        <div class="flex items-center gap-3 bg-sky-50 border border-sky-200 rounded-xl px-4 py-2 mb-3">
+            <span class="text-sky-500 text-sm shrink-0">☁️</span>
+            <div class="flex-1">
+                <span class="text-[10px] font-black text-sky-700">하이드라이브 Destiny ECM 연동:</span>
+                <span class="text-[10px] text-sky-600"> 여기에 등록된 용어는 하이드라이브 전사폴더에 자동 저장됩니다. <strong>본문 전체(Full-text) 검색</strong>은 하이드라이브를 이용하세요.</span>
+            </div>
+            <button onclick="openHidriveSearchModal()" class="shrink-0 text-[10px] font-bold px-3 py-1.5 rounded-lg text-white transition flex items-center gap-1" style="background:#0ea5e9">
+                하이드라이브에서 찾기 →
+            </button>
+        </div>
+        <div class="flex gap-2 mb-2">
             <div class="relative flex-1">
-                <span class="absolute left-3 top-2 text-gray-400 text-xs">🔍</span>
-                <input type="text" id="gloss-search" placeholder="용어명 또는 설명으로 검색..." oninput="filterGlossary()"
-                    class="w-full border border-gray-300 rounded-lg pl-8 pr-3 py-2 text-xs outline-none focus:border-hi-navy transition bg-gray-50">
+                <span class="absolute left-3 top-2.5 text-gray-400 text-xs">🔍</span>
+                <input type="text" id="gloss-search-v2" oninput="filterGlossaryV2()" placeholder="검색할 용어명이나 설명을 입력하세요..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-xs outline-none focus:border-hi-navy transition">
             </div>
-            <div class="text-[9px] text-gray-400 flex items-center px-2">검색 시 <strong class="text-hi-org mx-1">+0.1 Hi-Point</strong> 적립</div>
+            <button onclick="openHidriveSearchModal()" class="shrink-0 text-xs font-bold px-3 py-2 rounded-xl border flex items-center gap-1.5 transition" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">
+                ☁️ 하이드라이브 본문 검색
+            </button>
         </div>
-        <!-- 초성/카테고리 필터 -->
-        <div class="flex gap-1 flex-wrap mb-2">
-            <span class="text-[10px] text-gray-400 self-center mr-1">초성:</span>
-            <button onclick="setGlossLetter('전체',this)" class="gloss-letter-btn active text-[10px] px-2 py-0.5 rounded border bg-hi-navy text-white border-hi-navy">전체</button>
-            <button onclick="setGlossLetter('ㄱ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㄱ</button>
-            <button onclick="setGlossLetter('ㄴ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㄴ</button>
-            <button onclick="setGlossLetter('ㄷ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㄷ</button>
-            <button onclick="setGlossLetter('ㅂ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅂ</button>
-            <button onclick="setGlossLetter('ㅅ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅅ</button>
-            <button onclick="setGlossLetter('ㅇ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅇ</button>
-            <button onclick="setGlossLetter('ㅈ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅈ</button>
-            <button onclick="setGlossLetter('ㅊ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅊ</button>
-            <button onclick="setGlossLetter('ㅎ',this)" class="gloss-letter-btn text-[10px] px-2 py-0.5 rounded border border-gray-200 hover:border-hi-navy text-gray-600">ㅎ</button>
+        <div class="flex gap-2 items-center flex-wrap mb-1.5">
+            <span class="text-[10px] font-bold text-gray-600 shrink-0">분야:</span>
+            <button data-val="전체" onclick="setGlossCatV2(this)" class="gloss-cat-v2 text-white text-[10px] px-3 py-1 rounded-full font-bold transition" style="background:#00205b">전체</button>
+            <button data-val="계약" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[계약]</button>
+            <button data-val="보상" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[보상]</button>
+            <button data-val="언더라이팅" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[언더라이팅]</button>
+            <button data-val="상품" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[상품]</button>
+            <button data-val="재무/계리" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[재무/계리]</button>
+            <button data-val="법규/준법" onclick="setGlossCatV2(this)" class="gloss-cat-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-3 py-1 rounded-full hover:border-hi-navy transition">[법규/준법]</button>
         </div>
-        <div class="flex gap-1 flex-wrap">
-            <span class="text-[10px] text-gray-400 self-center mr-1">분야:</span>
-            <button onclick="setGlossCat('전체',this)" class="gloss-cat-btn active text-[10px] px-2.5 py-0.5 rounded-full border bg-hi-navy text-white border-hi-navy">전체</button>
-            <button onclick="setGlossCat('계약',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[계약]</button>
-            <button onclick="setGlossCat('보상',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[보상]</button>
-            <button onclick="setGlossCat('언더라이팅',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[언더라이팅]</button>
-            <button onclick="setGlossCat('상품',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[상품]</button>
-            <button onclick="setGlossCat('재무',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[재무/계리]</button>
-            <button onclick="setGlossCat('법규',this)" class="gloss-cat-btn text-[10px] px-2.5 py-0.5 rounded-full border border-gray-300 text-gray-600 hover:border-hi-navy">[법규/준법]</button>
+        <div class="flex gap-1 items-center flex-wrap">
+            <span class="text-[10px] font-bold text-gray-600 shrink-0 mr-1">초성:</span>
+            <button data-val="전체" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 text-white text-[10px] px-2 py-0.5 rounded font-bold transition" style="background:#00205b">전체</button>
+            <button data-val="ㄱ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㄱ</button>
+            <button data-val="ㄴ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㄴ</button>
+            <button data-val="ㄷ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㄷ</button>
+            <button data-val="ㅂ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅂ</button>
+            <button data-val="ㅅ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅅ</button>
+            <button data-val="ㅇ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅇ</button>
+            <button data-val="ㅈ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅈ</button>
+            <button data-val="ㅊ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅊ</button>
+            <button data-val="ㅎ" onclick="setGlossLetterV2(this)" class="gloss-letter-v2 bg-white border border-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded hover:border-hi-navy transition">ㅎ</button>
         </div>
     </div>
 
-    <!-- 용어 목록 -->
-    <div class="flex-1 overflow-y-auto msb px-6 py-4">
-        <div id="glossary-list" class="space-y-2 max-w-3xl">
+    <!-- 용어 카드 리스트 -->
+    <div class="flex-1 overflow-y-auto msb px-6 py-4 bg-gray-50">
+        <div class="space-y-3 max-w-4xl mx-auto" id="glossary-list-v2">
 
-            <div class="gloss-item bg-white rounded-xl border border-gray-200 p-4" data-cat="계약" data-letter="ㄱ">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="font-black text-hi-navy text-sm">갱신형 보험</span>
-                            <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">[계약]</span>
-                        </div>
-                        <p class="text-xs text-gray-600 leading-relaxed">일정 기간(1년, 3년 등)마다 계약을 갱신하는 보험 형태. 갱신 시점의 나이와 위험률에 따라 보험료가 재산정됩니다. 비갱신형에 비해 초기 보험료가 낮으나 장기적으로 보험료 인상 가능성이 있습니다.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[9px] text-gray-400">등록: 상품팀 · 2026-04-10</span>
-                            <button class="text-[9px] border border-gray-200 text-gray-400 px-2 py-0.5 rounded hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (23)</button>
-                        </div>
+            <div class="gloss-item-v2 kcard bg-white border border-gray-200 rounded-xl p-4 relative cursor-pointer group" data-cat="계약" data-letter="ㄱ">
+                <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style="background:#00205b"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe">#계약</span>
+                    <span class="text-[9px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded">초성: ㄱ</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2 group-hover:text-hi-navy transition">갱신형 보험</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-xs text-gray-600 leading-relaxed">일정 기간(1년, 3년 등)마다 계약을 갱신하는 보험 형태. 갱신 시점의 나이와 위험률에 따라 보험료가 재산정됩니다. 비갱신형에 비해 초기 보험료가 낮으나 장기적으로 보험료 인상 가능성이 있습니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-[8px]">상</div>
+                        <span class="font-bold text-gray-600">상품팀</span><span class="mx-1">·</span><span>2026-04-10</span>
                     </div>
+                    <button onclick="event.stopPropagation();showToast('하이파이브! 감사합니다! 👍','✅')" class="border px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-orange-50 transition" style="border-color:#fed7aa;color:#ff9e1b">
+                        👍 하이파이브! (23)
+                    </button>
                 </div>
             </div>
 
-            <div class="gloss-item bg-white rounded-xl border border-gray-200 p-4" data-cat="보상" data-letter="ㅂ">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="font-black text-hi-navy text-sm">비급여 진료</span>
-                            <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">[보상]</span>
-                        </div>
-                        <p class="text-xs text-gray-600 leading-relaxed">국민건강보험에서 보장하지 않는 의료 서비스. MRI, 도수치료, 초음파, 상급병실료 등이 포함됩니다. 실손의료보험에서 보장하는 핵심 영역이며, 5세대 실손보험부터 30% 자기부담금이 적용됩니다.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[9px] text-gray-400">등록: 이현대 과장 · 2026-05-02</span>
-                            <button class="text-[9px] border border-gray-200 text-gray-400 px-2 py-0.5 rounded hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (41)</button>
-                        </div>
+            <div class="gloss-item-v2 kcard bg-white border border-gray-200 rounded-xl p-4 relative cursor-pointer group" data-cat="보상" data-letter="ㅂ">
+                <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style="background:#00205b"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border" style="background:#fef2f2;color:#dc2626;border-color:#fecaca">#보상</span>
+                    <span class="text-[9px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded">초성: ㅂ</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2 group-hover:text-hi-navy transition">비급여 진료</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-xs text-gray-600 leading-relaxed">국민건강보험에서 보장하지 않는 의료 서비스. MRI, 도수치료, 초음파, 상급병실료 등이 포함됩니다. 실손의료보험에서 보장하는 핵심 영역이며, 5세대 실손보험부터 30% 자기부담금이 적용됩니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[8px]">이</div>
+                        <span class="font-bold text-gray-600">이현대 과장</span><span class="mx-1">·</span><span>2026-05-02</span>
                     </div>
+                    <button onclick="event.stopPropagation();showToast('하이파이브! 감사합니다! 👍','✅')" class="border px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-orange-50 transition" style="border-color:#fed7aa;color:#ff9e1b">
+                        👍 하이파이브! (41)
+                    </button>
                 </div>
             </div>
 
-            <div class="gloss-item bg-white rounded-xl border border-gray-200 p-4" data-cat="언더라이팅" data-letter="ㅅ">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="font-black text-hi-navy text-sm">심사 등급</span>
-                            <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">[언더라이팅]</span>
-                        </div>
-                        <p class="text-xs text-gray-600 leading-relaxed">피보험자의 건강 상태에 따라 표준체, 준표준체, 할증체, 부담보 등으로 분류하는 언더라이팅 체계. 표준체는 정상 인수, 준표준체는 할증 또는 부담보 조건부 인수, 거절체는 인수 불가를 의미합니다.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[9px] text-gray-400">등록: 언더라이팅팀 · 2026-04-22</span>
-                            <button class="text-[9px] border border-gray-200 text-gray-400 px-2 py-0.5 rounded hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (18)</button>
-                        </div>
+            <div class="gloss-item-v2 kcard bg-white border border-gray-200 rounded-xl p-4 relative cursor-pointer group" data-cat="언더라이팅" data-letter="ㅅ">
+                <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style="background:#00205b"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border" style="background:#f5f3ff;color:#7c3aed;border-color:#ddd6fe">#언더라이팅</span>
+                    <span class="text-[9px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded">초성: ㅅ</span>
+                </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2 group-hover:text-hi-navy transition">심사 등급</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-xs text-gray-600 leading-relaxed">피보험자의 건강 상태에 따라 표준체, 준표준체, 할증체, 부담보 등으로 분류하는 언더라이팅 체계. 표준체는 정상 인수, 거절체는 인수 불가를 의미합니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-[8px]">언</div>
+                        <span class="font-bold text-gray-600">언더라이팅팀</span><span class="mx-1">·</span><span>2026-04-22</span>
                     </div>
+                    <button onclick="event.stopPropagation();showToast('하이파이브! 감사합니다! 👍','✅')" class="border px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-orange-50 transition" style="border-color:#fed7aa;color:#ff9e1b">
+                        👍 하이파이브! (18)
+                    </button>
                 </div>
             </div>
 
-            <div class="gloss-item bg-white rounded-xl border border-gray-200 p-4" data-cat="계약" data-letter="ㅇ">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="font-black text-hi-navy text-sm">언더라이팅 (Underwriting)</span>
-                            <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">[언더라이팅]</span>
-                        </div>
-                        <p class="text-xs text-gray-600 leading-relaxed">보험 계약 체결 전 위험을 평가하고 인수 여부와 조건을 결정하는 과정. 피보험자의 건강 상태, 직업, 생활 습관 등을 종합적으로 심사하여 보험료를 산정하거나 인수를 거절합니다.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[9px] text-gray-400">등록: 심사팀 · 2026-03-18</span>
-                            <button class="text-[9px] border border-gray-200 text-gray-400 px-2 py-0.5 rounded hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (31)</button>
-                        </div>
-                    </div>
+            <div class="gloss-item-v2 kcard bg-white border border-gray-200 rounded-xl p-4 relative cursor-pointer group" data-cat="재무/계리" data-letter="ㅈ">
+                <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl" style="background:#00205b"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[9px] px-2 py-0.5 rounded-full font-bold border" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0">#재무/계리</span>
+                    <span class="text-[9px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded">초성: ㅈ</span>
                 </div>
-            </div>
-
-            <div class="gloss-item bg-white rounded-xl border border-gray-200 p-4" data-cat="재무" data-letter="ㅈ">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="font-black text-hi-navy text-sm">준비금 (Reserve)</span>
-                            <span class="text-[9px] font-black bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">[재무/계리]</span>
-                        </div>
-                        <p class="text-xs text-gray-600 leading-relaxed">보험사가 미래 보험금 지급을 위해 적립하는 자금. 보험료적립금(책임준비금), 미경과보험료적립금, 미지급보험금 등으로 구성됩니다. 금융감독원의 감독 하에 법정 기준에 따라 적립합니다.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="text-[9px] text-gray-400">등록: 계리팀 · 2026-04-05</span>
-                            <button class="text-[9px] border border-gray-200 text-gray-400 px-2 py-0.5 rounded hover:border-hi-navy hover:text-hi-navy transition">👍 하이파이브! (15)</button>
-                        </div>
+                <h3 class="font-black text-sm text-gray-800 mb-2 group-hover:text-hi-navy transition">준비금 (Reserve)</h3>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 mb-3">
+                    <p class="text-xs text-gray-600 leading-relaxed">보험사가 미래 보험금 지급을 위해 적립하는 자금. 보험료적립금(책임준비금), 미경과보험료적립금, 미지급보험금 등으로 구성됩니다.</p>
+                </div>
+                <div class="flex items-center justify-between text-[10px] text-gray-400">
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-[8px]">계</div>
+                        <span class="font-bold text-gray-600">계리팀</span><span class="mx-1">·</span><span>2026-04-05</span>
                     </div>
+                    <button onclick="event.stopPropagation();showToast('하이파이브! 감사합니다! 👍','✅')" class="border px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-orange-50 transition" style="border-color:#fed7aa;color:#ff9e1b">
+                        👍 하이파이브! (15)
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 용어 등록 모달 -->
-    <div id="glossary-register-modal" class="modal-bg" onclick="if(event.target===this)closeGlossaryRegister()">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4">
-            <div class="bg-hi-navy text-white p-4 rounded-t-2xl flex items-center justify-between">
+    <div id="modal-glossary-register" class="modal-bg" onclick="if(event.target===this)closeGlossaryRegister()">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 flex flex-col">
+            <div class="text-white p-4 rounded-t-2xl flex items-center justify-between shrink-0" style="background:#00205b">
                 <div>
-                    <h3 class="font-black text-sm">보험 용어 등록하기</h3>
-                    <p class="text-[10px] text-blue-100 mt-0.5">등록 시 <strong class="text-hi-org">Hi-Point 1개</strong>가 즉시 지급됩니다</p>
+                    <h3 class="font-black text-sm">✍️ 보험 용어 등록하기</h3>
+                    <p class="text-[10px] mt-0.5" style="color:#93c5fd">등록 시 <strong style="color:#ff9e1b">Hi-Point 1개</strong> 즉시 지급 · 하이드라이브 전사폴더 자동 저장</p>
                 </div>
-                <button onclick="closeGlossaryRegister()" class="text-white/60 hover:text-white text-lg">✕</button>
+                <button onclick="closeGlossaryRegister()" class="flex items-center justify-center text-white font-bold hover:bg-white/20 rounded-lg transition" style="width:32px;height:32px;font-size:18px;border:1.5px solid rgba(255,255,255,0.4)">✕</button>
             </div>
-            <div class="p-4 space-y-3">
+            <div class="p-4 space-y-3 overflow-y-auto msb">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[10px] text-gray-500 font-bold mb-1 block">용어명 (한글) *</label>
+                        <label class="text-[10px] font-bold text-gray-700 mb-1 block">용어명 (한글) *</label>
                         <input type="text" placeholder="예: 갱신형 보험" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
                     </div>
                     <div>
-                        <label class="text-[10px] text-gray-500 font-bold mb-1 block">용어명 (영문)</label>
+                        <label class="text-[10px] font-bold text-gray-700 mb-1 block">용어명 (영문)</label>
                         <input type="text" placeholder="예: Renewable Insurance" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
                     </div>
                 </div>
                 <div>
-                    <label class="text-[10px] text-gray-500 font-bold mb-1 block">분야 분류 *</label>
+                    <label class="text-[10px] font-bold text-gray-700 mb-1 block">분야 분류 *</label>
                     <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
-                        <option>계약</option><option>보상</option><option>언더라이팅</option>
-                        <option>상품</option><option>재무/계리</option><option>법규/준법</option>
+                        <option>선택하세요</option><option>계약</option><option>보상</option><option>언더라이팅</option><option>상품</option><option>재무/계리</option><option>법규/준법</option>
                     </select>
                 </div>
                 <div>
-                    <label class="text-[10px] text-gray-500 font-bold mb-1 block">용어 설명 *</label>
-                    <textarea rows="4" placeholder="현장에서 실용적으로 이해할 수 있도록 명확하게 설명해주세요" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none"></textarea>
+                    <label class="text-[10px] font-bold text-gray-700 mb-1 block">용어 설명 *</label>
+                    <textarea rows="4" placeholder="현장에서 실용적으로 이해할 수 있도록 명확하게 설명해주세요." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="closeGlossaryRegister()" class="flex-1 border border-gray-200 text-gray-500 text-xs font-bold py-2.5 rounded-lg hover:bg-gray-50">취소</button>
-                    <button onclick="submitGlossary()" class="flex-1 bg-hi-navy text-white text-xs font-bold py-2.5 rounded-lg hover:bg-hi-navy/90 transition">등록 (+1 Hi-Point)</button>
-                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 bg-gray-50 flex gap-2 rounded-b-2xl shrink-0">
+                <button onclick="closeGlossaryRegister()" class="flex-1 border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
+                <button onclick="submitGlossary()" class="flex-[2] text-white text-xs font-bold py-2.5 rounded-xl transition shadow" style="background:#00205b">등록 (+1 Hi-Point)</button>
             </div>
         </div>
     </div>
+
 </div><!-- /view-glossary -->
 
 
@@ -2646,6 +2790,183 @@
     </div>
 </div>
 
+
+<!-- ================================================================ -->
+<!-- 🌟 하이드라이브 ECM 통합 검색 모달 (Destiny ECM API)              -->
+<!-- ================================================================ -->
+<div id="modal-hidrive-search" class="modal-bg" onclick="if(event.target===this)closeHidriveModal()">
+    <div class="bg-white rounded-md shadow-2xl w-full max-w-[1000px] mx-4 flex flex-col border border-gray-400" style="height:85vh">
+        <div class="px-4 py-2.5 flex justify-between items-center shrink-0 text-white" style="background:#20385c">
+            <div class="flex items-center gap-2">
+                <span>☁️</span>
+                <span class="font-bold text-sm tracking-wide">Hi-Drive 통합 검색 (Destiny ECM API)</span>
+                <span class="text-[10px] font-normal" style="color:#93c5fd">· SSO Hi-nac 연동중</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] cursor-pointer" style="background:#162843;border:1px solid #3b5998" onclick="showToast('Hi-nac SSO 세션 및 조직도 권한이 동기화되었습니다.','🔐')">
+                    <span class="text-green-400">●</span> Hi-nac SSO 연동중
+                </div>
+                <button onclick="closeHidriveModal()" class="text-gray-300 hover:text-white text-lg font-bold transition">✕</button>
+            </div>
+        </div>
+        <div class="flex-1 flex flex-col overflow-hidden bg-white">
+            <!-- 검색 폼 -->
+            <div class="p-3 border-b shrink-0" style="border-color:#d2d6de;background:#f4f5f8">
+                <div class="grid grid-cols-[80px_1fr_80px_1fr] gap-y-2 gap-x-4 items-center" style="border:1px solid #d2d6de;padding:12px;background:#f4f5f8">
+                    <div class="text-right font-bold text-gray-700 text-xs">검색어</div>
+                    <div class="flex items-center gap-1">
+                        <select class="ecm-input bg-white" style="width:110px"><option>제목+본문</option><option>제목</option><option>본문</option><option>태그</option></select>
+                        <input type="text" class="ecm-input" style="flex:1" placeholder="검색어를 입력하세요.">
+                    </div>
+                    <div class="text-right font-bold text-gray-700 text-xs">등록자</div>
+                    <div class="flex items-center gap-1">
+                        <input type="text" class="ecm-input" style="flex:1" placeholder="사번 또는 이름">
+                        <button class="ecm-btn">조직도</button>
+                    </div>
+                    <div class="text-right font-bold text-gray-700 text-xs">등록기간</div>
+                    <div class="flex items-center gap-1">
+                        <select class="ecm-input bg-white" style="width:110px"><option>전체</option><option>1주일</option><option>1개월</option><option>직접입력</option></select>
+                        <input type="date" class="ecm-input" style="color:#555;background:white"> <span style="color:#888">~</span> <input type="date" class="ecm-input" style="color:#555;background:white">
+                    </div>
+                    <div class="text-right font-bold text-gray-700 text-xs">검색위치</div>
+                    <div class="flex items-center gap-1">
+                        <input type="text" class="ecm-input" style="flex:1;background:#eee" value="/전사지식/HI-VE 아카이브" readonly>
+                        <button class="ecm-btn">찾기</button>
+                    </div>
+                    <div class="text-right font-bold text-gray-700 text-xs">문서유형</div>
+                    <div class="flex items-center gap-3 text-xs text-gray-700">
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked> 전체</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox"> Word</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox"> Excel</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox"> PPT</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox"> PDF</label>
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox"> HWP</label>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-2 gap-1.5">
+                    <button class="ecm-btn ecm-btn-primary" style="padding:4px 32px" onclick="showToast('Destiny ECM 검색 엔진 API로 결과를 가져왔습니다.','🔎')">검색</button>
+                    <button class="ecm-btn" style="padding:4px 24px">초기화</button>
+                </div>
+            </div>
+            <!-- 툴바 -->
+            <div class="px-3 py-2 border-b flex justify-between items-center shrink-0" style="border-color:#d2d6de">
+                <div class="text-xs text-gray-600">검색 결과: 총 <span class="font-bold" style="color:#20385c">3</span>건</div>
+                <div class="flex gap-1.5">
+                    <button class="ecm-btn" onclick="openHidriveViewer('선택 문서')"><span>👁️</span> 미리보기</button>
+                    <button class="ecm-btn" onclick="showToast('하이웍스(플로우) 채팅방으로 원본 URL이 전송되었습니다.','💬')"><span>💬</span> 플로우 공유</button>
+                    <button class="ecm-btn" onclick="showToast('HI-VE Q&A 답변 첨부파일로 연동되었습니다.','🔗')"><span>🔗</span> Hi-Bridge 첨부</button>
+                    <button class="ecm-btn"><span>⬇️</span> 다운로드</button>
+                </div>
+            </div>
+            <!-- 결과 테이블 -->
+            <div class="flex-1 overflow-auto msb bg-white">
+                <table class="w-full ecm-table border-collapse" style="min-width:900px">
+                    <thead class="sticky top-0 z-10">
+                        <tr>
+                            <th style="width:30px"><input type="checkbox"></th>
+                            <th style="width:40px">유형</th>
+                            <th style="width:50px">버전</th>
+                            <th>문서 제목 (파일명)</th>
+                            <th style="width:180px">위치 (경로)</th>
+                            <th style="width:80px">크기</th>
+                            <th style="width:80px">등록자</th>
+                            <th style="width:120px">등록일시</th>
+                            <th style="width:60px">보안</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="cursor-pointer">
+                            <td style="text-align:center"><input type="checkbox"></td>
+                            <td style="text-align:center">📄</td>
+                            <td style="text-align:center"><span style="color:#1d4ed8;font-weight:bold">v2.1</span></td>
+                            <td><span class="font-medium text-gray-800 hover:underline cursor-pointer" style="color:#0ea5e9" onclick="event.stopPropagation();openHidriveViewer('5세대_실손_전환상담_가이드_최종.pdf')">5세대_실손_전환상담_가이드_최종.pdf</span></td>
+                            <td class="text-gray-500">/전사지식/.../영업/마케팅</td>
+                            <td style="text-align:right;color:#555">2.4 MB</td>
+                            <td style="text-align:center;color:#555">김현대</td>
+                            <td style="text-align:center;color:#888">2026.05.09 14:22</td>
+                            <td style="text-align:center"><span style="color:#16a34a">일반</span></td>
+                        </tr>
+                        <tr class="cursor-pointer">
+                            <td style="text-align:center"><input type="checkbox"></td>
+                            <td style="text-align:center">📝</td>
+                            <td style="text-align:center"><span style="color:#1d4ed8;font-weight:bold">v1.0</span></td>
+                            <td><span class="font-medium text-gray-800 hover:underline cursor-pointer" style="color:#0ea5e9" onclick="event.stopPropagation();openHidriveViewer('QA_장기보험_인수지침_사례집.docx')">QA_장기보험_인수지침_사례집_24년1분기.docx</span> <span style="color:#9ca3af;font-size:11px">🔒</span></td>
+                            <td class="text-gray-500">/전사지식/.../언더라이팅</td>
+                            <td style="text-align:right;color:#555">1.8 MB</td>
+                            <td style="text-align:center;color:#555">이영업</td>
+                            <td style="text-align:center;color:#888">2026.05.01 09:15</td>
+                            <td style="text-align:center"><span style="color:#dc2626;font-weight:bold">대외비</span></td>
+                        </tr>
+                        <tr class="cursor-pointer">
+                            <td style="text-align:center"><input type="checkbox"></td>
+                            <td style="text-align:center">📊</td>
+                            <td style="text-align:center"><span style="color:#1d4ed8;font-weight:bold">v3.4</span></td>
+                            <td><span class="font-medium text-gray-800 hover:underline cursor-pointer" style="color:#0ea5e9" onclick="event.stopPropagation();openHidriveViewer('영업가족_핵심화법_스크립트_모음집.pptx')">영업가족_핵심화법_스크립트_모음집.pptx</span></td>
+                            <td class="text-gray-500">/부서공유함/마케팅기획팀</td>
+                            <td style="text-align:right;color:#555">15.2 MB</td>
+                            <td style="text-align:center;color:#555">박지식</td>
+                            <td style="text-align:center;color:#888">2026.04.15 16:40</td>
+                            <td style="text-align:center"><span style="color:#16a34a">일반</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- 상태바 -->
+            <div class="px-3 py-1.5 flex justify-between items-center shrink-0 text-[11px] text-gray-500" style="border-top:1px solid #d2d6de;background:#f0f2f5">
+                <span>Ready.</span>
+                <div class="flex gap-4">
+                    <span>Hi-Drive API: <span style="color:#16a34a;font-weight:bold">● 정상</span></span>
+                    <span>Hi-Works Webhook: <span style="color:#16a34a;font-weight:bold">● 대기</span></span>
+                    <span>SSO 세션: <span style="color:#16a34a;font-weight:bold">● 활성</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- 🌟 문서 미리보기 웹 뷰어 모달                                      -->
+<!-- ================================================================ -->
+<div id="modal-hidrive-viewer" class="modal-bg" style="z-index:250" onclick="if(event.target===this)closeHidriveViewer()">
+    <div class="rounded-lg shadow-2xl w-full max-w-5xl mx-4 flex flex-col overflow-hidden border border-gray-500" style="height:90vh;background:#f3f4f6">
+        <div class="px-4 py-2.5 flex justify-between items-center shrink-0 text-white" style="background:#1f2937">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] px-2 py-0.5 rounded font-bold tracking-wide" style="background:#2563eb">Web Viewer</span>
+                <span id="hd-viewer-title" class="font-bold text-sm">문서 제목.pdf</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="text-xs px-3 py-1 rounded border font-medium text-gray-200 hover:bg-gray-600 transition" style="border-color:#4b5563">인쇄</button>
+                <button class="text-xs px-3 py-1 rounded border font-medium cursor-not-allowed" style="border-color:#4b5563;color:#6b7280" title="보안 정책상 다운로드 제한">다운로드 🔒</button>
+                <button onclick="closeHidriveViewer()" class="text-gray-400 hover:text-white text-lg font-bold ml-2 transition">✕</button>
+            </div>
+        </div>
+        <div class="bg-white border-b px-4 py-2 flex justify-center items-center gap-6 shrink-0 text-gray-600 text-sm shadow-sm z-10" style="border-color:#d1d5db">
+            <div class="flex gap-2"><button class="hover:bg-gray-100 px-2 py-1 rounded">◀</button><span class="px-2 py-1 font-bold">1 / 15</span><button class="hover:bg-gray-100 px-2 py-1 rounded">▶</button></div>
+            <div class="w-px h-5 bg-gray-300"></div>
+            <div class="flex gap-2"><button class="hover:bg-gray-100 px-2 py-1 rounded">−</button><span class="px-2 py-1 font-bold">100%</span><button class="hover:bg-gray-100 px-2 py-1 rounded">+</button></div>
+            <div class="w-px h-5 bg-gray-300"></div>
+            <button class="hover:bg-gray-100 px-3 py-1 rounded flex items-center gap-1.5 font-medium">🔍 본문 검색</button>
+        </div>
+        <div class="flex-1 overflow-auto msb flex justify-center p-8 relative" style="background:#e4e4e4">
+            <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50 text-center select-none whitespace-nowrap" style="color:rgba(100,100,100,.12);font-weight:900;font-size:52px;transform:translate(-50%,-50%) rotate(-30deg)">
+                현대해상 보안열람<br><span style="font-size:24px">김현대 (2026-05-10)</span>
+            </div>
+            <div class="bg-white shadow-md w-full flex flex-col gap-4 border border-gray-300 p-12" style="max-width:700px;min-height:900px">
+                <div class="h-7 w-2/3 bg-gray-200 rounded mb-4"></div>
+                <div class="h-3 w-full bg-gray-100 rounded"></div>
+                <div class="h-3 w-full bg-gray-100 rounded"></div>
+                <div class="h-3 w-11/12 bg-gray-100 rounded"></div>
+                <div class="h-3 w-5/6 bg-gray-100 rounded"></div>
+                <div class="h-40 w-full mt-6 mb-3 border rounded flex items-center justify-center font-bold" style="background:#eff6ff;border-color:#bfdbfe;color:#93c5fd">📊 차트 및 데이터 영역</div>
+                <div class="h-3 w-full bg-gray-100 rounded"></div>
+                <div class="h-3 w-full bg-gray-100 rounded"></div>
+                <div class="h-3 w-10/12 bg-gray-100 rounded"></div>
+                <div class="h-3 w-3/4 bg-gray-100 rounded"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ================================================================ -->
 <!-- 업데이트 요청 모달                                                 -->
 <!-- ================================================================ -->
@@ -2794,9 +3115,9 @@ function filterGlossary() {
     });
     if (q.length > 0) showToast('검색 적립: +0.1 Hi-Point');
 }
-function openGlossaryRegister() { document.getElementById('glossary-register-modal').classList.add('open'); }
-function closeGlossaryRegister() { document.getElementById('glossary-register-modal').classList.remove('open'); }
-function submitGlossary() { closeGlossaryRegister(); showToast('용어가 등록되었습니다! Hi-Point 1개 지급 ✅'); }
+
+
+
 
 // ── 업로드: 자료 유형 말머리 ──────────────────────────────────
 function updateTitlePrefix(radio) {
@@ -2863,6 +3184,111 @@ function toggleMenu(id, el) {
     arr.classList.toggle('open');
     el.classList.toggle('bg-lnbh');
     el.classList.toggle('text-white');
+}
+
+
+// ── Hi-Bridge Q&A 탭 전환 ──────────────────────────────────────────
+function switchBridgeTab(tab) {
+    ['solved','wait'].forEach(t => {
+        document.getElementById('tab-'+t)?.classList.remove('active');
+        document.getElementById('list-'+t)?.classList.add('hidden');
+    });
+    document.getElementById('tab-'+tab)?.classList.add('active');
+    document.getElementById('list-'+tab)?.classList.remove('hidden');
+}
+
+// ── Q&A 질문 모달 ──────────────────────────────────────────────────
+function openAskModal() { document.getElementById('modal-ask')?.classList.add('open'); }
+function closeAskModal() { document.getElementById('modal-ask')?.classList.remove('open'); }
+function submitAsk() {
+    closeAskModal();
+    switchBridgeTab('wait');
+    showToast('질문이 등록되었습니다. 본사 담당자에게 알림이 전달됩니다.', '✅');
+}
+
+function openDetailModal(type) {
+    const modal = document.getElementById('modal-qa-detail');
+    const badge = document.getElementById('qa-badge-area');
+    const title = document.getElementById('qa-title');
+    const content = document.getElementById('qa-content');
+    const author = document.getElementById('qa-author');
+    const ans = document.getElementById('qa-answer-section');
+    if (!modal) return;
+
+    if (type === 'unsolved') {
+        badge.innerHTML = '<span class="status-wait text-[9px] font-bold px-2 py-0.5 rounded-md">🚨 답변 대기</span>';
+        title.innerHTML = '<span class="text-red-500 mr-1">Q.</span>5세대 실손 전환 시, 과거 병력 고지 기간 문의';
+        content.textContent = '현장에서 전환 상담 중입니다. 매뉴얼에는 직전 1년 고지라 되어있는데 전산에는 5년이 떠서 고객 안내에 혼선이 있습니다. 빠른 확인 부탁드립니다.';
+        author.innerHTML = '<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-[9px]">김</div><span class="font-bold text-gray-600">김현장 매니저 (강남지점)</span>';
+        ans.innerHTML = `<div class="bg-white border-2 border-sky-100 rounded-xl p-4 shadow-sm relative"><div class="absolute -top-2.5 left-3 bg-sky-50 text-sky-600 border border-sky-200 text-[9px] font-bold px-2 py-0.5 rounded">✍️ 본사 답변 작성하기</div><textarea rows="4" placeholder="본사 규정 및 명확한 가이드를 작성해주세요." class="w-full mt-2 border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none resize-none leading-relaxed"></textarea><div class="flex justify-between items-center mt-2"><button class="text-xs text-gray-400 hover:text-blue-500">📎 파일 첨부</button><div class="flex gap-2"><button onclick="openHidriveSearchModal()" class="text-xs border px-3 py-1.5 rounded-lg font-bold" style="color:#0ea5e9;border-color:#bae6fd">☁️ 하이드라이브 검색</button><button onclick="showToast('답변이 등록되었습니다.','✅')" class="text-white text-xs font-bold px-4 py-1.5 rounded-lg" style="background:#00205b">답변 등록</button></div></div></div>`;
+    } else {
+        badge.innerHTML = '<span class="status-archived text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">👑 채택 아카이빙 완료</span>';
+        title.innerHTML = '<span class="font-bold mr-1" style="color:#00205b">Q.</span>5세대 실손 전환 시 병력 고지 기간은 1년인가요?';
+        content.textContent = '현장에서 5세대 실손 전환 상담 중입니다. 매뉴얼에는 1년이라 되어 있는데 전산에는 5년이 표시되어 혼선이 있습니다.';
+        author.innerHTML = '<div class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-[9px]">김</div><span class="font-bold text-gray-600">김현장 매니저</span>';
+        ans.innerHTML = `<div class="bg-blue-50 border border-blue-200 rounded-xl p-4"><div class="text-[10px] font-black text-blue-700 mb-1.5">✅ 채택 답변 (장기계약관리부)</div><p class="text-xs text-gray-700 leading-relaxed">5세대 실손 전환 시 고지 의무 기간은 <strong>직전 1년</strong>이 맞습니다. 전산 UI 오류로 현재 개선 요청 중이며, 고객 안내는 매뉴얼 기준인 1년으로 하시면 됩니다.</p><div class="flex items-center gap-2 mt-3"><button onclick="openHidriveSearchModal()" class="text-[9px] border px-2 py-0.5 rounded font-bold" style="color:#0ea5e9;border-color:#bae6fd">☁️ 관련 문서 검색</button><span class="text-[9px] text-gray-400">❤ 하이파이브! 89 · 조회 342</span></div></div>`;
+    }
+    modal.classList.add('open');
+}
+function closeQADetail() { document.getElementById('modal-qa-detail')?.classList.remove('open'); }
+
+// ── HiDrive ECM 검색 모달 ──────────────────────────────────────────
+function openHidriveSearchModal() {
+    document.getElementById('modal-hidrive-search')?.classList.add('open');
+}
+function closeHidriveModal() {
+    document.getElementById('modal-hidrive-search')?.classList.remove('open');
+}
+
+// ── HiDrive 문서 미리보기 ──────────────────────────────────────────
+function openHidriveViewer(title) {
+    const el = document.getElementById('hd-viewer-title');
+    if (el) el.textContent = title || '문서 미리보기';
+    document.getElementById('modal-hidrive-viewer')?.classList.add('open');
+    showToast('ECM 보안 웹 뷰어가 실행되었습니다.', '👁️');
+}
+function closeHidriveViewer() {
+    document.getElementById('modal-hidrive-viewer')?.classList.remove('open');
+}
+
+// ── 용어 사전 필터링 (v2) ──────────────────────────────────────────
+function filterGlossaryV2() {
+    const q = document.getElementById('gloss-search-v2')?.value.toLowerCase() || '';
+    document.querySelectorAll('.gloss-item-v2').forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+    if (q.length > 1) showToast('전문 검색이 필요하시면 하이드라이브를 이용해보세요 ☁️', '🔍');
+}
+function setGlossCatV2(btn) {
+    document.querySelectorAll('.gloss-cat-v2').forEach(b => {
+        b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
+        b.classList.add('bg-white','border-gray-200','text-gray-600');
+    });
+    btn.classList.remove('bg-white','border-gray-200','text-gray-600');
+    btn.style.background = '#00205b'; btn.style.color = '#fff';
+    const val = btn.dataset.val;
+    document.querySelectorAll('.gloss-item-v2').forEach(el => {
+        el.style.display = (val === '전체' || el.dataset.cat === val) ? '' : 'none';
+    });
+}
+function setGlossLetterV2(btn) {
+    document.querySelectorAll('.gloss-letter-v2').forEach(b => {
+        b.style.background = ''; b.style.color = ''; b.classList.add('bg-white','border-gray-200','text-gray-600');
+    });
+    btn.classList.remove('bg-white','border-gray-200','text-gray-600');
+    btn.style.background = '#00205b'; btn.style.color = '#fff';
+    const val = btn.dataset.val;
+    document.querySelectorAll('.gloss-item-v2').forEach(el => {
+        el.style.display = (val === '전체' || el.dataset.letter === val) ? '' : 'none';
+    });
+}
+
+// ── 용어 등록 모달 ─────────────────────────────────────────────────
+function openGlossaryRegister() { document.getElementById('modal-glossary-register')?.classList.add('open'); }
+function closeGlossaryRegister() { document.getElementById('modal-glossary-register')?.classList.remove('open'); }
+function submitGlossary() {
+    closeGlossaryRegister();
+    showToast('용어가 등록되었습니다! Hi-Point 1개 지급 ✅ · 하이드라이브 자동 저장 완료', '✅');
 }
 
 // ── 목록 페이지로 이동 ─────────────────────────────────────────
