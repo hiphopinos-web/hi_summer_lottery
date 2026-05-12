@@ -96,6 +96,23 @@
         /* 지원 밸류체인 카드 높이 균일화 */
         .support-grid .vc-card .mcard { height:82px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .support-grid .vc-card .mcard .card-label { height:28px; display:flex; align-items:center; justify-content:center; }
+
+        /* 목록 행 호버 팝업 */
+        .list-row-hover { position:relative; }
+        .row-preview-cell { position:static; }
+        .row-preview-popup {
+            display:none; position:absolute; right:0; top:50%; transform:translateY(-50%);
+            z-index:800; width:280px; background:#fff;
+            border:1.5px solid #e2e8f0; border-radius:12px;
+            box-shadow:0 8px 24px -4px rgba(0,32,91,.18);
+            padding:12px 14px; pointer-events:none;
+        }
+        .list-row-hover:hover .row-preview-popup { display:block; }
+
+        /* 소분류 탭 */
+        .subcat-btn { font-size:10.5px; font-weight:500; padding:6px 14px; border-bottom:2px solid transparent; color:#6b7280; white-space:nowrap; transition:all .2s; }
+        .subcat-btn.active { font-weight:700; border-bottom-color:#00205b; color:#00205b; }
+        .subcat-btn:hover { color:#00205b; }
         .vc-hover-popup {
             position:absolute; top:calc(100% + 6px); left:0;
             width:220px; z-index:500;
@@ -1174,7 +1191,7 @@
 <!-- VIEW 2: LIST                                                      -->
 <!-- ================================================================ -->
 <div id="view-list" class="view flex-col flex-1 overflow-hidden">
-    <!-- 목록 상단 브레드크럼 -->
+    <!-- 브레드크럼 -->
     <div class="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-1.5 text-xs text-gray-500">
             <span onclick="nav('home')" class="hover:text-hi-navy cursor-pointer">HI-VE 홈</span>
@@ -1193,27 +1210,67 @@
         </div>
     </div>
 
-    <!-- 상단 파스텔 환영 배너 -->
-    <div class="bg-gradient-to-r from-blue-50 via-white to-orange-50 border-b border-gray-200 px-6 py-4 shrink-0">
+    <!-- ① 카테고리 소개 배너 (하위 카테고리 전용, 기본 hidden) -->
+    <div id="cat-banner" class="hidden shrink-0 text-white px-6 py-4 relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
+        <div class="absolute inset-0 overflow-hidden opacity-10">
+            <svg width="100%" height="100%"><defs><pattern id="cb-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#cb-hex)"/></svg>
+        </div>
+        <div class="relative z-10 flex items-center justify-between">
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                    <span id="cat-banner-badge" class="text-[9px] font-black px-2 py-0.5 rounded" style="background:rgba(255,158,27,.25);color:#fcd34d;border:1px solid rgba(255,158,27,.4)">보상/손해사정</span>
+                    <span id="cat-banner-dept" class="text-[9px] font-bold" style="color:rgba(255,255,255,.5)">담당부서 미지정</span>
+                </div>
+                <h2 id="cat-banner-title" class="font-black text-base mb-1">장기보상</h2>
+                <p id="cat-banner-desc" class="text-xs" style="color:#93c5fd">설명</p>
+            </div>
+            <!-- 시스템 링크 + 퀵 액션 -->
+            <div class="flex items-center gap-2 shrink-0 ml-6">
+                <div id="cat-banner-syslinks" class="flex gap-2"></div>
+                <button onclick="nav('upload')" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                    📤 자료 등록
+                </button>
+                <button class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition">
+                    🔔 알림설정
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ② TOP5 + 골목대장 패널 (하위 카테고리 전용, 기본 hidden) -->
+    <div id="cat-stats-panel" class="hidden shrink-0 border-b border-gray-200" style="background:#f8fafc">
+        <div class="grid px-6 py-4 gap-4" style="grid-template-columns:1fr 280px">
+            <!-- 인기자료 TOP5 -->
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-[10px] font-black text-gray-700 uppercase tracking-widest">🔥 이 폴더 인기자료 TOP 5</span>
+                </div>
+                <div id="cat-top5-list" class="space-y-1.5"></div>
+            </div>
+            <!-- 골목대장 -->
+            <div class="border-l border-gray-200 pl-4">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-[10px] font-black text-gray-700 uppercase tracking-widest">👑 골목대장 — 우수 기여자</span>
+                </div>
+                <div id="cat-contributors" class="space-y-2"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ③ 기존 배너 (일반 카테고리용) -->
+    <div id="cat-default-banner" class="bg-gradient-to-r from-blue-50 via-white to-orange-50 border-b border-gray-200 px-6 py-4 shrink-0">
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="font-black text-hi-navy text-base" id="list-title">영업/마케팅 · 전속영업</h2>
                 <p id="list-desc-text" class="text-xs text-gray-500 mt-0.5">현장에서 검증된 영업 노하우와 화법 스크립트를 찾아보세요</p>
             </div>
-            <!-- 퀵 링크 아이콘 -->
             <div class="hidden md:flex gap-2">
-                <button onclick="nav('upload')" class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm">
-                    <span style="font-style:normal">📤</span>자료 등록
-                </button>
-                <button class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm">
-                    <span style="font-style:normal">🔖</span>관심등록
-                </button>
-                <button class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm">
-                    <span style="font-style:normal">🔔</span>알림설정
-                </button>
+                <button onclick="nav('upload')" class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm"><span>📤</span>자료 등록</button>
+                <button class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm"><span>🔖</span>관심등록</button>
+                <button class="flex flex-col items-center gap-1 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-[10px] text-gray-600 font-medium transition shadow-sm"><span>🔔</span>알림설정</button>
             </div>
         </div>
-        <!-- 칩 필터 -->
         <div id="list-chip-filters" class="flex gap-1.5 flex-wrap mt-3">
             <button class="chip active text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">전체</button>
             <button class="chip text-[10px] px-2.5 py-1 rounded-full border border-gray-300 bg-white text-gray-600 hover:border-hi-navy transition">영업 화법</button>
@@ -1224,26 +1281,30 @@
         </div>
     </div>
 
-    <!-- 탭 -->
+    <!-- ③-b 소분류 탭 (하위 카테고리 전용, 기본 hidden) -->
+    <div id="subcat-tab-bar" class="hidden shrink-0 bg-white border-b border-gray-100 px-6 flex items-center gap-1 overflow-x-auto" style="scrollbar-width:none;background:#fafbfc">
+        <!-- JS로 탭 버튼 렌더링 -->
+    </div>
+
+    <!-- ③-c 해시태그 필터 (하위 카테고리 전용, 기본 hidden) -->
+    <div id="hashtag-filter-bar" class="hidden shrink-0 bg-white border-b border-gray-100 px-6 py-2 flex items-center gap-1.5 flex-wrap">
+        <span class="text-[9.5px] font-bold text-gray-400 mr-1">#태그 필터</span>
+        <!-- JS로 태그 버튼 렌더링 -->
+    </div>
+
+    <!-- ④ 탭 -->
     <div class="bg-white border-b border-gray-200 px-6 shrink-0 flex items-center gap-0">
         <button class="tab-btn active py-2.5 px-4 text-xs text-gray-500" onclick="switchTab('archived',this)">
             🏆 검증 완료 (아카이빙) <span class="ml-1 bg-hi-navy text-white text-[9px] px-1.5 py-0.5 rounded-full">128</span>
         </button>
-        <button class="tab-btn py-2.5 px-4 text-xs text-gray-500" onclick="switchTab('pending',this)">
+        <button id="list-tab-pending-btn" class="tab-btn py-2.5 px-4 text-xs text-gray-500" onclick="switchTab('pending',this)">
             🌱 평가 진행 중 <span class="ml-1 bg-hi-org text-white text-[9px] px-1.5 py-0.5 rounded-full">NEW</span>
         </button>
     </div>
 
     <div class="flex flex-1 overflow-hidden">
-        <!-- 목록 메인 -->
         <div class="flex-1 overflow-y-auto msb px-6 py-4">
-
-            <!-- 아카이빙 탭 -->
             <div id="tab-archived">
-                <!-- 상단 카드형 -->
-                <div class="text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-widest">👑 인증 &amp; 우수 자료</div>
-                <div id="list-featured-cards" class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5"></div>
-                <!-- 하단 테이블형 -->
                 <div class="text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-widest">📋 전체 아카이빙 목록</div>
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                     <table class="w-full text-xs">
@@ -1268,7 +1329,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 평가 진행 중 탭 -->
             <div id="tab-pending" class="hidden">
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-xs text-blue-700">
                     ℹ 현장의 피드백을 기다리는 신규 자료입니다. 유용한 자료에 <strong>'하이파이브!'</strong>를 눌러 아카이빙을 도와주세요! <span class="font-bold">(10회 이상 달성 시 자동 인증)</span>
@@ -1734,11 +1794,209 @@
         <button data-cat="이벤트" onclick="setFieldCat(this)" class="field-cat-btn whitespace-nowrap text-[11px] font-medium px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-hi-navy transition shrink-0">이벤트 자료 <span class="ml-1 text-[9px] font-normal text-gray-400">195건</span></button>
     </div>
 
-    <!-- ③ 스크롤 컨텐츠 -->
+    <!-- ③ 상태 탭: 전체보기 / 평가 진행 중 / 밸류체인 승급 완료 -->
+    <div class="shrink-0 bg-white border-b border-gray-100 px-6 flex items-center gap-0" style="background:#f8fafc">
+        <button id="field-status-all" onclick="setFieldStatus('all',this)" class="field-status-btn active text-[10.5px] font-bold px-4 py-2 border-b-2 border-hi-navy text-hi-navy transition">
+            📋 전체 보기
+        </button>
+        <button id="field-status-pending" onclick="setFieldStatus('pending',this)" class="field-status-btn text-[10.5px] font-medium px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-hi-navy transition">
+            🌱 평가 진행 중 <span class="ml-1 bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded-full font-bold">4건</span>
+        </button>
+        <button id="field-status-certified" onclick="setFieldStatus('certified',this)" class="field-status-btn text-[10.5px] font-medium px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-hi-navy transition">
+            ✅ 밸류체인 승급 완료 <span class="ml-1 bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded-full font-bold">12건</span>
+        </button>
+    </div>
+
+    <!-- ④ 스크롤 컨텐츠 -->
     <div class="flex-1 overflow-y-auto msb bg-gray-50">
         <div class="px-6 py-5 max-w-6xl">
 
-            <!-- ─── TOP 5 인기 자료 (항상 표시, 카테고리 필터 적용 안 됨) ─── -->
+            <!-- ══ 평가 진행 중 전용 섹션 (field-status=pending) ══ -->
+            <div id="field-pending-section" class="hidden mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-sm font-black text-gray-800">🌱 인증 대기 중인 자료</span>
+                    <span class="text-[10px] text-gray-400">하이파이브! 10개를 달성하면 자동으로 밸류체인 폴더로 승급됩니다</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+                    <!-- 인증 임박 (7/10) -->
+                    <div class="bg-white border-2 border-yellow-300 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-yellow-400 text-white text-[9px] font-black px-2.5 py-1 rounded-bl-xl">🔥 인증 임박!</div>
+                        <div class="flex gap-3 mt-2">
+                            <div class="w-10 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-[10px] font-black text-gray-600 shrink-0">XLSX</div>
+                            <div class="flex-1">
+                                <div class="font-bold text-xs text-gray-800 mb-1">MZ세대 고객 공략 디지털 영업 스크립트</div>
+                                <div class="text-[9px] text-gray-400 mb-2">이디지털 · 카카오·인스타 DM 기반 신규 유입 화법</div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                                        <div class="h-2 rounded-full bg-yellow-400 transition-all" style="width:70%"></div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-yellow-600 shrink-0">7 / 10</span>
+                                </div>
+                                <div class="text-[9px] text-yellow-600 font-bold">👍 인증까지 하이파이브! 3개 더!</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('하이파이브!를 남겼습니다. 감사합니다! 👍','✅')" class="mt-3 w-full text-[10px] font-bold py-1.5 rounded-lg border border-yellow-300 text-yellow-700 hover:bg-yellow-50 transition">
+                            👍 하이파이브! 남기기
+                        </button>
+                    </div>
+
+                    <!-- 평가 중 (6/10) -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="w-10 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-[10px] font-black text-blue-600 shrink-0">PDF</div>
+                            <div class="flex-1">
+                                <div class="font-bold text-xs text-gray-800 mb-1">실손 5세대 전환 권유 제안서 템플릿</div>
+                                <div class="text-[9px] text-gray-400 mb-2">박전환 · 기존 1~4세대 가입자 전환 상담 PPT</div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                                        <div class="h-2 rounded-full bg-blue-400 transition-all" style="width:60%"></div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-blue-600 shrink-0">6 / 10</span>
+                                </div>
+                                <div class="text-[9px] text-blue-600 font-bold">👍 인증까지 하이파이브! 4개 더!</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('하이파이브!를 남겼습니다. 감사합니다! 👍','✅')" class="mt-3 w-full text-[10px] font-bold py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                            👍 하이파이브! 남기기
+                        </button>
+                    </div>
+
+                    <!-- 평가 중 (3/10) -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="w-10 h-12 bg-violet-50 rounded-lg flex items-center justify-center text-[10px] font-black text-violet-600 shrink-0">XLSX</div>
+                            <div class="flex-1">
+                                <div class="font-bold text-xs text-gray-800 mb-1">월별 활동 관리 &amp; 성과 대시보드 엑셀</div>
+                                <div class="text-[9px] text-gray-400 mb-2">이현대 · 월간 영업 활동·성과 자동 정리 툴</div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                                        <div class="h-2 rounded-full bg-violet-400 transition-all" style="width:30%"></div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-violet-600 shrink-0">3 / 10</span>
+                                </div>
+                                <div class="text-[9px] text-gray-400">👍 인증까지 하이파이브! 7개 더</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('하이파이브!를 남겼습니다. 감사합니다! 👍','✅')" class="mt-3 w-full text-[10px] font-bold py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                            👍 하이파이브! 남기기
+                        </button>
+                    </div>
+
+                    <!-- 평가 중 (2/10) -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="w-10 h-12 bg-amber-50 rounded-lg flex items-center justify-center text-[10px] font-black text-amber-600 shrink-0">PDF</div>
+                            <div class="flex-1">
+                                <div class="font-bold text-xs text-gray-800 mb-1">법인 CEO 보험 접근 화법 &amp; 클로징 스크립트</div>
+                                <div class="text-[9px] text-gray-400 mb-2">최효율 · 법인 대표 대상 영업 화법 시나리오</div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
+                                        <div class="h-2 rounded-full bg-amber-400 transition-all" style="width:20%"></div>
+                                    </div>
+                                    <span class="text-[9px] font-black text-amber-600 shrink-0">2 / 10</span>
+                                </div>
+                                <div class="text-[9px] text-gray-400">👍 인증까지 하이파이브! 8개 더</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('하이파이브!를 남겼습니다. 감사합니다! 👍','✅')" class="mt-3 w-full text-[10px] font-bold py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+                            👍 하이파이브! 남기기
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══ 밸류체인 승급 완료 전용 섹션 (field-status=certified) ══ -->
+            <div id="field-certified-section" class="hidden mb-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-sm font-black text-gray-800">✅ 밸류체인으로 승급된 자료</span>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2.5 mb-4 text-[10.5px] text-blue-700">
+                    현장 노하우에서 인증을 받아 밸류체인 폴더로 이동된 자료입니다. 해당 폴더에서도 계속 확인할 수 있습니다.
+                </div>
+                <div class="space-y-2.5">
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center gap-4 shadow-sm hover:shadow-md transition cursor-pointer" onclick="showList('마케팅/영업','전속채널')">
+                        <div class="w-9 h-10 bg-red-50 rounded-lg flex items-center justify-center text-[9px] font-black text-red-600 shrink-0">PDF</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-xs text-gray-800 truncate">26년 개정 실손의료비 화법 스크립트 v3.2</div>
+                            <div class="text-[9px] text-gray-400">이현대 · ↓342 · ⭐89</div>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-blue-600 mb-0.5">
+                                <span>✅ 마케팅/영업</span><span class="text-gray-300">›</span><span>전속채널</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400">2026-04-28 승급</div>
+                        </div>
+                        <span class="text-gray-300 text-xs">›</span>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center gap-4 shadow-sm hover:shadow-md transition cursor-pointer" onclick="showList('마케팅/영업','전속채널')">
+                        <div class="w-9 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-[9px] font-black text-blue-600 shrink-0">DOC</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-xs text-gray-800 truncate">거절 극복 화법 모음집 (유형별 10선)</div>
+                            <div class="text-[9px] text-gray-400">박노하우 · ↓201 · ⭐52</div>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-blue-600 mb-0.5">
+                                <span>✅ 마케팅/영업</span><span class="text-gray-300">›</span><span>FC채널</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400">2026-04-20 승급</div>
+                        </div>
+                        <span class="text-gray-300 text-xs">›</span>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center gap-4 shadow-sm hover:shadow-md transition cursor-pointer" onclick="showList('IT/디지털','디지털혁신')">
+                        <div class="w-9 h-10 bg-emerald-50 rounded-lg flex items-center justify-center text-[9px] font-black text-emerald-600 shrink-0">XLSX</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-xs text-gray-800 truncate">보험료 자동계산 엑셀 매크로 v2.5</div>
+                            <div class="text-[9px] text-gray-400">최효율 · ↓198 · ⭐43</div>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-blue-600 mb-0.5">
+                                <span>✅ IT/디지털</span><span class="text-gray-300">›</span><span>디지털혁신</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400">2026-04-15 승급</div>
+                        </div>
+                        <span class="text-gray-300 text-xs">›</span>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center gap-4 shadow-sm hover:shadow-md transition cursor-pointer" onclick="showList('마케팅/영업','마케팅기획')">
+                        <div class="w-9 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-[9px] font-black text-indigo-600 shrink-0">PDF</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-xs text-gray-800 truncate">5세대 실손의료비 상품 교육자료 (영업용)</div>
+                            <div class="text-[9px] text-gray-400">장기계약관리부 · ↓687 · ⭐134</div>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-blue-600 mb-0.5">
+                                <span>✅ 마케팅/영업</span><span class="text-gray-300">›</span><span>마케팅기획</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400">2026-04-10 승급</div>
+                        </div>
+                        <span class="text-gray-300 text-xs">›</span>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center gap-4 shadow-sm hover:shadow-md transition cursor-pointer" onclick="showList('언더라이팅/심사','장기심사')">
+                        <div class="w-9 h-10 bg-red-50 rounded-lg flex items-center justify-center text-[9px] font-black text-red-600 shrink-0">PDF</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-xs text-gray-800 truncate">당뇨·고혈압 복합 위험 사례 심사 가이드</div>
+                            <div class="text-[9px] text-gray-400">의적심사팀 · ↓198 · ⭐34</div>
+                        </div>
+                        <div class="shrink-0 text-right">
+                            <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-blue-600 mb-0.5">
+                                <span>✅ 언더라이팅/심사</span><span class="text-gray-300">›</span><span>장기심사</span>
+                            </div>
+                            <div class="text-[9px] text-gray-400">2026-04-08 승급</div>
+                        </div>
+                        <span class="text-gray-300 text-xs">›</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══ 전체 보기 (field-status=all, 기존 콘텐츠) ══ -->
+            <div id="field-all-section">
             <div id="field-top5" class="mb-7">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="font-black text-sm text-hi-navy flex items-center gap-1.5">이번 주 인기 자료 TOP 5</h2>
@@ -2167,6 +2425,8 @@
                 </div>
             </div>
 
+            </div><!-- /field-all-section -->
+
         </div>
     </div>
 
@@ -2181,254 +2441,166 @@
 <!-- ================================================================ -->
 <div id="view-faq" class="view flex-col flex-1 overflow-hidden">
 
-    <!-- 페이지 헤더 (현장 노하우와 동일 스타일) -->
-    <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
+    <!-- ① 헤더 -->
+    <div class="shrink-0 text-white px-8 py-4 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
         <div class="absolute inset-0 overflow-hidden opacity-10">
             <svg width="100%" height="100%"><defs><pattern id="hb-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#hb-hex)"/></svg>
         </div>
         <div class="relative z-10">
-            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 통합 FAQ</div>
-            <h1 class="text-xl font-black mb-0.5">통합 FAQ — 현장 질문 &amp; 답변</h1>
-            <p class="text-xs" style="color:#93c5fd">현장의 질문을 본사 전문가가 답변하고, 우수 답변은 전사 지식으로 아카이빙됩니다. <span style="color:#fcd34d;font-weight:700">질문 등록 시 10 Hi-Point 차감</span></p>
+            <div class="text-[10px] font-bold mb-0.5" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 통합 FAQ</div>
+            <h1 class="text-lg font-black mb-0.5">통합 FAQ — 현장 질문 &amp; 답변</h1>
+            <p class="text-xs" style="color:#93c5fd">현장의 질문을 본사 전문가가 답변합니다. <span style="color:#fcd34d;font-weight:700">질문 등록 시 10 Hi-Point 차감 / 채택 시 반환</span></p>
         </div>
         <div class="relative z-10 flex gap-2 shrink-0">
             <button onclick="openAskModal()" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
-                🙋 현장 질문하기
-            </button>
-            <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">
-                하이드라이브 검색
+                🙋 질문 등록
             </button>
         </div>
     </div>
 
-    <!-- 대시보드 통계 -->
-    <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0 grid grid-cols-4 gap-3">
-        <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3 border border-gray-100">
-            <span class="text-2xl">📝</span>
-            <div>
-                <div class="text-[9px] text-gray-500 font-bold tracking-wide">누적 질문</div>
-                <div class="text-lg font-black text-gray-800">5,241<span class="text-xs font-normal text-gray-400 ml-1">건</span></div>
-            </div>
+    <!-- ② 통계 요약 (4칸 compact) -->
+    <div class="shrink-0 bg-white border-b border-gray-200 px-6 py-2.5 grid grid-cols-4 gap-3">
+        <div class="flex items-center gap-2.5 bg-gray-50 rounded-lg p-2.5 border border-gray-100">
+            <span class="text-xl">📝</span>
+            <div><div class="text-[9px] text-gray-500 font-bold">누적 질문</div><div class="text-sm font-black text-gray-800">5,241건</div></div>
         </div>
-        <div class="flex items-center gap-3 bg-blue-50 rounded-xl p-3 border border-blue-100">
-            <span class="text-2xl">✅</span>
-            <div>
-                <div class="text-[9px] text-blue-600 font-bold tracking-wide">답변 완료</div>
-                <div class="text-lg font-black text-blue-700">5,129<span class="text-xs font-normal text-blue-400 ml-1">건</span></div>
-            </div>
+        <div class="flex items-center gap-2.5 bg-blue-50 rounded-lg p-2.5 border border-blue-100">
+            <span class="text-xl">✅</span>
+            <div><div class="text-[9px] text-blue-600 font-bold">답변 완료</div><div class="text-sm font-black text-blue-700">5,095건</div></div>
         </div>
-        <div class="flex items-center gap-3 bg-red-50 rounded-xl p-3 border border-red-100">
-            <span class="text-2xl">🚨</span>
-            <div>
-                <div class="text-[9px] text-red-600 font-bold tracking-wide">답변 대기</div>
-                <div class="text-lg font-black text-red-700">112<span class="text-xs font-normal text-red-400 ml-1">건</span></div>
-            </div>
+        <div class="flex items-center gap-2.5 bg-yellow-50 rounded-lg p-2.5 border border-yellow-100">
+            <span class="text-xl">💬</span>
+            <div><div class="text-[9px] text-yellow-700 font-bold">답변 중</div><div class="text-sm font-black text-yellow-700">34건</div></div>
         </div>
-        <div class="flex items-center gap-3 bg-orange-50 rounded-xl p-3 border border-orange-100">
-            <span class="text-2xl">👑</span>
-            <div>
-                <div class="text-[9px] text-orange-600 font-bold tracking-wide">아카이브 (채택)</div>
-                <div class="text-lg font-black text-orange-700">3,492<span class="text-xs font-normal text-orange-400 ml-1">건</span></div>
-            </div>
+        <div class="flex items-center gap-2.5 bg-red-50 rounded-lg p-2.5 border border-red-100">
+            <span class="text-xl">🚨</span>
+            <div><div class="text-[9px] text-red-600 font-bold">답변 대기</div><div class="text-sm font-black text-red-700">112건</div></div>
         </div>
     </div>
 
-    <!-- 탭 + 검색 -->
-    <div class="bg-white border-b border-gray-200 px-6 pt-3 flex items-end justify-between shrink-0">
-        <div class="flex gap-5">
-            <button id="tab-solved" onclick="switchBridgeTab('solved')" class="bridge-tab active pb-2.5 text-sm text-gray-500 hover:text-gray-800 transition">
-                ✅ 답변 완료 <span class="ml-1 bg-blue-100 text-blue-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">5,129</span>
-            </button>
-            <button id="tab-inprogress" onclick="switchBridgeTab('inprogress')" class="bridge-tab pb-2.5 text-sm text-gray-500 hover:text-gray-800 transition">
-                💬 답변 중 <span class="ml-1 bg-yellow-100 text-yellow-700 text-[10px] px-1.5 py-0.5 rounded-full font-bold">34</span>
-            </button>
-            <button id="tab-wait" onclick="switchBridgeTab('wait')" class="bridge-tab pb-2.5 text-sm text-gray-500 hover:text-gray-800 transition">
-                🚨 답변 대기 <span class="ml-1 bg-red-100 text-red-600 text-[10px] px-1.5 py-0.5 rounded-full font-bold">112</span>
-            </button>
-        </div>
-        <div class="flex items-center gap-2 pb-2.5">
-            <div class="relative">
-                <input type="text" placeholder="질문 검색..." class="border border-gray-200 rounded-lg pl-7 pr-3 py-1.5 text-xs outline-none focus:border-hi-navy bg-gray-50 w-44">
-                <span class="absolute left-2.5 top-2 text-gray-400 text-[10px]">🔍</span>
+    <!-- ③ 복합 필터 바 -->
+    <div class="shrink-0 bg-white border-b border-gray-200 px-6 py-3 space-y-2">
+        <div class="flex items-center gap-2 flex-wrap">
+            <!-- 카테고리 -->
+            <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">카테고리</label>
+                <select id="faq-filter-cat" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-600 outline-none bg-white min-w-[130px]">
+                    <option value="">전체</option>
+                    <optgroup label="주요 밸류체인">
+                        <option>상품개발</option><option>마케팅/영업</option><option>언더라이팅/심사</option>
+                        <option>계약관리/보전</option><option>보상/손해사정</option><option>고객서비스</option>
+                    </optgroup>
+                    <optgroup label="지원 밸류체인">
+                        <option>경영기획/전략</option><option>결산/계리/리스크관리</option><option>IT/디지털</option>
+                        <option>자산운용</option><option>인사/조직관리</option><option>대외/홍보</option>
+                        <option>감사/법무</option><option>총무</option>
+                    </optgroup>
+                </select>
             </div>
-            <select class="border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-500 outline-none bg-white">
-                <option>전체 카테고리</option><option>영업/마케팅</option><option>보상/손해사정</option><option>계약관리</option>
-            </select>
+            <!-- 답변 상태 -->
+            <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">답변 상태</label>
+                <select id="faq-filter-status" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-600 outline-none bg-white">
+                    <option value="">전체</option>
+                    <option value="done">✅ 답변 완료</option>
+                    <option value="ing">💬 답변 중</option>
+                    <option value="wait">🚨 답변 대기</option>
+                </select>
+            </div>
+            <!-- 등록부서 -->
+            <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">등록부서</label>
+                <select id="faq-filter-dept" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-600 outline-none bg-white min-w-[120px]">
+                    <option value="">전체</option>
+                    <option>장기계약관리부</option><option>자동차보상팀</option><option>상품개발팀</option>
+                    <option>언더라이팅팀</option><option>영업기획팀</option><option>고객서비스팀</option>
+                </select>
+            </div>
+            <!-- 기간 -->
+            <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">등록일</label>
+                <input type="text" id="faq-date-from" placeholder="2023-05-12" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs w-24 outline-none">
+                <span class="text-gray-400 text-xs">~</span>
+                <input type="text" id="faq-date-to" placeholder="2026-05-12" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs w-24 outline-none">
+                <button onclick="setFaqDateRange(3)" class="text-[9.5px] font-bold px-2 py-1 rounded border border-gray-200 hover:border-hi-navy hover:text-hi-navy text-gray-500 transition">3년</button>
+                <button onclick="setFaqDateRange(1)" class="text-[9.5px] font-bold px-2 py-1 rounded border border-gray-200 hover:border-hi-navy hover:text-hi-navy text-gray-500 transition">1년</button>
+                <button onclick="setFaqDateRange(0)" class="text-[9.5px] font-bold px-2 py-1 rounded border border-gray-200 hover:border-hi-navy hover:text-hi-navy text-gray-500 transition">당월</button>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <!-- 질문/답변 텍스트 검색 -->
+            <div class="flex items-center gap-1.5 flex-1">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">질문/답변</label>
+                <input type="text" id="faq-filter-q" placeholder="키워드를 입력하세요" class="border border-gray-200 rounded-lg px-3 py-1.5 text-xs outline-none flex-1 max-w-xs">
+            </div>
+            <!-- 등록자 -->
+            <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-gray-500 shrink-0">등록자</label>
+                <input type="text" id="faq-filter-author" placeholder="이름" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs w-24 outline-none">
+            </div>
+            <button onclick="faqSearch()" class="font-black text-xs px-5 py-1.5 rounded-lg text-white transition shadow" style="background:#00205b">
+                조회
+            </button>
+            <button onclick="faqReset()" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition">
+                초기화
+            </button>
         </div>
     </div>
 
-    <!-- Q&A 리스트 -->
-    <div class="flex-1 overflow-y-auto msb px-6 py-4 bg-gray-50">
-
-        <!-- 답변 완료 탭 -->
-        <div id="list-solved" class="space-y-3 max-w-4xl mx-auto">
-
-            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-archived text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">👑 채택 아카이빙</span>
-                        <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] px-2 py-0.5 rounded-full font-bold">영업/마케팅</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">2026-05-06</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 5세대 실손 전환 상담 시 병력 고지 기간은 1년인가요, 5년인가요?</h3>
-                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
-                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 채택 답변 (장기계약관리부)</div>
-                    <p class="text-xs text-gray-600 leading-relaxed">5세대 실손 전환 시 고지 의무 기간은 <strong>직전 1년</strong>이 맞습니다. 전산상 5년이 표시되는 것은 시스템 UI 오류로 현재 개선 요청 중이며, 고객 안내는 매뉴얼 기준인 1년으로 하시면 됩니다.</p>
-                </div>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-pt flex items-center justify-center text-white font-bold text-[9px]">김</div>
-                        <span>김현장 매니저 (강남지점)</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span>조회 342</span>
-                        <span class="text-orange-500 font-bold">❤ 하이파이브! 89</span>
-                    </div>
-                </div>
+    <!-- ④ 테이블 목록 + 인라인 Q&A -->
+    <div class="flex-1 overflow-y-auto msb bg-gray-50">
+        <div class="px-6 py-4">
+            <!-- 건수 + 정렬 -->
+            <div class="flex items-center justify-between mb-2">
+                <span id="faq-count-label" class="text-[10px] text-gray-500 font-bold">전체 <span class="text-hi-navy">5,241</span>건</span>
+                <select class="text-xs border border-gray-200 rounded-lg px-2 py-1 text-gray-600 outline-none bg-white">
+                    <option>최신 등록 순</option><option>조회 많은 순</option><option>하이파이브! 많은 순</option>
+                </select>
             </div>
 
-            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-archived text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">👑 채택 아카이빙</span>
-                        <span class="bg-green-50 text-green-700 border border-green-100 text-[9px] px-2 py-0.5 rounded-full font-bold">보상/손해사정</span>
+            <!-- 테이블 -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-20">상태</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-24">카테고리</th>
+                            <th class="text-left px-4 py-2.5 text-gray-500 font-bold">질문</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-24 hidden md:table-cell">등록부서</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-20 hidden md:table-cell">등록자</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-20">등록일</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-14 hidden lg:table-cell">조회</th>
+                            <th class="text-center px-3 py-2.5 text-gray-500 font-bold w-14 hidden lg:table-cell">❤</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faq-tbody">
+                        <!-- JS render -->
+                    </tbody>
+                </table>
+                <!-- 페이지네이션 -->
+                <div class="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+                    <div class="flex items-center gap-1">
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-400 hover:border-hi-navy text-xs">&lt;&lt;</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-400 hover:border-hi-navy text-xs">&lt;</button>
+                        <button class="w-7 h-7 rounded bg-hi-navy text-white text-xs font-bold">1</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-500 hover:border-hi-navy text-xs">2</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-500 hover:border-hi-navy text-xs">3</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-500 hover:border-hi-navy text-xs">4</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-500 hover:border-hi-navy text-xs">5</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-400 hover:border-hi-navy text-xs">&gt;</button>
+                        <button class="w-7 h-7 rounded border border-gray-200 text-gray-400 hover:border-hi-navy text-xs">&gt;&gt;</button>
                     </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">2026-05-02</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 자동차 사고 현장에서 쌍방과실인 경우 현장출동 기준이 어떻게 되나요?</h3>
-                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
-                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 채택 답변 (자동차보상팀)</div>
-                    <p class="text-xs text-gray-600 leading-relaxed">쌍방과실의 경우 과실 비율이 불명확하거나 당사자 간 합의가 어려운 상황이라면 출동 원칙입니다. 현장에서 과실 비율이 대략 확인되고 당사자 합의가 가능하다면 비출동 처리도 가능합니다.</p>
-                </div>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[9px]">박</div>
-                        <span>박현장 대리 (부산지점)</span>
+                    <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                        <span>건수 <strong class="text-gray-700">5,241</strong></span>
+                        <span>페이지 <input type="text" value="1" class="w-8 border border-gray-200 rounded text-center text-xs py-0.5 outline-none"> / 262</span>
+                        <button class="px-2 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">이동</button>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span>조회 187</span>
-                        <span class="text-orange-500 font-bold">❤ 하이파이브! 54</span>
-                    </div>
-                </div>
-            </div>
-
-            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-gray-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-done text-[9px] font-bold px-2 py-0.5 rounded-md">✅ 답변 완료</span>
-                        <span class="bg-purple-50 text-purple-700 border border-purple-100 text-[9px] px-2 py-0.5 rounded-full font-bold">계약관리</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">2026-04-28</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 청약 철회 후 재청약 시 동일 보험료 적용이 가능한가요?</h3>
-                <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-3">
-                    <div class="text-[10px] font-black text-blue-700 mb-1">✅ 답변 완료 (장기계약관리부)</div>
-                    <p class="text-xs text-gray-600 leading-relaxed">청약 철회 후 재청약은 신규 청약과 동일하게 처리되므로, 재청약 시점의 나이와 위험률이 적용됩니다. 동일 보험료 보장은 어렵습니다.</p>
-                </div>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-[9px]">이</div>
-                        <span>이현장 주임 (서울지점)</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span>조회 124</span>
-                        <span class="text-orange-500 font-bold">❤ 하이파이브! 31</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 답변 중 탭 -->
-        <div id="list-inprogress" class="hidden space-y-3 max-w-4xl mx-auto">
-            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border-2 border-yellow-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1" style="background:#fefce8;color:#92400e;border:1px solid #fde68a">💬 답변 중</span>
-                        <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] px-2 py-0.5 rounded-full font-bold">영업/마케팅</span>
-                        <span class="bg-gray-50 text-gray-500 border border-gray-100 text-[9px] px-2 py-0.5 rounded-full">@상품개발팀 배정</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">1시간 전 등록</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 5세대 실손 전환 고객에게 과거 병력 고지 동의서 별도 수취해야 하나요?</h3>
-                <p class="text-xs text-gray-500 mb-3">전환 상품의 청약서 내에 고지 동의가 포함되어 있는지 확인 부탁드립니다.</p>
-                <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-3">
-                    <div class="text-[10px] font-black text-yellow-700 mb-1">💬 답변 작성 중 (장기계약관리부)</div>
-                    <p class="text-[10px] text-gray-400 italic">담당자가 답변을 작성 중입니다. 잠시만 기다려주세요.</p>
-                </div>
-                <div class="flex items-center justify-between text-[10px] text-gray-400 mt-3">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-green-400 flex items-center justify-center text-white font-bold text-[9px]">이</div>
-                        <span>이영업 주임 (광주지점)</span>
-                    </div>
-                    <span class="text-yellow-600 font-bold">예상 답변 시간: 1시간 이내</span>
-                </div>
-            </div>
-            <div onclick="openDetailModal('solved')" class="kcard bg-white rounded-xl border border-yellow-100 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-md" style="background:#fefce8;color:#92400e;border:1px solid #fde68a">💬 답변 중</span>
-                        <span class="bg-green-50 text-green-700 border border-green-100 text-[9px] px-2 py-0.5 rounded-full font-bold">보상/손해사정</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">3시간 전 등록</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 전기차 리스 차량 사고 시 렌트비 청구 기준이 어떻게 되나요?</h3>
-                <p class="text-xs text-gray-500 mb-3">리스 계약 특약 유무에 따라 기준이 다른지 확인이 필요합니다.</p>
-                <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-3">
-                    <div class="text-[10px] font-black text-yellow-700 mb-1">💬 답변 작성 중 (자동차보상팀)</div>
-                    <p class="text-[10px] text-gray-400 italic">담당자가 답변을 작성 중입니다.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 답변 대기 탭 -->
-        <div id="list-wait" class="hidden space-y-3 max-w-4xl mx-auto">
-
-            <div onclick="openDetailModal('unsolved')" class="kcard bg-white rounded-xl border-2 border-red-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-wait text-[9px] font-bold px-2 py-1 rounded-md flex items-center gap-1 animate-pulse">🚨 긴급 — 답변 대기</span>
-                        <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[9px] px-2 py-0.5 rounded-full font-bold">@장기계약관리부 지정</span>
-                    </div>
-                    <span class="text-[10px] text-red-500 font-bold shrink-0">15분 전 등록</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 5세대 실손 전환 시, 과거 병력 고지 기간 문의 (고객 대기 중)</h3>
-                <p class="text-xs text-gray-500 mb-3 leading-relaxed">매뉴얼에는 직전 1년이라 되어있는데 전산에는 5년이 뜨고 있어 고객 안내에 혼선이 있습니다. 빠른 확인 부탁드립니다.</p>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-pt flex items-center justify-center text-white font-bold text-[9px]">김</div>
-                        <span>김현장 매니저 (강남지점)</span>
-                    </div>
-                    <button onclick="event.stopPropagation();openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">
-                        ☁️ 관련 문서 하이드라이브 검색
-                    </button>
-                </div>
-            </div>
-
-            <div onclick="openDetailModal('unsolved')" class="kcard bg-white rounded-xl border border-orange-200 p-5 shadow-sm cursor-pointer">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-wait text-[9px] font-bold px-2 py-0.5 rounded-md">🚨 답변 대기</span>
-                        <span class="bg-green-50 text-green-700 border border-green-100 text-[9px] px-2 py-0.5 rounded-full font-bold">보상/손해사정</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 shrink-0">2시간 전 등록</span>
-                </div>
-                <h3 class="font-black text-sm text-gray-800 mb-2">Q. 전기차 배터리 손상 보험금 산정 기준이 어떻게 되나요?</h3>
-                <p class="text-xs text-gray-500 mb-3 leading-relaxed">전기차 사고 처리 중인데 고전압 배터리 손상에 대한 공식 산정 기준이 불명확합니다. 관련 내규나 기준이 있으면 알려주세요.</p>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-[9px]">최</div>
-                        <span>최현장 과장 (대전지점)</span>
-                    </div>
-                    <button onclick="event.stopPropagation();openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">
-                        ☁️ 관련 문서 하이드라이브 검색
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Q&A 질문 등록 모달 -->
+    <!-- ⑤ 질문 등록 모달 -->
     <div id="modal-ask" class="modal-bg" onclick="if(event.target===this)closeAskModal()">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col">
             <div class="text-white p-5 rounded-t-2xl flex justify-between items-center shrink-0" style="background:#00205b">
@@ -2480,7 +2652,7 @@
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-gray-700 mb-1 block">상세 내용 * <span class="text-[9px] text-red-400 font-normal">고객 정보(주민번호 등)는 절대 포함하지 마세요.</span></label>
-                    <textarea rows="5" placeholder="- 현상/상황:&#10;- 궁금한 점:&#10;- 급한 정도:" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
+                    <textarea rows="4" placeholder="- 현상/상황:&#10;- 궁금한 점:&#10;- 급한 정도:" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
                 </div>
                 <label class="flex items-center gap-2 bg-red-50 border border-red-100 p-2.5 rounded-lg cursor-pointer">
                     <input type="checkbox" class="w-4 h-4 accent-red-500">
@@ -2489,27 +2661,8 @@
             </div>
             <div class="p-4 border-t border-gray-200 bg-gray-50 flex gap-2 rounded-b-2xl shrink-0">
                 <button onclick="closeAskModal()" class="flex-1 bg-white border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
-                <button onclick="submitAsk()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#00205b">질문 등록하기</button>
+                <button onclick="submitAsk()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#00205b">질문 등록하기 (-10 Hi-Point)</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Q&A 상세 모달 -->
-    <div id="modal-qa-detail" class="modal-bg" onclick="if(event.target===this)closeQADetail()">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] flex flex-col">
-            <div class="p-5 pb-4 border-b border-gray-100 shrink-0">
-                <div class="flex justify-between items-start mb-3">
-                    <div id="qa-badge-area" class="flex items-center gap-2 flex-wrap"></div>
-                    <button onclick="closeQADetail()" class="flex items-center justify-center text-gray-500 hover:text-gray-800 rounded-lg transition" style="width:28px;height:28px;font-size:16px;border:1px solid #e5e7eb">✕</button>
-                </div>
-                <h2 id="qa-title" class="text-base font-black text-gray-900 mb-3"></h2>
-                <div id="qa-content" class="bg-gray-50 rounded-xl p-4 text-xs text-gray-700 leading-relaxed border border-gray-100 whitespace-pre-line"></div>
-                <div class="flex items-center justify-between text-[10px] text-gray-400 mt-3">
-                    <div id="qa-author" class="flex items-center gap-1.5"></div>
-                    <button onclick="openHidriveSearchModal()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1" style="color:#0ea5e9;border-color:#bae6fd;background:#f0f9ff">하이드라이브 검색</button>
-                </div>
-            </div>
-            <div id="qa-answer-section" class="p-5 overflow-y-auto msb flex-1 bg-gray-50 space-y-3"></div>
         </div>
     </div>
 
@@ -2834,6 +2987,7 @@
     <div class="shrink-0 bg-white border-b border-gray-200 px-6 flex">
         <button class="admin-tab active py-3 px-5 text-sm" onclick="switchAdminTab('adm-dashboard', this)">대시보드</button>
         <button class="admin-tab py-3 px-5 text-sm" onclick="switchAdminTab('adm-settings', this)">Hi-Point 설정</button>
+        <button class="admin-tab py-3 px-5 text-sm" onclick="switchAdminTab('adm-subcat', this)">폴더 소분류 관리</button>
     </div>
 
     <!-- 스크롤 영역 -->
@@ -3224,6 +3378,73 @@
                 </div>
 
             </div>
+        </div>
+
+        <!-- ===== 탭 3: 폴더 소분류 관리 ===== -->
+        <div id="tab-adm-subcat" class="admin-panel hidden p-6">
+
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h2 class="font-black text-base text-gray-800">폴더 소분류 관리</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">밸류체인 하위 폴더별 소분류 항목을 관리합니다. 추후 폴더별 담당 부서 관리자에게 권한 위임 예정.</p>
+                </div>
+                <button onclick="showToast('소분류 저장되었습니다.','✅')" class="text-xs font-bold px-4 py-2 rounded-lg text-white transition" style="background:#00205b">
+                    변경사항 저장
+                </button>
+            </div>
+
+            <!-- 폴더 선택 -->
+            <div class="flex items-center gap-3 mb-5">
+                <label class="text-xs font-bold text-gray-600 shrink-0">폴더 선택</label>
+                <select id="adm-subcat-folder" onchange="loadAdminSubcat(this.value)" class="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none bg-white min-w-[200px]">
+                    <optgroup label="주요 밸류체인 — 보상/손해사정">
+                        <option value="장기보상">보상/손해사정 &gt; 장기보상</option>
+                        <option value="자동차보상">보상/손해사정 &gt; 자동차보상</option>
+                        <option value="일반보상">보상/손해사정 &gt; 일반보상</option>
+                    </optgroup>
+                    <optgroup label="※ 기타 폴더 (향후 추가)">
+                        <option disabled>상품개발 &gt; 장기보험 (준비 중)</option>
+                        <option disabled>마케팅/영업 &gt; 전속채널 (준비 중)</option>
+                    </optgroup>
+                </select>
+                <span class="text-[10px] text-gray-400">· 변경사항은 즉시 해당 폴더에 반영됩니다</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <!-- 소분류 목록 -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black text-gray-700">소분류 항목</span>
+                        <button onclick="addAdminSubcat()" class="text-[10px] font-bold px-2.5 py-1 rounded border border-hi-navy text-hi-navy hover:bg-blue-50 transition">+ 항목 추가</button>
+                    </div>
+                    <div id="adm-subcat-list" class="space-y-2">
+                        <!-- JS 렌더 -->
+                    </div>
+                </div>
+                <!-- 해시태그 목록 -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-black text-gray-700">해시태그 (검색 태그)</span>
+                        <button onclick="addAdminTag()" class="text-[10px] font-bold px-2.5 py-1 rounded border border-hi-org text-hi-org hover:bg-orange-50 transition">+ 태그 추가</button>
+                    </div>
+                    <div id="adm-tag-list" class="flex flex-wrap gap-2">
+                        <!-- JS 렌더 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 담당 부서 지정 (향후 확장 예고) -->
+            <div class="mt-6 pt-5 border-t border-gray-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xs font-black text-gray-700">담당 부서 지정</span>
+                    <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-bold">향후 권한 위임 시 활성화</span>
+                </div>
+                <div class="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-4 text-center text-xs text-gray-400">
+                    담당 부서 관리자에게 소분류 편집 권한을 위임하는 기능입니다.<br>
+                    해당 기능은 다음 개발 단계에서 구현 예정입니다.
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -4333,6 +4554,358 @@ function top5Prev() {
     renderTop5();
 }
 
+// ── 하위 카테고리 전용 데이터 (파일럿: 보상/손해사정) ──────────────
+const SUB_CAT_DATA = {
+  '보상/손해사정': {
+    '장기보상': {
+      cat: '보상/손해사정', sub: '장기보상',
+      dept: '장기보상부', contact: { tel: '02-2020-7800', email: 'lt.claim@hi.co.kr' },
+      desc: '실손·상해·질병 보험금 심사 기준, 비급여 지급 가이드, 판례 자료를 공유합니다',
+      systems: [{ name: '장기 포탈', icon: '🖥️' }],
+      chips: ['전체','심사기준','지급가이드','Q&A','양식','판례'],
+      subcats: ['전체','의료비 보험금','장해 보험금','사망 보험금','구상·환수','심사 Q&A'],
+      allTags: ['#비급여','#5세대실손','#장해판정','#의료비','#도수치료','#사망보험금','#구상권','#비급여심사','#실손청구'],
+      top5: [
+        { rank:1, type:'PDF', title:'실손보험 비급여 보험금 심사 기준 가이드 (5세대)', dl:287, hp:54 },
+        { rank:2, type:'PDF', title:'골절·인대 손상 보험금 산정 Q&A 25선', dl:312, hp:71 },
+        { rank:3, type:'본사', title:'[본사] 장기보험 장해 등급 판정 기준 v3.1', dl:267, hp:0 },
+        { rank:4, type:'PDF', title:'암보험 청구 서류 체크리스트 (2026)', dl:198, hp:43 },
+        { rank:5, type:'XLS', title:'장기보험 보험금 산정 자동화 엑셀 모델 v2.1', dl:156, hp:38 }
+      ],
+      contributors: [
+        { name:'김보상', rank:'대리', dept:'장기보상1팀', cnt:18, hi:156, avatar:'김' },
+        { name:'이장기', rank:'과장', dept:'장기보상2팀', cnt:14, hi:112, avatar:'이' },
+        { name:'박심사', rank:'주임', dept:'의료심사팀', cnt:11, hi:89,  avatar:'박' }
+      ],
+      featured: [
+        { type:'심사기준', title:'실손보험 비급여 보험금 심사 기준 가이드 (5세대)', desc:'5세대 실손 적용 비급여 항목별 지급 기준 총정리 — 도수치료·주사료·MRI 등', author:'장기보상팀', dl:287, hp:54, icon:'📄', ic:'#2563eb' },
+        { type:'Q&A',     title:'골절·인대 손상 보험금 산정 Q&A 25선', desc:'판단이 어려운 상해 보험금 산정 케이스 25개 상세 정리', author:'김보상', dl:312, hp:71, icon:'📄', ic:'#ef4444' }
+      ],
+      rows: [
+        { hq:false, cert:true,  icon:'📄', ic:'#2563eb', title:'실손보험 비급여 심사 기준 가이드 (5세대)', sub:'도수치료·주사료·MRI 항목별 지급 기준 총정리', badge:'v2.0', author:'장기보상팀', hp:'❤ 54', dl:287, date:'2026-05-03', tags:['#비급여','#5세대실손','#의료비'], preview:'5세대 실손의료비 기준 비급여 심사 핵심 변경사항. 도수치료 연 50회→30회, 주사료 기준 강화, MRI 급여 전환 항목 정리.', subcatKey:'의료비 보험금' },
+        { hq:false, cert:true,  icon:'📄', ic:'#ef4444', title:'골절·인대 손상 보험금 산정 Q&A 25선',  sub:'현장에서 자주 발생하는 상해 산정 케이스 정리', badge:'',     author:'김보상',   hp:'❤ 71', dl:312, date:'2026-05-02', tags:['#의료비','#장해판정'], preview:'골절·인대 손상 시 장해 등급과 의료비 산정 기준 25가지 케이스. 수술 여부·입원일수별 지급 기준 포함.', subcatKey:'심사 Q&A' },
+        { hq:true,  cert:false, icon:'📄', ic:'#ef4444', title:'[본사] 장기보험 장해 등급 판정 기준', sub:'의학자문 결과 반영 2026년 최신 판정 기준', badge:'v3.1', author:'장기보상팀', hp:'-', dl:267, date:'2026-04-18', tags:['#장해판정','#사망보험금'], preview:'2026년 개정 장해 등급 판정 기준 전문. 신체 부위별 장해 등급표 및 의학자문 기준 포함.', subcatKey:'장해 보험금' },
+        { hq:false, cert:true,  icon:'📄', ic:'#16a34a', title:'암보험 청구 서류 체크리스트 (2026)',  sub:'진단·수술·입원·통원 각 단계별 필요 서류 목록', badge:'',     author:'이장기',   hp:'❤ 43', dl:198, date:'2026-04-10', tags:['#의료비','#암보험'], preview:'암 진단·수술·입원·통원 4단계별 필요 서류 완전 목록. 병원별 서류 발급 안내 포함.', subcatKey:'의료비 보험금' },
+        { hq:false, cert:true,  icon:'📊', ic:'#16a34a', title:'장기보험 보험금 산정 자동화 엑셀 모델', sub:'입력값에 따라 지급 가능 금액을 자동 계산하는 엑셀 툴', badge:'v2.1', author:'박심사', hp:'❤ 38', dl:156, date:'2026-04-05', tags:['#의료비','#장해판정','#자동화'], preview:'입원일수·수술여부·진단코드 입력 시 지급 가능 보험금 자동 산출. IFRS17 기준 반영 최신 버전.', subcatKey:'의료비 보험금' }
+      ],
+      pending: [
+        { type:'판례', title:'백내장 수술 실손 지급 기준 논란 정리', desc:'법원 판결과 현행 기준의 차이 — 현장 대응 방향 제안', prog:7, total:10 },
+        { type:'심사기준', title:'5세대 실손 도수치료 지급 한도 적용 사례 공유', desc:'한도 초과 케이스 10개 실사례와 처리 방식 정리', prog:4, total:10 }
+      ]
+    },
+    '자동차보상': {
+      cat: '보상/손해사정', sub: '자동차보상',
+      dept: '자동차보상팀', contact: { tel: '02-2020-7700', email: 'auto.claim@hi.co.kr' },
+      desc: '자동차 사고 현장출동, 보험금 산정, 전기차 처리, 보험사기 감지 실무 자료',
+      systems: [{ name: '자동차 보상포탈', icon: '🖥️' }],
+      chips: ['전체','심사기준','현장출동','수리비기준','렌트/대차','판례'],
+      subcats: ['전체','현장출동 처리','수리비 산정','렌트/대차','보험사기','전기차 사고'],
+      allTags: ['#현장출동','#전기차','#보험사기','#쌍방과실','#렌트비','#수리비','#대물','#대인'],
+      top5: [
+        { rank:1, type:'본사', title:'[본사] 자동차보험 보험금 지급 기준 개정 (2026.4)', dl:534, hp:0  },
+        { rank:2, type:'PDF', title:'보험사기 의심 패턴 감지 체크리스트', dl:178, hp:48 },
+        { rank:3, type:'PDF', title:'전기차 고전압 배터리 손상 보험금 산정 기준', dl:167, hp:41 },
+        { rank:4, type:'PDF', title:'쌍방과실 현장출동 판단 가이드 (사례 포함)', dl:145, hp:35 },
+        { rank:5, type:'XLS', title:'렌트/대차 비용 산정 자동화 계산기 v1.3', dl:132, hp:29 }
+      ],
+      contributors: [
+        { name:'최현장', rank:'과장', dept:'자동차보상1팀', cnt:22, hi:198, avatar:'최' },
+        { name:'강출동', rank:'대리', dept:'현장출동팀',   cnt:16, hi:134, avatar:'강' },
+        { name:'윤조사', rank:'주임', dept:'보상조사팀',   cnt:12, hi:97,  avatar:'윤' }
+      ],
+      featured: [
+        { type:'현장출동', title:'자동차사고 현장 출동 가이드 및 체크리스트', desc:'사고 현장 확인부터 보험금 산정까지 단계별 처리 절차 완전 정리', author:'자동차보상팀', dl:421, hp:67, icon:'📄', ic:'#ef4444' },
+        { type:'심사기준', title:'전기차 고전압 배터리 손상 보험금 산정 기준', desc:'배터리 전체/부분 손상, 임시수리 포함 산정 기준 및 사례', author:'최현장', dl:167, hp:41, icon:'📄', ic:'#2563eb' }
+      ],
+      rows: [
+        { hq:true,  cert:false, icon:'📄', ic:'#ef4444', title:'[본사] 자동차보험 보험금 지급 기준 개정 (2026.4)', sub:'수리비·대인 배상 기준 주요 변경 사항 총정리', badge:'v8.2', author:'자동차보상팀', hp:'-',    dl:534, date:'2026-04-30' },
+        { hq:false, cert:true,  icon:'📄', ic:'#ef4444', title:'보험사기 의심 패턴 감지 체크리스트',         sub:'보상 접수 단계에서 조기 감지 가능한 이상 패턴 목록', badge:'',     author:'윤조사',     hp:'❤ 48', dl:178, date:'2026-04-20' },
+        { hq:false, cert:true,  icon:'📄', ic:'#2563eb', title:'전기차 고전압 배터리 손상 보험금 산정 기준', sub:'배터리 전체/부분 손상, 임시수리 포함 산정 기준',    badge:'v1.1', author:'최현장',     hp:'❤ 41', dl:167, date:'2026-04-15' },
+        { hq:false, cert:true,  icon:'📄', ic:'#ef4444', title:'쌍방과실 현장출동 판단 가이드',             sub:'과실 비율별 출동 기준 및 실사례 20건 수록',         badge:'',     author:'강출동',     hp:'❤ 35', dl:145, date:'2026-04-08' },
+        { hq:false, cert:true,  icon:'📊', ic:'#16a34a', title:'렌트/대차 비용 산정 자동화 계산기 v1.3',   sub:'차종·수리일수 입력 시 렌트 지급 한도 자동 계산',    badge:'v1.3', author:'렌트담당팀', hp:'❤ 29', dl:132, date:'2026-04-01' }
+      ],
+      pending: [
+        { type:'판례', title:'킥보드 사고 자동차보험 적용 범위 논의', desc:'전동킥보드 사고 시 자동차보험 vs 일상배상 적용 기준 정리', prog:6, total:10 },
+        { type:'수리비기준', title:'외제차 수리비 적정성 심사 케이스 공유', desc:'고가 차량 수리 견적 검증 방법과 적정 지급 기준 논의', prog:3, total:10 }
+      ]
+    },
+    '일반보상': {
+      cat: '보상/손해사정', sub: '일반보상',
+      dept: '일반보상팀', contact: { tel: '02-2020-7750', email: 'general.claim@hi.co.kr' },
+      desc: '화재·배상책임·기업성 보험 손해사정, 현장조사 실무, 구상권 행사 자료',
+      systems: [{ name: '영업 포탈', icon: '🖥️' }],
+      chips: ['전체','심사기준','현장조사','약관','양식','판례'],
+      subcats: ['전체','화재 보험금','배상책임','기업성 보험','현장조사 실무','구상·환수'],
+      allTags: ['#화재손해','#배상책임','#현장조사','#구상권','#약관면책','#자연재해','#기업보험'],
+      top5: [
+        { rank:1, type:'PDF', title:'화재보험 손해 산정 기준 및 실무 가이드', dl:234, hp:52 },
+        { rank:2, type:'본사', title:'[본사] 배상책임보험 구상권 행사 절차서', dl:189, hp:0  },
+        { rank:3, type:'PDF', title:'기업성 보험 현장조사 체크리스트 (2026)', dl:167, hp:38 },
+        { rank:4, type:'PDF', title:'자연재해 보험금 산정 사례 모음 (침수·낙뢰)', dl:145, hp:31 },
+        { rank:5, type:'XLS', title:'건물 손해 산정 자동화 엑셀 모델 v1.5', dl:121, hp:24 }
+      ],
+      contributors: [
+        { name:'한일반', rank:'과장', dept:'일반보상1팀', cnt:19, hi:167, avatar:'한' },
+        { name:'임화재', rank:'대리', dept:'화재보상팀',  cnt:13, hi:108, avatar:'임' },
+        { name:'조구상', rank:'주임', dept:'구상/환수팀', cnt:10, hi:84,  avatar:'조' }
+      ],
+      featured: [
+        { type:'심사기준', title:'화재보험 손해 산정 기준 및 실무 가이드', desc:'건물·집기 손해 산정부터 잔존물 처리까지 단계별 가이드', author:'한일반', dl:234, hp:52, icon:'📄', ic:'#ef4444' },
+        { type:'약관',     title:'배상책임보험 면책 조항 판례 분석 모음',  desc:'최근 3년 주요 판례 기반 면책 조항 적용 기준 정리', author:'임화재', dl:156, hp:44, icon:'📄', ic:'#2563eb' }
+      ],
+      rows: [
+        { hq:false, cert:true,  icon:'📄', ic:'#ef4444', title:'화재보험 손해 산정 기준 및 실무 가이드',    sub:'건물·집기 손해 산정부터 잔존물 처리까지 단계별 가이드', badge:'v1.3', author:'한일반',   hp:'❤ 52', dl:234, date:'2026-05-01' },
+        { hq:true,  cert:false, icon:'📄', ic:'#2563eb', title:'[본사] 배상책임보험 구상권 행사 절차서', sub:'제3자 과실 사고 구상 청구 단계별 처리 매뉴얼',         badge:'v2.0', author:'일반보상팀', hp:'-',    dl:189, date:'2026-04-22' },
+        { hq:false, cert:true,  icon:'📄', ic:'#ef4444', title:'기업성 보험 현장조사 체크리스트 (2026)', sub:'대형 사고 현장조사 시 확인 항목 및 증거 수집 가이드', badge:'',     author:'임화재',   hp:'❤ 38', dl:167, date:'2026-04-14' },
+        { hq:false, cert:true,  icon:'📄', ic:'#16a34a', title:'자연재해 보험금 산정 사례 모음',         sub:'침수·낙뢰·풍재 사고 유형별 산정 기준 및 실사례',       badge:'',     author:'조구상',   hp:'❤ 31', dl:145, date:'2026-04-06' },
+        { hq:false, cert:true,  icon:'📊', ic:'#16a34a', title:'건물 손해 산정 자동화 엑셀 모델 v1.5',  sub:'면적·잔가율 입력 시 손해액 자동 산정하는 엑셀 툴',   badge:'v1.5', author:'한일반',   hp:'❤ 24', dl:121, date:'2026-03-28' }
+      ],
+      pending: [
+        { type:'판례',    title:'임차인 과실 화재 시 손해 범위 논의',    desc:'임대인·임차인·제3자 보험 적용 기준에 대한 현장 케이스 정리', prog:5, total:10 },
+        { type:'현장조사', title:'드론 활용 현장조사 절차 가이드 (안)',  desc:'접근 불가 현장 드론 촬영 시 증거 효력 및 활용 방법',         prog:2, total:10 }
+      ]
+    }
+  }
+};
+
+// 하위 카테고리 데이터 조회
+function getSubCatData(cat, sub) {
+    return SUB_CAT_DATA[cat]?.[sub] || null;
+}
+
+// 소개 배너 렌더
+function renderCatBanner(d) {
+    document.getElementById('cat-banner-badge').textContent = d.cat;
+    document.getElementById('cat-banner-dept').textContent = '담당: ' + d.dept;
+    document.getElementById('cat-banner-title').textContent = d.sub;
+    document.getElementById('cat-banner-desc').textContent = d.desc;
+    const sysEl = document.getElementById('cat-banner-syslinks');
+    sysEl.innerHTML = d.systems.map(s =>
+        `<a href="#" onclick="showToast('${s.name}으로 이동합니다.','${s.icon}');return false;"
+            class="flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-lg border transition"
+            style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:white">
+            ${s.icon} ${s.name} →
+         </a>`
+    ).join('');
+}
+
+// TOP5 + 골목대장 렌더
+function renderCatStatsPanel(d) {
+    const rankColors = ['text-hi-org','text-gray-500','text-amber-700','text-gray-400','text-gray-400'];
+    document.getElementById('cat-top5-list').innerHTML = d.top5.map((item, i) => `
+        <div class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white transition cursor-pointer" onclick="openModal(0)">
+            <span class="font-black text-xs w-5 text-center shrink-0 ${rankColors[i]}">${item.rank}</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 ${item.type==='본사'?'bg-amber-50 text-amber-700':'bg-red-50 text-red-600'}">${item.type}</span>
+            <span class="text-[11px] font-bold text-gray-800 flex-1 truncate">${item.title}</span>
+            <span class="text-[9px] text-gray-400 shrink-0">↓${item.dl}${item.hp?` ❤${item.hp}`:''}</span>
+        </div>`).join('');
+
+    const medal = ['🥇','🥈','🥉'];
+    document.getElementById('cat-contributors').innerHTML = d.contributors.map((c, i) => `
+        <div class="flex items-center gap-2.5 p-2 rounded-lg ${i===0?'bg-amber-50 border border-amber-100':'hover:bg-gray-50'} transition">
+            <span class="text-base shrink-0">${medal[i]||'  '}</span>
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-black text-[11px] shrink-0"
+                 style="background:${['#ff9e1b','#64748b','#92400e'][i]||'#94a3b8'}">${c.avatar}</div>
+            <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-black text-gray-800">${c.name} <span class="font-normal text-gray-400">${c.rank}</span></div>
+                <div class="text-[9px] text-gray-400">${c.dept} · ${c.cnt}건 등록</div>
+            </div>
+            <div class="text-right shrink-0">
+                <div class="text-[10px] font-black" style="color:#ff9e1b">⭐ ${c.hi}</div>
+                <div class="text-[8px] text-gray-400">Hi-Point</div>
+            </div>
+        </div>`).join('');
+
+    document.getElementById('cat-dept-contact').innerHTML = '';
+}
+
+// ── 소분류 탭 렌더 ────────────────────────────────────────────────
+function renderSubcatTabs(d) {
+    const bar = document.getElementById('subcat-tab-bar');
+    const tagBar = document.getElementById('hashtag-filter-bar');
+    if (!bar) return;
+    if (!d || !d.subcats) { bar.classList.add('hidden'); tagBar.classList.add('hidden'); return; }
+
+    bar.classList.remove('hidden');
+    bar.innerHTML = d.subcats.map((s, i) =>
+        `<button class="subcat-btn${i===0?' active':''}" onclick="setSubcat(this,'${s}')">${s}</button>`
+    ).join('');
+
+    tagBar.classList.remove('hidden');
+    const tags = d.allTags || [];
+    tagBar.innerHTML = `<span class="text-[9.5px] font-bold text-gray-400 mr-1">#태그 필터</span>` +
+        tags.map(t =>
+            `<button class="hashtag-btn text-[9px] font-bold px-2 py-0.5 rounded-full border transition"
+                style="background:#f8fafc;color:#6b7280;border-color:#e2e8f0"
+                onclick="toggleHashtag(this,'${t}')">${t}</button>`
+        ).join('');
+}
+
+function setSubcat(btn, subcat) {
+    document.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const rows = document.querySelectorAll('#table-body tr.list-row-hover');
+    rows.forEach(tr => {
+        if (subcat === '전체') { tr.style.display = ''; return; }
+        const rowData = tr.dataset.subcat;
+        tr.style.display = (rowData === subcat) ? '' : 'none';
+    });
+}
+
+function toggleHashtag(btn, tag) {
+    const isActive = btn.dataset.active === '1';
+    if (isActive) {
+        btn.dataset.active = '0';
+        btn.style.background = '#f8fafc'; btn.style.color = '#6b7280'; btn.style.borderColor = '#e2e8f0';
+    } else {
+        btn.dataset.active = '1';
+        btn.style.background = '#eff6ff'; btn.style.color = '#2563eb'; btn.style.borderColor = '#93c5fd';
+    }
+    const activeTags = Array.from(document.querySelectorAll('.hashtag-btn[data-active="1"]')).map(b => b.textContent.trim());
+    const rows = document.querySelectorAll('#table-body tr.list-row-hover');
+    rows.forEach(tr => {
+        if (activeTags.length === 0) { tr.style.display = ''; return; }
+        const rowTags = (tr.dataset.tags || '').split(',');
+        tr.style.display = activeTags.some(t => rowTags.includes(t)) ? '' : 'none';
+    });
+}
+
+// ── renderTableRow에서 dataset 주입 지원 ──────────────────────────
+const _origRenderTableRow = renderTableRow;
+// (dataset은 renderTableRow 내부에서 직접 추가)
+
+// ── FAQ 데이터 & 함수 ──────────────────────────────────────────────
+const FAQ_DATA = [
+    { id:'q001', status:'done',   cat:'마케팅/영업',    q:'5세대 실손 전환 상담 시 병력 고지 기간은 1년인가요, 5년인가요?', dept:'장기계약관리부', author:'김현장', date:'2026-05-06', views:483, hp:89,
+      a:'5세대 실손 전환 시 고지 의무 기간은 직전 1년이 맞습니다. 전산상 5년이 표시되는 것은 시스템 UI 오류로 현재 개선 요청 중이며, 고객 안내는 매뉴얼 기준인 1년으로 하시면 됩니다.', aBy:'장기계약관리부', aDate:'2026-05-06' },
+    { id:'q002', status:'done',   cat:'보상/손해사정',  q:'자동차 사고 현장에서 쌍방과실인 경우 현장출동 기준이 어떻게 되나요?', dept:'영업기획팀', author:'박현장', date:'2026-05-02', views:342, hp:54,
+      a:'쌍방과실의 경우 과실 비율이 불명확하거나 당사자 간 합의가 어려운 상황이라면 출동 원칙입니다. 현장에서 과실 비율이 대략 확인되고 당사자 합의가 가능하다면 비출동 처리도 가능합니다.', aBy:'자동차보상팀', aDate:'2026-05-02' },
+    { id:'q003', status:'done',   cat:'계약관리/보전',  q:'청약 철회 후 재청약 시 동일 보험료 적용이 가능한가요?', dept:'계약관리부', author:'이현장', date:'2026-04-28', views:267, hp:31,
+      a:'청약 철회 후 재청약은 신규 청약과 동일하게 처리되므로, 재청약 시점의 나이와 위험률이 적용됩니다. 동일 보험료 보장은 어렵습니다.', aBy:'장기계약관리부', aDate:'2026-04-28' },
+    { id:'q004', status:'ing',    cat:'마케팅/영업',    q:'5세대 실손 전환 고객에게 과거 병력 고지 동의서 별도 수취해야 하나요?', dept:'영업1팀', author:'이영업', date:'2026-05-10', views:89, hp:12,
+      a:'담당자가 답변을 작성 중입니다. 잠시만 기다려주세요.', aBy:'장기계약관리부(작성중)', aDate:'' },
+    { id:'q005', status:'wait',   cat:'보상/손해사정',  q:'전기차 배터리 손상 보험금 산정 기준이 어떻게 되나요?', dept:'자동차보상팀', author:'최현장', date:'2026-05-09', views:112, hp:8,
+      a:null, aBy:'', aDate:'' },
+    { id:'q006', status:'wait',   cat:'언더라이팅/심사', q:'당뇨 병력자 5세대 실손 전환 인수 가능 여부', dept:'언더라이팅팀', author:'한심사', date:'2026-05-08', views:67, hp:5,
+      a:null, aBy:'', aDate:'' },
+];
+
+const FAQ_STATUS_LABEL = { done:'✅ 답변 완료', ing:'💬 답변 중', wait:'🚨 답변 대기' };
+const FAQ_STATUS_STYLE = {
+    done: 'background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe',
+    ing:  'background:#fefce8;color:#92400e;border:1px solid #fde68a',
+    wait: 'background:#fef2f2;color:#dc2626;border:1px solid #fecaca'
+};
+
+function renderFaqTable(data) {
+    const tbody = document.getElementById('faq-tbody');
+    if (!tbody) return;
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-400 text-xs">조회 결과가 없습니다.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = data.map(r => {
+        const statusLabel = FAQ_STATUS_LABEL[r.status] || r.status;
+        const statusStyle = FAQ_STATUS_STYLE[r.status] || '';
+        return `
+        <tr id="faq-row-${r.id}" class="trow border-b border-gray-100 cursor-pointer hover:bg-blue-50/30 transition"
+            onclick="toggleFaqInline('${r.id}')">
+            <td class="px-3 py-3 text-center">
+                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap" style="${statusStyle}">${statusLabel}</span>
+            </td>
+            <td class="px-3 py-3 text-center text-[10px] text-gray-500 hidden md:table-cell">${r.cat}</td>
+            <td class="px-4 py-3">
+                <div class="font-medium text-gray-800 text-xs">Q. ${r.q}</div>
+            </td>
+            <td class="px-3 py-3 text-center text-[10px] text-gray-500 hidden md:table-cell">${r.dept}</td>
+            <td class="px-3 py-3 text-center text-[10px] text-gray-500 hidden md:table-cell">${r.author}</td>
+            <td class="px-3 py-3 text-center text-[10px] text-gray-400">${r.date}</td>
+            <td class="px-3 py-3 text-center text-[10px] text-gray-500 hidden lg:table-cell">${r.views}</td>
+            <td class="px-3 py-3 text-center text-[10px] text-red-400 font-bold hidden lg:table-cell">${r.hp ? '❤ '+r.hp : '-'}</td>
+        </tr>
+        <tr id="faq-inline-${r.id}" class="hidden">
+            <td colspan="8" class="px-0 py-0">
+                <div class="border-t border-b border-blue-100 bg-blue-50/40 px-6 py-4">
+                    <div class="grid grid-cols-2 gap-4 max-w-4xl">
+                        <div>
+                            <div class="text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-wide">📌 질문</div>
+                            <div class="bg-white border border-gray-200 rounded-xl p-3 text-xs text-gray-700 leading-relaxed">${r.q}</div>
+                            <div class="text-[9.5px] text-gray-400 mt-1.5 flex items-center gap-3">
+                                <span>등록: ${r.author} (${r.dept})</span>
+                                <span>${r.date}</span>
+                                <span>조회 ${r.views}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-black text-gray-500 mb-1.5 uppercase tracking-wide">💬 답변${r.aBy ? ' — '+r.aBy : ''}</div>
+                            ${r.a
+                                ? `<div class="bg-white border border-blue-200 rounded-xl p-3 text-xs text-gray-700 leading-relaxed">${r.a}</div>
+                                   ${r.aDate ? '<div class="text-[9.5px] text-gray-400 mt-1.5">답변일: '+r.aDate+'</div>' : ''}`
+                                : `<div class="bg-gray-50 border border-dashed border-gray-200 rounded-xl p-3 text-xs text-gray-400 italic">아직 답변이 등록되지 않았습니다.<br>빠른 시일 내에 담당 부서에서 답변드리겠습니다.</div>`
+                            }
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-3">
+                        <button onclick="event.stopPropagation();showToast('하이파이브!를 남겼습니다.','❤')" class="text-[9.5px] font-bold px-3 py-1 rounded-lg border border-red-200 text-red-400 hover:bg-red-50 transition">❤ 하이파이브! (${r.hp})</button>
+                        <button onclick="event.stopPropagation();toggleFaqInline('${r.id}')" class="text-[9.5px] font-bold px-3 py-1 rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 transition ml-auto">닫기 ✕</button>
+                    </div>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function toggleFaqInline(id) {
+    const inline = document.getElementById('faq-inline-' + id);
+    if (!inline) return;
+    const isHidden = inline.classList.contains('hidden');
+    // 다른 열린 것 닫기
+    document.querySelectorAll('[id^="faq-inline-"]').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('[id^="faq-row-"]').forEach(el => el.classList.remove('bg-blue-100/50'));
+    if (isHidden) {
+        inline.classList.remove('hidden');
+        document.getElementById('faq-row-' + id)?.classList.add('bg-blue-100/50');
+    }
+}
+
+function faqSearch() {
+    const cat    = document.getElementById('faq-filter-cat')?.value || '';
+    const status = document.getElementById('faq-filter-status')?.value || '';
+    const dept   = document.getElementById('faq-filter-dept')?.value || '';
+    const q      = (document.getElementById('faq-filter-q')?.value || '').toLowerCase();
+    const author = (document.getElementById('faq-filter-author')?.value || '').toLowerCase();
+    const filtered = FAQ_DATA.filter(r =>
+        (!cat    || r.cat === cat) &&
+        (!status || r.status === status) &&
+        (!dept   || r.dept.includes(dept)) &&
+        (!q      || r.q.toLowerCase().includes(q) || (r.a && r.a.toLowerCase().includes(q))) &&
+        (!author || r.author.toLowerCase().includes(author))
+    );
+    renderFaqTable(filtered);
+    const lbl = document.getElementById('faq-count-label');
+    if (lbl) lbl.innerHTML = `전체 <span class="text-hi-navy">${filtered.length}</span>건`;
+}
+
+function faqReset() {
+    ['faq-filter-cat','faq-filter-status','faq-filter-dept','faq-filter-q','faq-filter-author'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    renderFaqTable(FAQ_DATA);
+}
+
+function setFaqDateRange(years) {
+    const now = new Date();
+    const to = now.toISOString().slice(0,10);
+    let from;
+    if (years === 0) { from = to.slice(0,7) + '-01'; }
+    else { const d = new Date(now); d.setFullYear(d.getFullYear()-years); from = d.toISOString().slice(0,10); }
+    const f = document.getElementById('faq-date-from');
+    const t = document.getElementById('faq-date-to');
+    if (f) f.value = from;
+    if (t) t.value = to;
+}
+
 const ALL_VIEWS = ['home','list','upload','dashboard','market','field','faq','glossary','quest','admin','wiki'];
 function nav(viewName) {
     ALL_VIEWS.forEach(v => {
@@ -4535,13 +5108,65 @@ document.addEventListener('DOMContentLoaded', () => {
     nav('home'); // 홈으로 돌아가되 content 초기화
     renderInterest();   // 나의 관심지식 초기 렌더
     renderTop5();       // 인기자료 TOP5 초기 렌더
+    renderFaqTable(FAQ_DATA);  // 통합 FAQ 초기 렌더
     const valInput = document.getElementById('admin-drop-value');
     const budgetInput = document.getElementById('admin-budget');
     if (valInput) valInput.addEventListener('input', saveAdminSettings);
     if (budgetInput) budgetInput.addEventListener('input', saveAdminSettings);
 });
 
-// ── 업로드 자산 유형 전환 ─────────────────────────────────────
+// ── 관리자: 소분류 관리 ───────────────────────────────────────────
+const ADMIN_SUBCAT_STORE = {
+    '장기보상':   { subcats:['전체','의료비 보험금','장해 보험금','사망 보험금','구상·환수','심사 Q&A'], tags:['#비급여','#5세대실손','#장해판정','#의료비','#도수치료','#사망보험금','#구상권'] },
+    '자동차보상': { subcats:['전체','현장출동 처리','수리비 산정','렌트/대차','보험사기','전기차 사고'], tags:['#현장출동','#전기차','#보험사기','#쌍방과실','#렌트비','#수리비'] },
+    '일반보상':   { subcats:['전체','화재 보험금','배상책임','기업성 보험','현장조사 실무','구상·환수'], tags:['#화재손해','#배상책임','#현장조사','#구상권','#약관면책','#자연재해'] }
+};
+
+function loadAdminSubcat(folder) {
+    const data = ADMIN_SUBCAT_STORE[folder];
+    if (!data) return;
+    const listEl = document.getElementById('adm-subcat-list');
+    const tagEl  = document.getElementById('adm-tag-list');
+    if (!listEl || !tagEl) return;
+    listEl.innerHTML = data.subcats.filter(s => s !== '전체').map((s, i) => `
+        <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2">
+            <span class="text-gray-300 text-xs cursor-move">☰</span>
+            <input type="text" value="${s}" class="flex-1 text-xs outline-none border-b border-transparent focus:border-gray-300 transition bg-transparent">
+            <button onclick="this.closest('div').remove();showToast('소분류가 삭제되었습니다.','🗑️')" class="text-gray-300 hover:text-red-400 text-xs transition font-bold">✕</button>
+        </div>`).join('');
+    tagEl.innerHTML = data.tags.map(t => `
+        <div class="flex items-center gap-1 text-[9.5px] font-bold px-2 py-1 rounded-full" style="background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe">
+            ${t}
+            <button onclick="this.closest('div').remove();showToast('태그가 삭제되었습니다.','🗑️')" class="ml-0.5 hover:text-red-400 transition">✕</button>
+        </div>`).join('');
+}
+
+function addAdminSubcat() {
+    const listEl = document.getElementById('adm-subcat-list');
+    if (!listEl) return;
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 bg-white border-2 border-hi-navy rounded-lg px-3 py-2';
+    div.innerHTML = `<span class="text-gray-300 text-xs cursor-move">☰</span><input type="text" placeholder="새 소분류명 입력" class="flex-1 text-xs outline-none border-b border-transparent focus:border-gray-300 transition bg-transparent"><button onclick="this.closest('div').remove()" class="text-gray-300 hover:text-red-400 text-xs transition font-bold">✕</button>`;
+    listEl.appendChild(div);
+    div.querySelector('input').focus();
+}
+
+function addAdminTag() {
+    const tag = prompt('추가할 해시태그를 입력하세요 (예: #비급여)');
+    if (!tag) return;
+    const tagEl = document.getElementById('adm-tag-list');
+    if (!tagEl) return;
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-1 text-[9.5px] font-bold px-2 py-1 rounded-full';
+    div.style = 'background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe';
+    div.innerHTML = `${tag} <button onclick="this.closest('div').remove()" class="ml-0.5 hover:text-red-400 transition">✕</button>`;
+    tagEl.appendChild(div);
+}
+
+// 관리자 탭 초기 로드
+document.addEventListener('DOMContentLoaded', () => {
+    loadAdminSubcat('장기보상');
+});
 function toggleAssetType() {
     const isPremium = document.querySelector('input[name="asset-type"][value="premium"]').checked;
     const hqDeptArea = document.getElementById('hq-dept-area');
@@ -4906,13 +5531,27 @@ const LIST_DATA = {
 
 // 기본 fallback
 function getCatKey(cat) {
+  // 신규 카테고리명 → LIST_DATA 키 매핑
   const map = {
-    '영업/마케팅':'영업/마케팅', '상품개발/계리':'상품개발/계리',
-    '언더라이팅/심사':'언더라이팅/심사', '계약관리/보전':'계약관리/보전',
-    '보상/손해사정':'보상/손해사정', '고객서비스':'고객서비스',
-    '경영기획/전략':'경영기획/전략', '재무/회계/자산운용':'재무/회계/자산운용',
-    'IT/디지털':'IT/디지털', '인사/조직관리':'인사/조직관리',
-    '리스크관리/준법감시':'리스크관리/준법감시', '감사/법무/총무/홍보':'감사/법무/총무/홍보'
+    '마케팅/영업':           '영업/마케팅',
+    '영업/마케팅':           '영업/마케팅',
+    '상품개발':              '상품개발/계리',
+    '상품개발/계리':         '상품개발/계리',
+    '언더라이팅/심사':       '언더라이팅/심사',
+    '계약관리/보전':         '계약관리/보전',
+    '보상/손해사정':         '보상/손해사정',
+    '고객서비스':            '고객서비스',
+    '경영기획/전략':         '경영기획/전략',
+    '결산/계리/리스크관리':  '결산/계리/리스크관리',
+    '재무/회계/자산운용':    '재무/회계/자산운용',
+    'IT/디지털':             'IT/디지털',
+    '자산운용':              '자산운용',
+    '인사/조직관리':         '인사/조직관리',
+    '리스크관리/준법감시':   '리스크관리/준법감시',
+    '대외/홍보':             '대외/홍보',
+    '감사/법무':             '감사/법무',
+    '감사/법무/총무/홍보':   '감사/법무/총무/홍보',
+    '총무':                  '총무'
   };
   return map[cat] || null;
 }
@@ -4946,8 +5585,12 @@ function renderTableRow(r, isLast) {
     const verBadge = r.badge && r.badge !== '신규'
         ? `<span class="badge-ver text-[9px] px-1.5 py-0.5 rounded font-bold">${r.badge}</span>`
         : r.badge === '신규' ? '<span class="badge-new text-[9px] px-1.5 py-0.5 rounded font-bold">신규</span>' : '';
-    const rowCls = (r.hq ? 'bg-amber-50/40 ' : '') + 'trow ' + (isLast ? '' : 'border-b border-gray-100');
-    return `<tr class="${rowCls}" onclick="openModal(0)">
+    const rowCls = (r.hq ? 'bg-amber-50/40 ' : '') + 'trow list-row-hover ' + (isLast ? '' : 'border-b border-gray-100');
+    const tags = (r.tags || []).map(t =>
+        `<span class="cursor-pointer text-[8.5px] px-1.5 py-0.5 rounded-full font-bold mr-0.5 list-tag" style="background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe">${t}</span>`
+    ).join('');
+    const preview = r.preview || r.sub || '';
+    return `<tr class="${rowCls}" style="position:relative" onclick="openModal(0)">
         <td class="px-4 py-3">${badge}</td>
         <td class="px-4 py-3">
             <div class="flex items-center gap-2">
@@ -4955,11 +5598,26 @@ function renderTableRow(r, isLast) {
                 <span class="font-medium text-gray-800">${r.title}</span>${verBadge}
             </div>
             <div class="text-[10px] text-gray-400 mt-0.5">${r.sub}</div>
+            ${tags ? '<div class="mt-1">' + tags + '</div>' : ''}
         </td>
         <td class="px-4 py-3 text-gray-500 hidden md:table-cell">${r.author}</td>
         <td class="px-4 py-3 text-center hidden lg:table-cell"><span class="text-red-400 font-bold">${r.hp}</span></td>
         <td class="px-4 py-3 text-center hidden lg:table-cell text-gray-500">${r.dl}</td>
         <td class="px-4 py-3 text-center text-gray-400">${r.date}</td>
+        <td class="row-preview-cell hidden">
+            <div class="row-preview-popup">
+                <div class="font-black text-[11px] text-hi-navy mb-1">${r.title}</div>
+                <div class="text-[10px] text-gray-600 leading-relaxed mb-2">${preview}</div>
+                <div class="flex items-center gap-2 text-[9.5px] text-gray-400">
+                    <span class="font-bold text-gray-600">${r.author}</span>
+                    <span>↓${r.dl}</span>
+                    ${r.hp !== '-' ? '<span class="text-red-400">' + r.hp + '</span>' : ''}
+                    <span class="ml-auto text-gray-400">${r.date}</span>
+                </div>
+                ${tags ? '<div class="mt-2">' + tags + '</div>' : ''}
+                <div class="mt-2 text-[9.5px] font-bold text-hi-navy text-right">클릭하여 자세히 보기 →</div>
+            </div>
+        </td>
     </tr>`;
 }
 
@@ -4996,32 +5654,61 @@ function showList(cat, sub) {
     document.getElementById('view-list').scrollTop = 0;
     switchTab('archived', document.querySelector('[onclick*="archived"]'));
 
-    // 칩 필터 업데이트
-    const chipEl = document.getElementById('list-chip-filters');
-    const key = getCatKey(cat);
-    const data = key ? LIST_DATA[key] : null;
+    // 하위 카테고리 전용 UI 제어
+    const subData = getSubCatData(cat, sub);
+    const bannerEl     = document.getElementById('cat-banner');
+    const statsEl      = document.getElementById('cat-stats-panel');
+    const defaultEl    = document.getElementById('cat-default-banner');
 
-    if (chipEl && data) {
-        chipEl.innerHTML = data.chips.map((c,i) =>
-            `<button class="chip ${i===0?'active':''} text-[10px] px-2.5 py-1 rounded-full border ${i===0?'bg-hi-navy text-white border-hi-navy':'border-gray-300 bg-white text-gray-600 hover:border-hi-navy'} transition" onclick="setChipActive(this)">${c}</button>`
-        ).join('');
+    if (subData) {
+        // 전용 배너 + 통계 패널 표시, 기본 배너 숨김
+        bannerEl.classList.remove('hidden');
+        statsEl.classList.remove('hidden');
+        defaultEl.classList.add('hidden');
+        renderCatBanner(subData);
+        renderCatStatsPanel(subData);
+        renderSubcatTabs(subData);
+        // 밸류체인 폴더: 평가 진행 중 탭 숨김 (inline style로 확실하게)
+        document.getElementById('list-tab-pending-btn').style.display = 'none';
+        // 칩은 기본 배너 내 #list-chip-filters 대신 별도 처리 불필요 (defaultEl 숨겨짐)
+        // featured / rows / pending 은 subData 사용
+        const featEl  = document.getElementById('list-featured-cards');
+        const tbodyEl = document.getElementById('table-body');
+        const pendEl  = document.getElementById('list-pending-cards');
+        // featured cards section removed
+        if (tbodyEl) tbodyEl.innerHTML = subData.rows.map((r,i) => renderTableRow(r, i===subData.rows.length-1)).join('');
+        if (pendEl)  pendEl.innerHTML  = subData.pending.map(renderPendingCard).join('');
+    } else {
+        // 기본 배너 표시, 전용 패널 숨김
+        bannerEl.classList.add('hidden');
+        statsEl.classList.add('hidden');
+        defaultEl.classList.remove('hidden');
+        // 소분류 탭/태그 숨김
+        const subcatBar = document.getElementById('subcat-tab-bar');
+        const tagBar    = document.getElementById('hashtag-filter-bar');
+        if (subcatBar) subcatBar.classList.add('hidden');
+        if (tagBar)    tagBar.classList.add('hidden');
+        // 일반 카테고리: 평가 진행 중 탭 복원
+        document.getElementById('list-tab-pending-btn').style.display = '';
+
+        // 칩 필터 업데이트
+        const chipEl = document.getElementById('list-chip-filters');
+        const key  = getCatKey(cat);
+        const data = key ? LIST_DATA[key] : null;
+        if (chipEl && data) {
+            chipEl.innerHTML = data.chips.map((c,i) =>
+                `<button class="chip ${i===0?'active':''} text-[10px] px-2.5 py-1 rounded-full border ${i===0?'bg-hi-navy text-white border-hi-navy':'border-gray-300 bg-white text-gray-600 hover:border-hi-navy'} transition" onclick="setChipActive(this)">${c}</button>`
+            ).join('');
+        }
+        const descEl  = document.getElementById('list-desc-text');
+        const featEl  = document.getElementById('list-featured-cards');
+        const tbodyEl = document.getElementById('table-body');
+        const pendEl  = document.getElementById('list-pending-cards');
+        if (descEl  && data) descEl.textContent  = data.desc;
+        // featured cards section removed
+        if (tbodyEl && data) tbodyEl.innerHTML    = data.rows.map((r,i) => renderTableRow(r, i===data.rows.length-1)).join('');
+        if (pendEl  && data) pendEl.innerHTML     = data.pending.map(renderPendingCard).join('');
     }
-
-    // 설명 텍스트
-    const descEl = document.getElementById('list-desc-text');
-    if (descEl && data) descEl.textContent = data.desc;
-
-    // 특성 카드
-    const featEl = document.getElementById('list-featured-cards');
-    if (featEl && data) featEl.innerHTML = data.featured.map(renderFeaturedCard).join('');
-
-    // 테이블 행
-    const tbodyEl = document.getElementById('table-body');
-    if (tbodyEl && data) tbodyEl.innerHTML = data.rows.map((r,i) => renderTableRow(r, i===data.rows.length-1)).join('');
-
-    // 평가 중 카드
-    const pendEl = document.getElementById('list-pending-cards');
-    if (pendEl && data) pendEl.innerHTML = data.pending.map(renderPendingCard).join('');
 }
 
 function setChipActive(btn) {
@@ -5045,6 +5732,7 @@ function doSearch(q) {
 
 // ── 탭 전환 ────────────────────────────────────────────────────
 function switchTab(tabName, btn) {
+    // tab-btn 중 pending-btn은 hidden 제어가 별도로 되므로 active 토글만
     document.querySelectorAll('#view-list .tab-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById('tab-archived').classList.toggle('hidden', tabName !== 'archived');
@@ -5227,6 +5915,29 @@ function showToast(msg, isWarn = false) {
                 s.style.display = (s.dataset.section === cat) ? '' : 'none';
             });
         }
+    }
+
+    // ── 현장 노하우 상태 탭 필터 (평가진행중 / 밸류체인승급 / 전체) ──
+    function setFieldStatus(status, btn) {
+        // 버튼 스타일 전환
+        document.querySelectorAll('.field-status-btn').forEach(b => {
+            b.classList.remove('active', 'border-hi-navy', 'text-hi-navy', 'font-bold');
+            b.classList.add('border-transparent', 'text-gray-500', 'font-medium');
+        });
+        btn.classList.add('active', 'border-hi-navy', 'text-hi-navy', 'font-bold');
+        btn.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
+
+        const allSec     = document.getElementById('field-all-section');
+        const pendSec    = document.getElementById('field-pending-section');
+        const certSec    = document.getElementById('field-certified-section');
+
+        allSec.classList.add('hidden');
+        pendSec.classList.add('hidden');
+        certSec.classList.add('hidden');
+
+        if (status === 'all')       allSec.classList.remove('hidden');
+        if (status === 'pending')   pendSec.classList.remove('hidden');
+        if (status === 'certified') certSec.classList.remove('hidden');
     }
 
     // ── 현장 노하우 자료 상세 모달 ──
