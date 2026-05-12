@@ -182,7 +182,7 @@
         .file-icon-etc  { color:#6b7280; }
 
         /* ══════════════════════════════════════════════════════════
-           HI-depia (사내 위키) 전용 스타일
+           Hi-pedia (사내 위키) 전용 스타일
         ══════════════════════════════════════════════════════════ */
         /* LNB 위키 메뉴 특수 강조 */
         #lnb-wiki { border-left: 3px solid transparent; }
@@ -555,16 +555,16 @@
             통합 FAQ
         </div>
 
-        <!-- ── L1: 사내 약어 사전 ── -->
+        <!-- ── L1: 용어 사전 ── -->
         <div id="lnb-glossary" onclick="nav('glossary');setLnbActive2('lnb-glossary')" class="lnb-l1">
-            사내 약어 사전
+            용어 사전
         </div>
 
-        <!-- ── L1: HI-depia (사내 백과) ── -->
+        <!-- ── L1: Hi-pedia (사내 백과) ── -->
         <div id="lnb-wiki" onclick="nav('wiki');setLnbActive2('lnb-wiki')" class="lnb-l1" style="color:#60a5fa;">
             <span class="flex items-center gap-1.5">
                 <span style="font-style:normal;font-size:13px">📖</span>
-                <span>HI-depia <span style="font-size:10px;color:#93c5fd;font-weight:400">(사내 백과)</span></span>
+                <span>Hi-pedia <span style="font-size:10px;color:#93c5fd;font-weight:400">(사내 백과)</span></span>
             </span>
         </div>
 
@@ -2549,10 +2549,10 @@
 
 
 <!-- ================================================================ -->
-<!-- VIEW 10: 사내 약어 사전                                           -->
+<!-- VIEW 10: 용어 사전                                           -->
 <!-- ================================================================ -->
 <!-- ================================================================ -->
-<!-- VIEW 10: 사내 약어 사전                      -->
+<!-- VIEW 10: 용어 사전                      -->
 <!-- ================================================================ -->
 <div id="view-glossary" class="view flex-col flex-1 overflow-hidden">
 
@@ -2562,8 +2562,8 @@
             <svg width="100%" height="100%"><defs><pattern id="gl-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#gl-hex)"/></svg>
         </div>
         <div class="relative z-10">
-            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 사내 약어 사전</div>
-            <h1 class="text-xl font-black mb-0.5">사내 약어 사전</h1>
+            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 용어 사전</div>
+            <h1 class="text-xl font-black mb-0.5">용어 사전</h1>
             <p class="text-xs" style="color:#93c5fd">실무 약어·부서 전용 용어를 단답형으로 정리합니다. 모르는 약어는 검색하거나 직접 등록해보세요. <span style="color:#fcd34d">+1 Hi-Point</span></p>
         </div>
         <div class="relative z-10 flex gap-2 shrink-0">
@@ -3591,7 +3591,7 @@
 </div><!-- /view-dashboard -->
 
 <!-- ================================================================ -->
-<!-- VIEW: HI-depia (사내 위키)                                        -->
+<!-- VIEW: Hi-pedia (사내 위키)                                        -->
 <!-- ================================================================ -->
 <div id="view-wiki" class="view flex-col flex-1 overflow-hidden bg-white">
 
@@ -3600,7 +3600,7 @@
         <div class="flex items-center gap-2.5">
             <div class="flex items-center justify-center w-8 h-8 rounded-lg text-white font-black text-base shrink-0" style="background:#00205b">📖</div>
             <div>
-                <h2 class="text-base font-black leading-none" style="color:#00205b">HI-depia</h2>
+                <h2 class="text-base font-black leading-none" style="color:#00205b">Hi-pedia</h2>
                 <span class="text-[10px] text-gray-500 font-medium">우리만의 사내 백과사전 — 누구나 기여할 수 있습니다.</span>
             </div>
             <div class="ml-2 text-[10px] px-2 py-0.5 rounded-full font-bold" style="background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe">BETA</div>
@@ -4298,7 +4298,7 @@ function nav(viewName) {
     if (target) target.classList.add('active');
 }
 
-// ── HI-depia 위키 함수 ───────────────────────────────────────
+// ── Hi-pedia 위키 함수 ───────────────────────────────────────
 function wikiToggleFolder(el) {
     const arrow = el.querySelector('.wiki-folder-arrow');
     const children = el.nextElementSibling;
