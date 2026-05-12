@@ -169,6 +169,12 @@
         .dropzone { border:2px dashed #cbd5e1; transition:all .2s; }
         .dropzone:hover, .dropzone.drag { border-color:#3eb49b; background:#f0fdf4; }
 
+        /* ── H.E.A.R.T. 캐릭터 시스템 ── */
+        .heart-card { transition:all .2s; }
+        .heart-char-avatar { width:34px;height:34px;border-radius:50%;background:#00205b;border:2px solid rgba(255,158,27,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+        .heart-streak { font-size:8.5px;font-weight:600;color:#085041;background:#dcfce7;border-radius:4px;padding:2px 6px;display:inline-flex;align-items:center;gap:3px; }
+        /* H축: #534AB7, E축: #EF9F27, A축: #1D9E75, R축: #D4537E, T축: #185FA5 */
+
         /* ── 모달 ── */
         .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; align-items:center; justify-content:center; }
         .modal-bg.open { display:flex !important; }
@@ -304,6 +310,16 @@
             </button>
             <button title="대시보드" onclick="nav('dashboard')" class="flex items-center justify-center text-white hover:opacity-80 transition"
                 style="background:#1565c0;width:28px;height:28px;border-radius:4px;font-size:11px">📊</button>
+            <!-- 사용자 + H.E.A.R.T. 캐릭터 타입 표시 -->
+            <div class="flex items-center gap-1.5 ml-1 pl-2 shrink-0" style="border-left:1px solid rgba(255,255,255,0.15);cursor:pointer" onclick="nav('dashboard');setLnbActive2('lnb-dashboard')">
+                <div id="gnb-char-avatar" style="width:26px;height:26px;border-radius:50%;background:#3eb49b;border:1.5px solid rgba(255,158,27,0.55);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <span style="font-size:10px;font-weight:900;color:white">T</span>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:#e2e8f0;line-height:1.2">김현대</div>
+                    <div id="gnb-char-type" style="font-size:9px;color:#ff9e1b;font-weight:600;line-height:1.2">신뢰의 파수꾼</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -526,10 +542,7 @@
 
         <!-- ── L1: Hi-pedia (사내 백과) ── -->
         <div id="lnb-wiki" onclick="nav('wiki');setLnbActive2('lnb-wiki')" class="lnb-l1" style="color:#60a5fa;">
-            <span class="flex items-center gap-1.5">
-                <span style="font-style:normal;font-size:13px">📖</span>
-                <span>Hi-pedia <span style="font-size:10px;color:#93c5fd;font-weight:400">(사내 백과)</span></span>
-            </span>
+            <span>Hi-pedia <span style="font-size:10px;color:#93c5fd;font-weight:400">(사내 백과)</span></span>
         </div>
 
         <!-- ── L1: 지식 거래소 (접기/펼치기) ── -->
@@ -539,7 +552,7 @@
         </div>
         <div id="g-market" style="overflow:hidden;max-height:0;transition:max-height .4s ease;">
             <div id="lnb-market" onclick="nav('market');setLnbActive2('lnb-market')" class="lnb-l2" style="color:#fbbf24;">Hi-Point 마켓</div>
-            <div id="lnb-quest" onclick="nav('quest');setLnbActive2('lnb-quest')" class="lnb-l2">본사 퀘스트</div>
+            <div id="lnb-quest" onclick="nav('quest');setLnbActive2('lnb-quest')" class="lnb-l2">지식 미션</div>
             <div id="lnb-dashboard" onclick="nav('dashboard');setLnbActive2('lnb-dashboard')" class="lnb-l2">My-Page</div>
         </div>
 
@@ -665,10 +678,10 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════
-         2단: 나의 관심지식 / 인기자료 TOP5 / 최근 알림 / Hi-Point
+         2단: 나의 관심지식 / 최근 알림 / Hi-Point / H.E.A.R.T.
     ══════════════════════════════════════════════════════ -->
     <div class="shrink-0 px-6 py-3" style="background:#F2F4F7;border-top:1.5px solid #e2e6ea">
-        <div class="grid gap-3" style="grid-template-columns:1fr 1fr 1fr 200px;height:252px">
+        <div class="grid gap-3" style="grid-template-columns:1fr 1fr 182px 182px;height:252px">
 
             <!-- ① 새로 등록된 나의 관심지식 -->
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
@@ -685,24 +698,6 @@
                         <span class="cursor-pointer hover:text-hi-navy font-bold px-1" onclick="interestPrev()">◀ 이전</span>
                         <span id="interest-page" class="px-1 font-bold text-gray-500">1 / 3</span>
                         <span class="cursor-pointer hover:text-hi-navy font-bold px-1" onclick="interestNext()">다음 ▶</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ② 이번 주 인기 자료 TOP 5 -->
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
-                <div class="flex items-center gap-1.5 px-3.5 py-2 border-b border-gray-100 shrink-0" style="background:#f8fafc">
-                    <span style="font-size:11px">🔥</span>
-                    <span class="font-black text-[11px] text-gray-700">이번 주 인기 자료 TOP 5</span>
-                </div>
-                <div class="flex-1 flex items-center justify-center px-3 py-2" id="top5-content">
-                    <!-- JS로 렌더링 -->
-                </div>
-                <div class="flex items-center justify-between px-3.5 pb-2 shrink-0">
-                    <div class="flex items-center gap-1 text-[9px] text-gray-400 ml-auto">
-                        <span class="cursor-pointer hover:text-hi-navy font-bold px-1" onclick="top5Prev()">◀ 이전</span>
-                        <span id="top5-page" class="px-1 font-bold text-gray-500">1 / 5</span>
-                        <span class="cursor-pointer hover:text-hi-navy font-bold px-1" onclick="top5Next()">다음 ▶</span>
                     </div>
                 </div>
             </div>
@@ -727,31 +722,93 @@
                         <div class="text-[10.5px]">내가 즐겨찾기한 <span class="font-bold">'청약철회 매뉴얼'</span>이 v3.2로 업데이트되었습니다.<br><span class="text-gray-400 text-[9px]">3일 전</span></div>
                     </div>
                     <div class="flex items-start gap-2">
-                        <span class="text-green-400 text-[11px] mt-0.5 shrink-0">💰</span>
-                        <div class="text-[10.5px]">Hi-Point <span class="font-bold text-hi-org">12 Hi-Point</span>이 지급되었습니다.<br><span class="text-gray-400 text-[9px]">5일 전</span></div>
+                        <span class="text-green-400 text-[11px] mt-0.5 shrink-0">✦</span>
+                        <div class="text-[10.5px]">장기보상 콘텐츠 업데이트로 <span class="font-bold" style="color:#3eb49b">+8 Hi-Point</span> 획득 · <span style="font-size:9px;color:#185FA5;font-weight:600">Trust ↑</span><br><span class="text-gray-400 text-[9px]">5일 전</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ④ 내 Hi-Point 지갑 (우측 끝 고정 너비) -->
+            <!-- ④ Hi-Point (잔고 / 누적 분리) -->
             <div class="bg-white rounded-xl border-2 border-orange-200 shadow-sm flex flex-col overflow-hidden">
-                <div class="flex items-center gap-1.5 px-3.5 py-2 border-b border-orange-100 shrink-0" style="background:#fff7ed">
+                <div class="flex items-center gap-1.5 px-3 py-2 border-b border-orange-100 shrink-0" style="background:#fff7ed">
                     <span style="font-size:11px">⭐</span>
-                    <span class="font-black text-[11px] text-orange-800">내 Hi-Point 지갑</span>
+                    <span class="font-black text-[11px] text-orange-800">Hi-Point</span>
                 </div>
-                <div class="flex-1 flex flex-col justify-center items-center px-4 py-3 gap-3">
-                    <div class="hipoint-badge w-14 h-14 rounded-2xl flex flex-col items-center justify-center shadow-md border-2 border-orange-300" style="background:linear-gradient(135deg,#ff9e1b,#e08c00)">
-                        <div class="text-white font-black text-[9px] tracking-wider">Hi</div>
-                        <div class="text-white font-black text-[13px] leading-none">Point</div>
+                <div class="flex-1 flex flex-col justify-center items-center px-3 py-2 gap-1.5">
+                    <div class="hipoint-badge w-12 h-12 rounded-2xl flex flex-col items-center justify-center shadow border-2 border-orange-300" style="background:linear-gradient(135deg,#ff9e1b,#e08c00)">
+                        <div class="text-white font-black tracking-wider" style="font-size:9px">Hi</div>
+                        <div class="text-white font-black leading-none" style="font-size:12px">Point</div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-base font-black text-hi-org">12 Hi-Point</div>
-                        <div class="text-[9px] text-gray-400 mt-0.5">= ₩12,000</div>
+                    <!-- 잔고 -->
+                    <div class="w-full text-center">
+                        <div style="font-size:8.5px;color:#94a3b8;margin-bottom:1px">현재 잔고</div>
+                        <div class="font-black text-hi-org hp-balance-display" style="font-size:16px">12 P</div>
                     </div>
-                    <div class="w-full">
-                        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2"><div class="bg-hi-org h-1.5 rounded-full" style="width:60%"></div></div>
-                        <button onclick="nav('dashboard')" class="w-full text-[9.5px] text-hi-org border border-orange-200 rounded-lg py-1.5 hover:bg-orange-50 transition font-bold">혜택 교환하기</button>
+                    <!-- 누적 획득 (소비해도 줄지 않음) -->
+                    <div class="w-full rounded-lg px-2 py-1.5 text-center" style="background:#fff7ed;border:1px solid #fed7aa">
+                        <div style="font-size:8px;color:#94a3b8;margin-bottom:1px">누적 획득 (이력)</div>
+                        <div style="font-size:13px;font-weight:700;color:#374151">84 P</div>
+                        <div style="font-size:8px;color:#9ca3af">12건 기여</div>
                     </div>
+                </div>
+                <div class="px-3 pb-2.5 shrink-0">
+                    <button onclick="nav('dashboard');setLnbActive2('lnb-dashboard')" class="w-full text-[9.5px] text-hi-org border border-orange-200 rounded-lg py-1.5 hover:bg-orange-50 transition font-bold">활동 내역 보기</button>
+                </div>
+            </div>
+
+            <!-- ⑤ 내 H.E.A.R.T. 캐릭터 -->
+            <div class="rounded-xl border-2 shadow-sm flex flex-col overflow-hidden" style="background:#ffffff;border-color:#3eb49b">
+                <div class="flex items-center gap-1.5 px-3 py-2 border-b shrink-0" style="background:#f0fdf9;border-color:#a7f3d0">
+                    <span style="font-size:11px;color:#3eb49b">✦</span>
+                    <span class="font-black text-[11px]" style="color:#085041">내 H.E.A.R.T.</span>
+                </div>
+                <div class="flex-1 flex flex-col px-3 py-2 gap-2">
+                    <!-- 캐릭터 타입 (이미지 추후 업데이트 예정, 현재 텍스트) -->
+                    <div class="flex items-center gap-2">
+                        <div id="home-char-avatar" style="width:34px;height:34px;border-radius:50%;background:#00205b;border:2px solid rgba(255,158,27,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <span style="font-size:13px;font-weight:900;color:#3eb49b">T</span>
+                        </div>
+                        <div>
+                            <div id="home-char-typename" style="font-size:11px;font-weight:700;color:#00205b;line-height:1.3">신뢰의 파수꾼</div>
+                            <div style="font-size:8.5px;color:#9ca3af;line-height:1.2">캐릭터 이미지 업데이트 예정</div>
+                        </div>
+                    </div>
+                    <!-- H.E.A.R.T. 미니 바 -->
+                    <div style="display:flex;flex-direction:column;gap:3px">
+                        <div style="display:flex;align-items:center;gap:3px;font-size:9px">
+                            <span style="width:9px;font-weight:700;color:#534AB7;flex-shrink:0">H</span>
+                            <div style="flex:1;height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:68%;height:100%;background:#534AB7;border-radius:2px"></div></div>
+                            <span style="min-width:14px;text-align:right;color:#6b7280">68</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:9px">
+                            <span style="width:9px;font-weight:700;color:#BA7517;flex-shrink:0">E</span>
+                            <div style="flex:1;height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:70%;height:100%;background:#EF9F27;border-radius:2px"></div></div>
+                            <span style="min-width:14px;text-align:right;color:#6b7280">70</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:9px">
+                            <span style="width:9px;font-weight:700;color:#1D9E75;flex-shrink:0">A</span>
+                            <div style="flex:1;height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:82%;height:100%;background:#1D9E75;border-radius:2px"></div></div>
+                            <span style="min-width:14px;text-align:right;color:#6b7280">82</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:9px">
+                            <span style="width:9px;font-weight:700;color:#D4537E;flex-shrink:0">R</span>
+                            <div style="flex:1;height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:67%;height:100%;background:#D4537E;border-radius:2px"></div></div>
+                            <span style="min-width:14px;text-align:right;color:#6b7280">67</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:3px;font-size:9px">
+                            <span style="width:9px;font-weight:700;color:#185FA5;flex-shrink:0">T</span>
+                            <div style="flex:1;height:3px;background:#E6F1FB;border-radius:2px;overflow:hidden"><div style="width:91%;height:100%;background:#185FA5;border-radius:2px"></div></div>
+                            <span style="min-width:14px;text-align:right;font-weight:700;color:#185FA5">91</span>
+                        </div>
+                    </div>
+                    <!-- Trust 스트릭 -->
+                    <div style="font-size:8.5px;font-weight:600;color:#085041;background:#dcfce7;border-radius:4px;padding:2px 6px;display:inline-flex;align-items:center;gap:3px;align-self:flex-start">
+                        <span style="width:5px;height:5px;border-radius:50%;background:#3eb49b;flex-shrink:0;display:inline-block"></span>
+                        14개월 연속 기여
+                    </div>
+                </div>
+                <div class="px-3 pb-2.5 shrink-0">
+                    <button onclick="navToHeartTab()" class="w-full font-bold rounded-lg py-1.5 border transition hover:opacity-80" style="font-size:9.5px;color:#3eb49b;border-color:#3eb49b">가치 증거함 →</button>
                 </div>
             </div>
 
@@ -1509,44 +1566,112 @@
             </div>
         </div>
 
+
+        <!-- ③-b H.E.A.R.T. 축 선택 (신규) -->
+        <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4 shadow-sm">
+            <div class="text-xs font-black text-gray-700 mb-1 flex items-center gap-1.5">✦ 이 지식이 담고 있는 핵심 가치는?
+                <span class="text-red-400">*</span>
+            </div>
+            <p class="text-[10px] text-gray-400 mb-3">어떤 H.E.A.R.T. 가치를 실천한 지식인지 한 번 생각해보세요. 이 선택이 기여자의 캐릭터 성장에 반영됩니다.</p>
+            <div class="grid grid-cols-5 gap-2" id="heart-axis-selection">
+                <label class="flex flex-col items-center gap-1.5 border-2 rounded-xl p-2.5 cursor-pointer transition text-center hover:border-opacity-80" style="border-color:#AFA9EC;background:#EEEDFE">
+                    <input type="radio" name="heart-axis" value="H" class="hidden">
+                    <span class="text-base font-black" style="color:#534AB7">H</span>
+                    <span class="text-[10px] font-bold" style="color:#534AB7">Honor</span>
+                    <span class="text-[9px] text-gray-500 leading-tight text-center">원칙·정확함<br>기준 수호</span>
+                </label>
+                <label class="flex flex-col items-center gap-1.5 border-2 rounded-xl p-2.5 cursor-pointer transition text-center hover:border-opacity-80" style="border-color:#FAC775;background:#FAEEDA">
+                    <input type="radio" name="heart-axis" value="E" class="hidden">
+                    <span class="text-base font-black" style="color:#BA7517">E</span>
+                    <span class="text-[10px] font-bold" style="color:#BA7517">Excellence</span>
+                    <span class="text-[9px] text-gray-500 leading-tight text-center">탁월함·깊이<br>전문성 기여</span>
+                </label>
+                <label class="flex flex-col items-center gap-1.5 border-2 border-teal-300 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-teal-500 has-[:checked]:bg-white transition text-center" style="border-color:#5DCAA5;background:#E1F5EE">
+                    <input type="radio" name="heart-axis" value="A" checked class="hidden">
+                    <span class="text-base font-black" style="color:#1D9E75">A</span>
+                    <span class="text-[10px] font-bold" style="color:#1D9E75">Action</span>
+                    <span class="text-[9px] text-gray-500 leading-tight text-center">실행·참여<br>적극적 기여</span>
+                </label>
+                <label class="flex flex-col items-center gap-1.5 border-2 rounded-xl p-2.5 cursor-pointer transition text-center hover:border-opacity-80" style="border-color:#ED93B1;background:#FBEAF0">
+                    <input type="radio" name="heart-axis" value="R" class="hidden">
+                    <span class="text-base font-black" style="color:#D4537E">R</span>
+                    <span class="text-[10px] font-bold" style="color:#D4537E">Respect</span>
+                    <span class="text-[9px] text-gray-500 leading-tight text-center">존중·배려<br>동료 지원</span>
+                </label>
+                <label class="flex flex-col items-center gap-1.5 border-2 rounded-xl p-2.5 cursor-pointer transition text-center hover:border-opacity-80" style="border-color:#85B7EB;background:#E6F1FB">
+                    <input type="radio" name="heart-axis" value="T" class="hidden">
+                    <span class="text-base font-black" style="color:#185FA5">T</span>
+                    <span class="text-[10px] font-bold" style="color:#185FA5">Trust</span>
+                    <span class="text-[9px] text-gray-500 leading-tight text-center">신뢰·일관성<br>꾸준한 기여</span>
+                </label>
+            </div>
+        </div>
+
         <!-- ④ Hi-Point 가격 설정 (프리미엄만) -->
         <div id="hipoint-price-section" class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-orange-200 p-4 mb-4 shadow-sm">
-            <div class="text-xs font-black text-orange-800 mb-3 flex items-center gap-1.5">⭐ Hi-Point 가격 설정 (프리미엄 자산)</div>
-            <p class="text-[10px] text-orange-700 mb-3">창작자가 직접 자료의 가치를 설정합니다. 동료들이 Hi-Point을 지불하고 다운로드하며, 하이파이브! 10회 달성 시 아카이빙됩니다.</p>
-            <div class="grid grid-cols-5 gap-2">
+            <div class="text-xs font-black text-orange-800 mb-1 flex items-center gap-1.5">⭐ Hi-Point 가격 설정 (프리미엄 자산)</div>
+            <div class="text-[10px] text-orange-700 mb-3 bg-white rounded-lg p-2.5 border border-orange-100">
+                💡 <strong>케이스 포맷 안내:</strong> "상황 → 내가 한 것 → 이유 → 결과 → 다음에 다를 점" 구조로 자료를 작성하면 구매자 신뢰도와 평점이 높아집니다.
+            </div>
+            <p class="text-[10px] text-orange-700 mb-3">창작자가 직접 자료의 가치를 설정합니다. 시간이 지나면 가격이 자동으로 감가되며 아카이빙(전사 무료 공개) 전환됩니다.</p>
+            <div class="grid grid-cols-5 gap-2 mb-4">
                 <label class="flex flex-col items-center gap-1 border-2 border-gray-200 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-white transition text-center bg-white">
                     <input type="radio" name="hipoint-price" value="0" class="hidden">
                     <span class="text-lg">🎁</span>
                     <span class="text-[10px] font-bold text-gray-600">무료 나눔</span>
-                    <span class="text-[9px] text-gray-400">0 Hi-Point</span>
+                    <span class="text-[9px] text-gray-400">0 P</span>
                 </label>
                 <label class="flex flex-col items-center gap-1 border-2 border-orange-300 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-white transition text-center bg-white">
                     <input type="radio" name="hipoint-price" value="1" class="hidden" checked>
                     <span class="text-lg font-black text-hi-org">P</span>
                     <span class="text-[10px] font-bold text-hi-org">소형</span>
-                    <span class="text-[9px] text-hi-org font-bold">1 Hi-Point</span>
+                    <span class="text-[9px] text-hi-org font-bold">1 P</span>
                 </label>
                 <label class="flex flex-col items-center gap-1 border-2 border-gray-200 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-white transition text-center bg-white">
                     <input type="radio" name="hipoint-price" value="3" class="hidden">
                     <span class="text-base font-black text-hi-org">3P</span>
                     <span class="text-[10px] font-bold text-gray-600">중형</span>
-                    <span class="text-[9px] text-gray-500">3 Hi-Point</span>
+                    <span class="text-[9px] text-gray-500">3 P</span>
                 </label>
                 <label class="flex flex-col items-center gap-1 border-2 border-gray-200 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-white transition text-center bg-white">
                     <input type="radio" name="hipoint-price" value="5" class="hidden">
                     <span class="text-base font-black text-hi-org">5P</span>
                     <span class="text-[10px] font-bold text-gray-600">대형</span>
-                    <span class="text-[9px] text-gray-500">5 Hi-Point</span>
+                    <span class="text-[9px] text-gray-500">5 P</span>
                 </label>
                 <label class="flex flex-col items-center gap-1 border-2 border-gray-200 rounded-xl p-2.5 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-white transition text-center bg-white">
                     <input type="radio" name="hipoint-price" value="10" class="hidden">
                     <span class="text-lg">👑</span>
                     <span class="text-[10px] font-bold text-gray-600">프리미엄</span>
-                    <span class="text-[9px] text-gray-500">10 Hi-Point</span>
+                    <span class="text-[9px] text-gray-500">10 P</span>
                 </label>
             </div>
-            <div class="mt-3 bg-white rounded-lg p-2.5 border border-orange-100 text-[10px] text-orange-700">
-                💡 <strong>수익 배분:</strong> 다운로드 1건당 설정한 Hi-Point의 <strong>70%</strong>가 창작자에게, <strong>30%</strong>는 생태계 유지 기금으로 적립됩니다.
+            <!-- Early Access 설정 -->
+            <div class="border-t border-orange-100 pt-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="ea-toggle" class="w-4 h-4 accent-hi-org" onchange="toggleEarlyAccess(this.checked)">
+                        <span class="text-[10px] font-black text-orange-800">⚡ Early Access 활성화</span>
+                    </label>
+                    <span class="text-[9px] text-gray-400">— 초기 구매자에게 특별가 제공, 아카이빙 시 30% 환급 보장</span>
+                </div>
+                <div id="ea-quota-area" class="hidden">
+                    <div class="text-[10px] font-bold text-gray-700 mb-2">조기 구매 쿼터 (선착순)</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="flex items-center gap-2 border rounded-lg p-2 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-orange-50 transition bg-white border-gray-200">
+                            <input type="radio" name="ea-quota" value="3" class="accent-hi-org">
+                            <div><div class="text-[10px] font-bold text-gray-700">3석</div><div class="text-[9px] text-gray-400">소규모 한정</div></div>
+                        </label>
+                        <label class="flex items-center gap-2 border rounded-lg p-2 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-orange-50 transition bg-white border-hi-org bg-orange-50">
+                            <input type="radio" name="ea-quota" value="5" checked class="accent-hi-org">
+                            <div><div class="text-[10px] font-bold text-hi-org">5석</div><div class="text-[9px] text-gray-400">권장</div></div>
+                        </label>
+                        <label class="flex items-center gap-2 border rounded-lg p-2 cursor-pointer has-[:checked]:border-hi-org has-[:checked]:bg-orange-50 transition bg-white border-gray-200">
+                            <input type="radio" name="ea-quota" value="10" class="accent-hi-org">
+                            <div><div class="text-[10px] font-bold text-gray-700">10석</div><div class="text-[9px] text-gray-400">확대 공개</div></div>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1610,7 +1735,7 @@
 <!-- VIEW 5: Hi-Point 마켓 (지식 거래소 스토어프론트)                        -->
 <!-- ================================================================ -->
 <div id="view-market" class="view flex-col flex-1 overflow-y-auto msb">
-    <!-- 마켓 헤더 (네이비 헥사곤 패턴) -->
+    <!-- 마켓 헤더 -->
     <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
         <div class="absolute inset-0 overflow-hidden opacity-10">
             <svg width="100%" height="100%"><defs><pattern id="mk-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#mk-hex)"/></svg>
@@ -1618,141 +1743,255 @@
         <div class="relative z-10">
             <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 지식 거래소 · Hi-Point 마켓</div>
             <h1 class="text-xl font-black mb-0.5">⭐ Hi-Point 마켓</h1>
-            <p class="text-xs" style="color:#93c5fd">검증된 노하우를 Hi-Point로 구매하고, 나의 노하우를 팔아 Hi-Point 지갑을 채우세요.</p>
+            <p class="text-xs" style="color:#93c5fd">검증된 노하우를 Hi-Point로 구매하고, 나의 노하우를 팔아 기여 이력을 쌓으세요.</p>
         </div>
         <div class="relative z-10 flex gap-2 shrink-0">
-            <button onclick="nav('upload')" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
-                ✏️ 프리미엄 자산 등록
-            </button>
-            <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">
-                하이드라이브 검색
-            </button>
+            <button onclick="nav('upload')" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">✏️ 지식 등록하기</button>
+            <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">하이드라이브 검색</button>
         </div>
     </div>
 
-    <!-- 마켓 히어로 -->
-    <div class="text-white px-8 py-6 shrink-0" style="background:linear-gradient(135deg,#c47a00 0%,#e08c00 100%)">
-        <div class="flex items-center justify-between max-w-5xl">
-            <div>
-                <div class="text-hi-org text-[10px] font-black tracking-widest mb-1">HI-VE KNOWLEDGE MARKET</div>
-                <h2 class="text-xl font-black mb-1">현장의 살아있는 지식을 거래하세요</h2>
-                <p class="text-white/90 text-xs">검증된 노하우를 Hi-Point로 구매하고, 나의 노하우를 팔아 Hi-Point 지갑을 채우세요.</p>
-            </div>
-            <div class="hidden lg:flex gap-4 text-center">
-                <div class="bg-white/20 rounded-xl px-4 py-3 min-w-[80px]">
-                    <div class="text-xl font-black text-hi-org">3,241</div>
-                    <div class="text-[9px] text-white/80">총 프리미엄 자산</div>
-                </div>
-                <div class="bg-white/20 rounded-xl px-4 py-3 min-w-[80px]">
-                    <div class="text-xl font-black text-hi-org">127</div>
-                    <div class="text-[9px] text-white/80">이번달 거래</div>
-                </div>
-                <div class="bg-white/20 rounded-xl px-4 py-3 min-w-[80px]">
-                    <div class="text-xl font-black text-hi-org">12</div>
-                    <div class="text-[9px] text-white/80">진행중 퀘스트</div>
-                </div>
-            </div>
+    <!-- 마켓 통계 바 -->
+    <div class="shrink-0 px-6 py-3 flex items-center gap-6 text-[11px] border-b border-gray-200" style="background:#f8fafc">
+        <div class="flex items-center gap-2"><span class="text-gray-400">프리미엄 자산</span><strong class="text-hi-navy">3,241건</strong></div>
+        <div style="width:1px;height:14px;background:#e2e8f0"></div>
+        <div class="flex items-center gap-2"><span class="text-gray-400">이번달 거래</span><strong class="text-hi-org">127건</strong></div>
+        <div style="width:1px;height:14px;background:#e2e8f0"></div>
+        <div class="flex items-center gap-2"><span class="text-gray-400">아카이브 전환 (이번달)</span><strong style="color:#1D9E75">18건</strong></div>
+        <div style="width:1px;height:14px;background:#e2e8f0"></div>
+        <div class="flex items-center gap-3 ml-auto text-[10px]">
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#ff9e1b;display:inline-block"></span>Early Access — 조기 구매자 특가</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#3eb49b;display:inline-block"></span>아카이빙 예정 — 곧 전사 무료 공개</span>
         </div>
     </div>
 
     <div class="px-6 py-5 max-w-6xl">
 
-        <!-- 본사 퀘스트/현상금 배너 -->
-        <div class="bg-hi-navy rounded-xl p-4 mb-5 flex items-center justify-between">
+        <!-- 미션 배너 -->
+        <div class="rounded-xl p-4 mb-5 flex items-center justify-between" style="background:#00205b">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-hi-org/20 rounded-xl flex items-center justify-center text-xl">🏆</div>
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style="background:rgba(255,158,27,0.2)">🏆</div>
                 <div>
-                    <div class="text-hi-org text-[10px] font-black mb-0.5">🔥 본사 현상금 퀘스트 진행 중</div>
+                    <div class="text-[10px] font-black mb-0.5" style="color:#ff9e1b">🎯 지식 미션 진행 중</div>
                     <div class="text-white text-sm font-bold">"신상품 Hi2606 고객 거절 극복 화법을 구합니다!"</div>
-                    <div class="text-blue-100 text-[10px]">마케팅팀 주관 · 채택 시 <span class="text-hi-org font-bold">포상금 500Hi-Point (₩500,000)</span> 지급 · 마감 2026-06-30</div>
+                    <div class="text-[10px] mt-0.5" style="color:#93c5fd">마케팅팀 주관 · 채택 시 <span style="color:#ff9e1b;font-weight:700">포상금 500 Hi-Point</span> 지급 · 마감 2026-06-30 <span style="margin-left:8px;background:#FAEEDA;color:#633806;padding:1px 6px;border-radius:3px;font-weight:700;font-size:9px">Excellence 성장</span></div>
                 </div>
             </div>
-            <button onclick="nav('quest')" class="bg-hi-org hover:bg-hi-orglow-400 text-gray-900 text-xs font-black px-4 py-2 rounded-lg transition shrink-0">퀘스트 보기 →</button>
+            <button onclick="nav('quest')" class="text-gray-900 text-xs font-black px-4 py-2 rounded-lg transition shrink-0 hover:opacity-90" style="background:#ff9e1b">미션 보기 →</button>
         </div>
 
-        <!-- 카테고리 필터 -->
-        <div class="flex gap-2 flex-wrap mb-4">
+        <!-- H.E.A.R.T. + 카테고리 필터 -->
+        <div class="flex items-center gap-2 flex-wrap mb-4">
+            <span class="text-[10px] text-gray-500 font-bold mr-1">카테고리</span>
             <button class="chip active text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">전체</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">🤝 영업화법</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">📊 제안서/PPT</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">📚 교육자료</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">📝 매뉴얼</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">💻 데이터/툴</button>
-            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">🏢 본사표준 (무료)</button>
+            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">영업화법</button>
+            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">제안서/PPT</button>
+            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">교육자료</button>
+            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">매뉴얼</button>
+            <button class="chip text-[10px] px-3 py-1.5 rounded-full border border-gray-300 bg-white text-gray-600 transition">데이터/툴</button>
+            <div style="width:1px;height:16px;background:#e2e8f0;margin:0 4px"></div>
+            <span class="text-[10px] text-gray-500 font-bold">H.E.A.R.T.</span>
+            <button class="chip text-[10px] px-2.5 py-1 rounded-full border transition" style="background:#E1F5EE;color:#085041;border-color:#5DCAA5">Action</button>
+            <button class="chip text-[10px] px-2.5 py-1 rounded-full border transition" style="background:#E6F1FB;color:#0C447C;border-color:#85B7EB">Trust</button>
+            <button class="chip text-[10px] px-2.5 py-1 rounded-full border transition" style="background:#FAEEDA;color:#633806;border-color:#FAC775">Excellence</button>
+            <button class="chip text-[10px] px-2.5 py-1 rounded-full border transition" style="background:#EEEDFE;color:#3C3489;border-color:#AFA9EC">Honor</button>
         </div>
 
-        <!-- 주간 베스트셀러 -->
-        <h3 class="font-black text-hi-navy text-sm mb-3">🔥 이번 주 베스트셀러</h3>
+        <!-- ① 이번 주 베스트 -->
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-black text-hi-navy text-sm">🔥 이번 주 베스트셀러</h3>
+            <span class="text-[10px] text-gray-400">구매 후 7일 내 평가로 레몬 시장을 방지합니다</span>
+        </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-6">
-            <!-- 프리미엄 카드 1 -->
-            <div onclick="openModal(0)" class="kcard bg-white rounded-xl border-2 border-orange-200 p-4 shadow-sm relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-hi-org text-white text-[9px] font-black px-2 py-1 rounded-bl-lg">#1 베스트</div>
-                <div class="flex items-start justify-between mb-2 mt-1">
-                    <span class="badge-cert text-[9px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
-                    <span class="bg-hi-org/10 text-hi-org border border-hi-org/30 text-[9px] px-2 py-0.5 rounded-full font-black">⭐ 1 Hi-Point</span>
+
+            <!-- 카드 1 - Action 태그, 감가 표시 -->
+            <div onclick="openModal(0)" class="kcard bg-white rounded-xl border-2 border-orange-200 p-4 shadow-sm relative overflow-hidden" style="cursor:pointer">
+                <div class="absolute top-0 right-0 text-white text-[9px] font-black px-2 py-1 rounded-bl-lg" style="background:#ff9e1b">#1 베스트</div>
+                <div class="flex items-center gap-1.5 mb-2 mt-1 flex-wrap">
+                    <span class="badge-cert text-[8px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
+                    <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#E1F5EE;color:#1D9E75">Action</span>
+                    <span style="font-size:8px;padding:1px 5px;border-radius:3px;background:#f8fafc;color:#64748b;border:0.5px solid #e2e8f0">⭐ 4.9 (47명)</span>
                 </div>
-                <div class="font-bold text-sm text-gray-800 mb-1 line-clamp-2">26년 개정 실손의료비 화법 스크립트</div>
-                <div class="text-[10px] text-gray-500 mb-3 line-clamp-2">거절을 극복하고 계약으로 이어질 핵심 화법 스크립트</div>
+                <div class="font-bold text-sm text-gray-800 mb-0.5 line-clamp-2">26년 개정 실손의료비 화법 스크립트</div>
+                <div class="text-[10px] text-gray-500 mb-3 line-clamp-2">거절을 극복하고 계약으로 이어질 핵심 화법 시나리오</div>
+                <!-- 가격 + 감가 -->
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <span class="text-hi-org font-black" style="font-size:15px">1 P</span>
+                        <span class="text-[9px] text-gray-400 ml-1">현재가</span>
+                    </div>
+                    <div class="text-right">
+                        <div style="font-size:8.5px;color:#ef4444;font-weight:600">30일 후 → 무료</div>
+                        <div class="text-[8px] text-gray-400">아카이빙 예정</div>
+                    </div>
+                </div>
+                <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:8px">
+                    <div style="width:85%;height:100%;background:#ef4444;border-radius:2px"></div>
+                </div>
                 <div class="flex items-center justify-between text-[10px]">
-                    <div class="flex items-center gap-1 text-gray-400"><div class="w-4 h-4 rounded-full bg-pt flex items-center justify-center text-white font-bold text-[8px]">이</div>이현대</div>
+                    <div class="flex items-center gap-1 text-gray-400">
+                        <div class="w-4 h-4 rounded-full flex items-center justify-center text-white font-bold text-[8px]" style="background:#3eb49b">T</div>
+                        <span>이현대 · 신뢰의 파수꾼</span>
+                    </div>
                     <div class="flex gap-2 text-gray-400"><span>↓342</span><span class="text-red-400">♥89</span></div>
                 </div>
             </div>
-            <!-- 프리미엄 카드 2 -->
-            <div onclick="openModal(1)" class="kcard bg-white rounded-xl border border-gray-200 p-4 shadow-sm relative overflow-hidden">
-                <div class="flex items-start justify-between mb-2">
-                    <span class="badge-cert text-[9px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
-                    <span class="bg-hi-org/10 text-hi-org border border-hi-org/30 text-[9px] px-2 py-0.5 rounded-full font-black">⭐ 3 Hi-Point</span>
+
+            <!-- 카드 2 - Excellence 태그, Early Access -->
+            <div onclick="openModal(1)" class="kcard bg-white rounded-xl border p-4 shadow-sm relative overflow-hidden" style="cursor:pointer;border-color:#e2e8f0">
+                <div class="absolute top-0 left-0 text-white text-[9px] font-black px-2.5 py-1 rounded-br-lg" style="background:#ff9e1b">Early Access</div>
+                <div class="flex items-center gap-1.5 mb-2 mt-4 flex-wrap">
+                    <span class="badge-cert text-[8px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
+                    <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#FAEEDA;color:#BA7517">Excellence</span>
+                    <span style="font-size:8px;padding:1px 5px;border-radius:3px;background:#f8fafc;color:#64748b;border:0.5px solid #e2e8f0">⭐ 4.7 (23명)</span>
                 </div>
-                <div class="font-bold text-sm text-gray-800 mb-1 line-clamp-2">VIP 고객 대상 종신보험 제안서 (수정가능 PPT)</div>
-                <div class="text-[10px] text-gray-500 mb-3 line-clamp-2">법인 CEO 및 고액 자산가 대상 종신보험 제안서 PPT 원본</div>
+                <div class="font-bold text-sm text-gray-800 mb-0.5 line-clamp-2">VIP 고객 대상 종신보험 제안서 PPT</div>
+                <div class="text-[10px] text-gray-500 mb-3 line-clamp-2">법인 CEO 및 고액 자산가 대상 종신보험 제안서 원본</div>
+                <!-- 가격 + Early Access 쿼터 -->
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <span class="text-hi-org font-black" style="font-size:15px">3 P</span>
+                        <span class="text-[9px] text-gray-400 ml-1">Early Access가</span>
+                    </div>
+                    <div class="text-right">
+                        <div style="font-size:8.5px;color:#ff9e1b;font-weight:600">잔여 <strong>2</strong>/5석</div>
+                        <div class="text-[8px] text-gray-400">소진 후 6P 예정</div>
+                    </div>
+                </div>
+                <!-- 쿼터 바 -->
+                <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden;margin-bottom:8px">
+                    <div style="width:60%;height:100%;background:#ff9e1b;border-radius:2px"></div>
+                </div>
                 <div class="flex items-center justify-between text-[10px]">
-                    <div class="flex items-center gap-1 text-gray-400"><div class="w-4 h-4 rounded-full bg-hi-org flex items-center justify-center text-white font-bold text-[8px]">김</div>김지식</div>
+                    <div class="flex items-center gap-1 text-gray-400">
+                        <div class="w-4 h-4 rounded-full flex items-center justify-center text-white font-bold text-[8px]" style="background:#BA7517">E</div>
+                        <span>김지식 · 탁월함의 개척자</span>
+                    </div>
                     <div class="flex gap-2 text-gray-400"><span>↓128</span><span class="text-red-400">♥45</span></div>
                 </div>
             </div>
-            <!-- 본사 공공 카드 -->
-            <div onclick="openModal(2)" class="kcard bg-white rounded-xl border border-blue-200 p-4 shadow-sm bg-blue-50/30">
-                <div class="flex items-start justify-between mb-2">
-                    <span class="badge-hq text-[9px] px-1.5 py-0.5 rounded font-bold">🏢 본사표준</span>
-                    <span class="bg-green-100 text-green-700 border border-green-200 text-[9px] px-2 py-0.5 rounded-full font-black">무료</span>
+
+            <!-- 카드 3 - Honor 태그, 본사 표준 무료 -->
+            <div onclick="openModal(2)" class="kcard bg-white rounded-xl border p-4 shadow-sm" style="cursor:pointer;border-color:#bfdbfe;background:#eff6ff22">
+                <div class="flex items-center gap-1.5 mb-2 flex-wrap">
+                    <span class="badge-hq text-[8px] px-1.5 py-0.5 rounded font-bold">🏢 본사표준</span>
+                    <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#EEEDFE;color:#3C3489">Honor</span>
+                    <span class="text-[8px] px-2 py-0.5 rounded-full font-black" style="background:#dcfce7;color:#15803d;border:0.5px solid #bbf7d0">무료</span>
                 </div>
-                <div class="font-bold text-sm text-gray-800 mb-1 line-clamp-2">장기보험 청약철회 및 취소 매뉴얼 (202605)</div>
+                <div class="font-bold text-sm text-gray-800 mb-0.5 line-clamp-2">장기보험 청약철회 및 취소 매뉴얼 (2026.05)</div>
                 <div class="text-[10px] text-gray-500 mb-3 line-clamp-2">5세대 실손의료비 출시로 문구 수정된 최신 버전</div>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold" style="color:#2563eb">공공 자산 (무료)</span>
+                    <span style="font-size:8.5px;color:#2563eb;background:#eff6ff;padding:2px 6px;border-radius:3px;font-weight:600">v3.2 최신</span>
+                </div>
                 <div class="flex items-center justify-between text-[10px]">
-                    <div class="flex items-center gap-1 text-gray-400"><div class="w-4 h-4 rounded-full bg-hi-navy flex items-center justify-center text-white font-bold text-[8px]">본</div>장기계약관리부</div>
-                    <span class="text-blue-400">🕐 v3.2</span>
+                    <div class="flex items-center gap-1 text-gray-400">
+                        <div class="w-4 h-4 rounded-full flex items-center justify-center text-white font-bold text-[8px]" style="background:#00205b">본</div>
+                        <span>장기계약관리부</span>
+                    </div>
+                    <div class="flex gap-2 text-gray-400"><span>↓521</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- 신규 등록 자산 -->
-        <h3 class="font-black text-hi-navy text-sm mb-3">✨ 따끈따끈 신규 등록</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-4">
-            <div onclick="openModal(7)" class="kcard bg-white rounded-xl border border-gray-200 p-4 flex gap-3 shadow-sm">
-                <div class="w-10 h-12 bg-amber-50 rounded-lg flex items-center justify-center shrink-0 border border-amber-100 text-xl">PDF</div>
+        <!-- ② Early Access — 선착순 한정 콘텐츠 -->
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-black text-hi-navy text-sm">⚡ Early Access — 조기 구매자 특가</h3>
+            <span class="text-[10px]" style="color:#ff9e1b;font-weight:600">쿼터 소진 후 가격 인상 · 얼리어답터는 추후 30% 환급</span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
+
+            <div onclick="openModal(7)" class="kcard bg-white rounded-xl p-4 flex gap-3 shadow-sm" style="cursor:pointer;border:1.5px solid #fed7aa">
+                <div class="w-10 h-12 bg-amber-50 rounded-lg flex items-center justify-center text-[10px] font-black text-amber-600 shrink-0 border border-amber-100">PDF</div>
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="text-[9px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">평가중</span>
-                        <span class="bg-hi-org/10 text-hi-org text-[9px] px-1.5 py-0.5 rounded-full font-black">⭐ 1 Hi-Point</span>
+                    <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                        <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#E1F5EE;color:#1D9E75">Action</span>
+                        <span class="text-[9px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">평가중 7/10</span>
+                        <span class="text-[8px] px-1.5 py-0.5 rounded-full font-black" style="background:#fff7ed;color:#c2410c;border:1px solid #fed7aa">⭐ 1 P</span>
                     </div>
                     <div class="font-bold text-xs text-gray-800 mb-0.5 truncate">신입 영업가족을 위한 100일 플랜 가이드</div>
-                    <div class="text-[9px] text-gray-400 mb-1">하이파이브! 7/10 · 다운로드 231</div>
-                    <div class="w-full bg-gray-100 rounded-full h-1"><div class="bg-hi-org h-1 rounded-full" style="width:70%"></div></div>
+                    <div class="flex items-center gap-2 text-[9px] text-gray-400 mb-1">
+                        <span>박노하우</span><span>↓231</span>
+                        <span style="margin-left:auto;color:#ff9e1b;font-weight:600">잔여 <strong>4</strong>/5석</span>
+                    </div>
+                    <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden">
+                        <div style="width:20%;height:100%;background:#ff9e1b;border-radius:2px"></div>
+                    </div>
                 </div>
             </div>
-            <div onclick="openModal(8)" class="kcard bg-white rounded-xl border border-gray-200 p-4 flex gap-3 shadow-sm">
-                <div class="w-10 h-12 bg-green-50 rounded-lg flex items-center justify-center shrink-0 border border-green-100 text-xl">PPT</div>
+
+            <div onclick="openModal(8)" class="kcard bg-white rounded-xl p-4 flex gap-3 shadow-sm" style="cursor:pointer;border:1.5px solid #fed7aa">
+                <div class="w-10 h-12 bg-green-50 rounded-lg flex items-center justify-center text-[10px] font-black text-green-600 shrink-0 border border-green-100">PPT</div>
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-1.5 mb-1">
-                        <span class="text-[9px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">평가중</span>
-                        <span class="bg-hi-org/10 text-hi-org text-[9px] px-1.5 py-0.5 rounded-full font-black">⭐ 무료</span>
+                    <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                        <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#EEEDFE;color:#3C3489">Honor</span>
+                        <span class="text-[9px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">평가중 2/10</span>
+                        <span class="text-[8px] px-1.5 py-0.5 rounded-full font-black" style="background:#fff7ed;color:#c2410c;border:1px solid #fed7aa">⭐ 2 P</span>
                     </div>
                     <div class="font-bold text-xs text-gray-800 mb-0.5 truncate">단순 반복 수작업을 줄여주는 엑셀 매크로</div>
-                    <div class="text-[9px] text-gray-400 mb-1">하이파이브! 2/10 · 다운로드 187</div>
-                    <div class="w-full bg-gray-100 rounded-full h-1"><div class="bg-hi-org h-1 rounded-full" style="width:20%"></div></div>
+                    <div class="flex items-center gap-2 text-[9px] text-gray-400 mb-1">
+                        <span>이현대</span><span>↓187</span>
+                        <span style="margin-left:auto;color:#ff9e1b;font-weight:600">잔여 <strong>5</strong>/5석</span>
+                    </div>
+                    <div style="height:3px;background:#f1f5f9;border-radius:2px;overflow:hidden">
+                        <div style="width:5%;height:100%;background:#ff9e1b;border-radius:2px"></div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- ③ 아카이빙 예정 — 곧 전사 무료 공개 -->
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-black text-sm" style="color:#085041">🌿 아카이빙 예정 — 지금 사면 환급 혜택</h3>
+            <span class="text-[10px]" style="color:#3eb49b;font-weight:600">전사 공개 시 구매가의 30% 자동 환급</span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+
+            <div class="kcard bg-white rounded-xl p-4 shadow-sm" style="cursor:pointer;border:1.5px solid #a7f3d0">
+                <div class="flex items-center gap-1.5 mb-2 flex-wrap">
+                    <span class="badge-cert text-[8px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
+                    <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#E6F1FB;color:#185FA5">Trust</span>
+                    <span style="font-size:8px;font-weight:600;padding:1px 5px;border-radius:3px;background:#E1F5EE;color:#085041">아카이빙 D-14</span>
+                </div>
+                <div class="font-bold text-xs text-gray-800 mb-0.5 truncate">악성 민원 VOC 대응 케이스북 v2</div>
+                <div class="text-[9px] text-gray-500 mb-2 line-clamp-2">실제 발생한 악성 민원 38건의 대응 시나리오 모음</div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="font-black" style="color:#ff9e1b;font-size:14px">2 P</span>
+                        <span class="text-[8px] line-through text-gray-400 ml-1">원래 4P</span>
+                    </div>
+                    <span style="font-size:8px;color:#085041;background:#dcfce7;padding:2px 7px;border-radius:3px;font-weight:600">구매 시 0.6P 환급 예정</span>
+                </div>
+            </div>
+
+            <div class="kcard bg-white rounded-xl p-4 shadow-sm" style="cursor:pointer;border:1.5px solid #a7f3d0">
+                <div class="flex items-center gap-1.5 mb-2 flex-wrap">
+                    <span class="badge-cert text-[8px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
+                    <span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:#E1F5EE;color:#1D9E75">Action</span>
+                    <span style="font-size:8px;font-weight:600;padding:1px 5px;border-radius:3px;background:#E1F5EE;color:#085041">아카이빙 D-7</span>
+                </div>
+                <div class="font-bold text-xs text-gray-800 mb-0.5 truncate">장기보상 청구 FAQ 핵심 50선</div>
+                <div class="text-[9px] text-gray-500 mb-2 line-clamp-2">현장에서 가장 많이 받는 질문과 모범 답변 정리</div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="font-black" style="color:#ff9e1b;font-size:14px">1 P</span>
+                        <span class="text-[8px] line-through text-gray-400 ml-1">원래 3P</span>
+                    </div>
+                    <span style="font-size:8px;color:#085041;background:#dcfce7;padding:2px 7px;border-radius:3px;font-weight:600">구매 시 0.3P 환급 예정</span>
+                </div>
+            </div>
+
+            <div class="rounded-xl p-4 flex flex-col items-center justify-center text-center" style="border:1.5px dashed #a7f3d0;background:#f0fdf9">
+                <div style="font-size:20px;margin-bottom:6px">🌿</div>
+                <div class="font-bold text-xs mb-1" style="color:#085041">전사 공개 완료</div>
+                <div class="text-[10px] mb-2" style="color:#0F6E56">이 달 18건이 아카이브로 이관됐습니다</div>
+                <button onclick="showList('보상/손해사정','장기보상')" class="text-[9.5px] font-bold px-3 py-1.5 rounded-lg border transition hover:opacity-80" style="color:#3eb49b;border-color:#3eb49b">아카이브 보러가기</button>
+            </div>
+        </div>
+
+        <!-- 안내 문구 -->
+        <div class="rounded-xl px-4 py-3 text-[10.5px] leading-relaxed" style="background:#f8fafc;border:0.5px solid #e2e8f0;color:#64748b">
+            💡 <strong style="color:#374151">Hi-Point 마켓 이용 안내:</strong> 모든 거래는 선착순으로 이루어지며 판매자가 특정 구매자를 거절할 수 없습니다. 구매 후 7일 내 "실제로 활용했나요?" 피드백을 남겨주세요. 아카이빙(전사 공개) 전환 시 조기 구매자에게 구매가의 30%가 자동 환급됩니다. <strong style="color:#374151">1일 최대 획득 한도:</strong> 답변 5회·업로드 1회·반응 2회.
         </div>
     </div>
 </div><!-- /view-market -->
@@ -2627,6 +2866,43 @@
                 </div>
             </div>
             <div class="p-5 space-y-4 overflow-y-auto msb">
+                <!-- HEART 축 선택 -->
+                <div>
+                    <label class="text-[10px] font-black text-gray-700 mb-1 block">이 질문의 핵심 가치 축 <span class="text-red-400">*</span></label>
+                    <p class="text-[9px] text-gray-400 mb-2">어떤 종류의 성장을 위한 질문인가요? 특정 축이 과도하게 쌓이지 않도록 생각해서 선택하세요.</p>
+                    <div class="grid grid-cols-5 gap-1.5">
+                        <label class="flex flex-col items-center gap-1 border rounded-lg p-2 cursor-pointer has-[:checked]:border-2 has-[:checked]:bg-white transition text-center" style="border-color:#AFA9EC;background:#EEEDFE">
+                            <input type="radio" name="faq-heart" value="H" class="hidden">
+                            <span class="text-sm font-black" style="color:#534AB7">H</span>
+                            <span class="text-[9px] font-bold" style="color:#534AB7">Honor</span>
+                            <span class="text-[8px] text-gray-500">정도·기준</span>
+                        </label>
+                        <label class="flex flex-col items-center gap-1 border rounded-lg p-2 cursor-pointer has-[:checked]:border-2 has-[:checked]:bg-white transition text-center" style="border-color:#FAC775;background:#FAEEDA">
+                            <input type="radio" name="faq-heart" value="E" class="hidden">
+                            <span class="text-sm font-black" style="color:#BA7517">E</span>
+                            <span class="text-[9px] font-bold" style="color:#BA7517">Excellence</span>
+                            <span class="text-[8px] text-gray-500">탁월·깊이</span>
+                        </label>
+                        <label class="flex flex-col items-center gap-1 border rounded-lg p-2 cursor-pointer has-[:checked]:border-2 has-[:checked]:bg-white transition text-center" style="border-color:#5DCAA5;background:#E1F5EE">
+                            <input type="radio" name="faq-heart" value="A" checked class="hidden">
+                            <span class="text-sm font-black" style="color:#1D9E75">A</span>
+                            <span class="text-[9px] font-bold" style="color:#1D9E75">Action</span>
+                            <span class="text-[8px] text-gray-500">실행·현장</span>
+                        </label>
+                        <label class="flex flex-col items-center gap-1 border rounded-lg p-2 cursor-pointer has-[:checked]:border-2 has-[:checked]:bg-white transition text-center" style="border-color:#ED93B1;background:#FBEAF0">
+                            <input type="radio" name="faq-heart" value="R" class="hidden">
+                            <span class="text-sm font-black" style="color:#D4537E">R</span>
+                            <span class="text-[9px] font-bold" style="color:#D4537E">Respect</span>
+                            <span class="text-[8px] text-gray-500">존중·협력</span>
+                        </label>
+                        <label class="flex flex-col items-center gap-1 border rounded-lg p-2 cursor-pointer has-[:checked]:border-2 has-[:checked]:bg-white transition text-center" style="border-color:#85B7EB;background:#E6F1FB">
+                            <input type="radio" name="faq-heart" value="T" class="hidden">
+                            <span class="text-sm font-black" style="color:#185FA5">T</span>
+                            <span class="text-[9px] font-bold" style="color:#185FA5">Trust</span>
+                            <span class="text-[8px] text-gray-500">신뢰·꾸준함</span>
+                        </label>
+                    </div>
+                </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="text-[10px] font-bold text-gray-700 mb-1 block">업무 카테고리 *</label>
@@ -2886,80 +3162,201 @@
 
 
 <!-- ================================================================ -->
-<!-- VIEW 8: 본사 퀘스트 / 현상금                                      -->
+<!-- VIEW 8: 지식 미션                                                 -->
 <!-- ================================================================ -->
 <div id="view-quest" class="view flex-col flex-1 overflow-y-auto msb">
-    <!-- 본사 퀘스트 헤더 (네이비 헥사곤 패턴) -->
+
+    <!-- ── 헤더 ── -->
     <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
         <div class="absolute inset-0 overflow-hidden opacity-10">
             <svg width="100%" height="100%"><defs><pattern id="qt-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#qt-hex)"/></svg>
         </div>
         <div class="relative z-10">
-            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 지식 거래소 › 본사 퀘스트</div>
-            <h1 class="text-xl font-black mb-0.5">🏆 본사 퀘스트 / 현상금</h1>
-            <p class="text-xs" style="color:#93c5fd">본사에서 필요한 현장 데이터와 노하우를 공모합니다. 채택되면 Hi-Point를 드립니다!</p>
+            <div class="text-[10px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 지식 거래소 › 지식 미션</div>
+            <h1 class="text-xl font-black mb-0.5">🎯 지식 미션</h1>
+            <p class="text-xs" style="color:#93c5fd">필요한 지식을 미션으로 공모합니다. 채택되면 Hi-Point를 드립니다!</p>
         </div>
         <div class="relative z-10 flex gap-2 shrink-0">
-            <button onclick="nav('upload')" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
-                ✏️ 퀘스트 응모하기
+            <button onclick="openMissionProposalModal()" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
+                ✏️ 미션 등록 제안
             </button>
             <button onclick="openHidriveSearchModal()" class="font-bold text-xs px-4 py-2 rounded-lg border transition flex items-center gap-1.5" style="background:rgba(14,165,233,.2);border-color:rgba(14,165,233,.4);color:#7dd3fc">
                 하이드라이브 검색
             </button>
         </div>
     </div>
-    <div class="px-6 py-5 max-w-5xl">
-        <div class="space-y-3">
-            <!-- 퀘스트 카드 1 -->
-            <div class="bg-white rounded-xl border-2 border-yel/50 p-5 shadow-sm">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                        <div class="bg-hi-org/20 text-amber-700 text-[9px] font-black px-2 py-0.5 rounded">🔥 진행중</div>
-                        <div class="text-[9px] text-gray-400">마케팅팀 주관</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-hi-org font-black text-lg">⭐ 500 Hi-Point (₩500,000)</div>
-                        <div class="text-[9px] text-gray-400">채택 시 지급</div>
-                    </div>
+
+    <!-- ── 상단 통계 카드 ── -->
+    <div class="shrink-0 px-6 pt-4 pb-0 grid grid-cols-4 gap-3 max-w-5xl">
+        <div class="bg-white rounded-xl border border-gray-200 p-3 shadow-sm text-center">
+            <div class="text-[10px] text-gray-400 mb-0.5">진행중 미션</div>
+            <div id="mstat-active" class="font-black text-xl text-hi-navy">0</div>
+        </div>
+        <div class="bg-white rounded-xl border border-red-200 p-3 shadow-sm text-center">
+            <div class="text-[10px] text-red-400 mb-0.5">마감 임박 (7일)</div>
+            <div id="mstat-urgent" class="font-black text-xl text-red-500">0</div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-3 shadow-sm text-center">
+            <div class="text-[10px] text-gray-400 mb-0.5">전체 응모건</div>
+            <div id="mstat-entries" class="font-black text-xl text-pt">0</div>
+        </div>
+        <div class="bg-white rounded-xl border border-orange-200 p-3 shadow-sm text-center">
+            <div class="text-[10px] text-orange-400 mb-0.5">총 보상 Hi-Point</div>
+            <div id="mstat-reward" class="font-black text-xl text-hi-org">0</div>
+        </div>
+    </div>
+
+    <!-- ── 검색 + 정렬 ── -->
+    <div class="shrink-0 px-6 pt-4 pb-0 max-w-5xl flex gap-2 items-center">
+        <div class="flex-1 relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+            <input id="mission-search" type="text" placeholder="미션 제목, 내용 검색..."
+                class="w-full border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-xs outline-none bg-white focus:border-hi-navy"
+                oninput="renderMissions()">
+        </div>
+        <select id="mission-sort" onchange="renderMissions()"
+            class="border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none bg-white min-w-[130px]">
+            <option value="deadline">마감 임박순</option>
+            <option value="reward">보상 높은순</option>
+            <option value="entries">응모 많은순</option>
+            <option value="newest">최신 등록순</option>
+        </select>
+    </div>
+
+    <!-- ── 상태 탭 ── -->
+    <div class="shrink-0 px-6 pt-3 pb-0 max-w-5xl">
+        <div class="flex border-b border-gray-200">
+            <button class="mission-tab-btn active text-xs py-2 px-4 border-b-2 border-hi-navy font-bold text-hi-navy transition" data-mtab="all" onclick="setMissionTab(this)">전체 <span id="mtab-cnt-all" class="text-gray-400 font-normal"></span></button>
+            <button class="mission-tab-btn text-xs py-2 px-4 border-b-2 border-transparent text-gray-500 font-medium transition" data-mtab="active" onclick="setMissionTab(this)">진행중 <span id="mtab-cnt-active" class="text-gray-400 font-normal"></span></button>
+            <button class="mission-tab-btn text-xs py-2 px-4 border-b-2 border-transparent text-gray-500 font-medium transition" data-mtab="urgent" onclick="setMissionTab(this)">마감 임박 <span id="mtab-cnt-urgent" class="text-red-400 font-normal"></span></button>
+            <button class="mission-tab-btn text-xs py-2 px-4 border-b-2 border-transparent text-gray-500 font-medium transition" data-mtab="done" onclick="setMissionTab(this)">완료 <span id="mtab-cnt-done" class="text-gray-400 font-normal"></span></button>
+            <button class="mission-tab-btn text-xs py-2 px-4 border-b-2 border-transparent text-gray-500 font-medium transition" data-mtab="mine" onclick="setMissionTab(this)">내 응모 <span id="mtab-cnt-mine" class="text-pt font-normal"></span></button>
+        </div>
+    </div>
+
+    <!-- ── 부서 필터 칩 ── -->
+    <div class="shrink-0 px-6 pt-3 pb-0 max-w-5xl flex gap-2 flex-wrap items-center">
+        <span class="text-[10px] text-gray-400 mr-1 shrink-0">주관</span>
+        <div id="mission-dept-chips" class="flex gap-1.5 flex-wrap"></div>
+    </div>
+
+    <!-- ── 결과 카운트 ── -->
+    <div class="shrink-0 px-6 pt-3 pb-1 max-w-5xl">
+        <span id="mission-result-info" class="text-[10px] text-gray-400"></span>
+    </div>
+
+    <!-- ── 미션 카드 목록 ── -->
+    <div id="mission-list" class="px-6 pb-8 max-w-5xl space-y-3"></div>
+
+    <!-- ── Phase 3: 명예의 전당 ── -->
+    <div class="shrink-0 px-6 pb-6 max-w-5xl">
+        <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-black text-sm text-hi-navy flex items-center gap-1.5">
+                    🏅 명예의 전당
+                    <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-bold ml-1">채택 우수자</span>
                 </div>
-                <h3 class="font-black text-sm text-gray-900 mb-1">"신상품 Hi2606 고객 거절 극복 화법을 구합니다!"</h3>
-                <p class="text-xs text-gray-600 mb-3">5월 출시 예정인 신상품에 대한 고객 반응과 거절 유형을 현장에서 직접 겪은 상황을 바탕으로 화법 스크립트를 작성해 주세요. 우수작은 전사 공공 자산으로 등재됩니다.</p>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <span>마감 2026-06-30 · 응모 12건</span>
-                    <button onclick="nav('upload')" class="bg-hi-org hover:bg-orange-600 text-white font-bold px-3 py-1.5 rounded transition">응모하기 →</button>
-                </div>
+                <span class="text-[9px] text-gray-400">2026년 누적</span>
             </div>
-            <!-- 퀘스트 카드 2 -->
-            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                        <div class="bg-blue-100 text-blue-700 text-[9px] font-black px-2 py-0.5 rounded">진행중</div>
-                        <div class="text-[9px] text-gray-400">보상팀 주관</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-hi-org font-black text-lg">⭐ 200 Hi-Point (₩200,000)</div>
-                        <div class="text-[9px] text-gray-400">채택 시 지급</div>
-                    </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="text-center p-3 bg-amber-50 rounded-xl border border-amber-100">
+                    <div class="text-2xl mb-1">🥇</div>
+                    <div class="font-black text-xs text-gray-800">이현대 과장</div>
+                    <div class="text-[9px] text-gray-500 mt-0.5">영업1팀</div>
+                    <div class="text-[10px] font-bold text-hi-org mt-1">채택 3회 · 900 HP 획득</div>
                 </div>
-                <h3 class="font-black text-sm text-gray-900 mb-1">"현장에서 가장 많이 받는 보험금 청구 Q&A 20선"</h3>
-                <p class="text-xs text-gray-600 mb-3">고객이 자주 묻는 보험금 청구 관련 질문과 현장에서 실제 효과적인 답변 방식을 정리해 주세요.</p>
-                <div class="flex items-center justify-between text-[10px] text-gray-400">
-                    <span>마감 2026-07-15 · 응모 5건</span>
-                    <button onclick="nav('upload')" class="bg-hi-navy hover:bg-hi-navy/90 text-white font-bold px-3 py-1.5 rounded transition">응모하기 →</button>
+                <div class="text-center p-3 bg-gray-50 rounded-xl border border-gray-200">
+                    <div class="text-2xl mb-1">🥈</div>
+                    <div class="font-black text-xs text-gray-800">김지식 대리</div>
+                    <div class="text-[9px] text-gray-500 mt-0.5">보상1팀</div>
+                    <div class="text-[10px] font-bold text-hi-org mt-1">채택 2회 · 500 HP 획득</div>
                 </div>
-            </div>
-            <!-- 완료된 퀘스트 -->
-            <div class="bg-gray-50 rounded-xl border border-gray-200 p-5 opacity-70">
-                <div class="flex items-start justify-between mb-2">
-                    <div class="bg-gray-200 text-gray-500 text-[9px] font-black px-2 py-0.5 rounded">완료</div>
-                    <div class="text-gray-400 font-black text-sm">⭐ 300 Hi-Point (₩300,000) · 지급완료</div>
+                <div class="text-center p-3 bg-orange-50 rounded-xl border border-orange-100">
+                    <div class="text-2xl mb-1">🥉</div>
+                    <div class="font-black text-xs text-gray-800">박노하우 팀장</div>
+                    <div class="text-[9px] text-gray-500 mt-0.5">상품팀</div>
+                    <div class="text-[10px] font-bold text-hi-org mt-1">채택 1회 · 400 HP 획득</div>
                 </div>
-                <h3 class="font-bold text-sm text-gray-600 line-through">"실손의료비 5세대 개정 관련 현장 반응 보고서"</h3>
-                <div class="text-[10px] text-gray-400 mt-1">채택자: 이현대 과장 · 2026-04-30 마감 · 응모 23건</div>
             </div>
         </div>
     </div>
+
 </div><!-- /view-quest -->
+
+<!-- ================================================================ -->
+<!-- 지식 미션 응모 모달                                               -->
+<!-- ================================================================ -->
+<div id="mission-apply-modal" class="modal-bg" onclick="if(event.target===this)closeMissionModal()">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden" style="max-height:90vh;overflow-y:auto" onclick="event.stopPropagation()">
+        <!-- 모달 헤더 -->
+        <div class="text-white px-6 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#00205b,#0d3073)">
+            <div>
+                <div class="text-[10px] font-bold mb-0.5" style="color:rgba(255,255,255,.55)">🎯 지식 미션 응모</div>
+                <div id="mmodal-title" class="font-black text-sm text-white"></div>
+            </div>
+            <button onclick="closeMissionModal()" class="text-white/60 hover:text-white text-lg leading-none font-bold">✕</button>
+        </div>
+
+        <!-- 미션 요약 정보 -->
+        <div id="mmodal-info" class="px-6 pt-4 pb-0"></div>
+
+        <!-- 응모 폼 -->
+        <div class="px-6 pt-4 pb-6 space-y-4">
+
+            <!-- 제목 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">응모 제목 <span class="text-red-400">*</span></label>
+                <input id="mapply-title" type="text" placeholder="응모작 제목을 입력하세요"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+            </div>
+
+            <!-- 본문 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">응모 내용 <span class="text-red-400">*</span></label>
+                <textarea id="mapply-content" rows="6" placeholder="미션 요건에 맞는 내용을 작성해 주세요. 구체적인 사례, 수치, 현장 경험을 포함하면 채택 가능성이 높아집니다."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
+                <div class="text-[9px] text-gray-400 mt-0.5 text-right"><span id="mapply-char">0</span> 자</div>
+            </div>
+
+            <!-- 파일 첨부 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">파일 첨부 <span class="text-gray-400 font-normal">(선택)</span></label>
+                <div class="dropzone rounded-lg p-3 text-center cursor-pointer" onclick="showToast('파일 선택 다이얼로그를 엽니다.','📎')">
+                    <span class="text-[10px] text-gray-400">📎 파일을 드래그하거나 클릭하여 업로드 (PDF, DOCX, XLSX, PPTX · 최대 20MB)</span>
+                </div>
+            </div>
+
+            <!-- 익명/실명 토글 -->
+            <div class="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3">
+                <div>
+                    <div class="text-[10px] font-black text-gray-700">응모자 공개 여부</div>
+                    <div class="text-[9px] text-gray-400 mt-0.5">비공개 선택 시 채택 결과 발표 전까지 익명 처리됩니다</div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="mapply-anon-label" class="text-[10px] text-gray-500">실명 공개</span>
+                    <div class="relative w-9 h-5 cursor-pointer" onclick="toggleMissionAnon()">
+                        <div id="mapply-anon-track" class="w-9 h-5 rounded-full transition" style="background:#e5e7eb"></div>
+                        <div id="mapply-anon-thumb" class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hi-Point 안내 -->
+            <div id="mmodal-reward-notice" class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-[10px] text-amber-800">
+                💰 <strong>채택 시 보상:</strong> <span id="mmodal-reward-text"></span>
+                <div class="mt-1 text-amber-600">채택작은 전사 공공 자산으로 등재되며, 작성자 이름이 「본사 인증」 뱃지와 함께 공개됩니다.</div>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeMissionModal()" class="flex-1 border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
+                <button onclick="submitMissionApply()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#00205b">
+                    응모 제출하기 ✓
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- ================================================================ -->
@@ -2988,6 +3385,7 @@
         <button class="admin-tab active py-3 px-5 text-sm" onclick="switchAdminTab('adm-dashboard', this)">대시보드</button>
         <button class="admin-tab py-3 px-5 text-sm" onclick="switchAdminTab('adm-settings', this)">Hi-Point 설정</button>
         <button class="admin-tab py-3 px-5 text-sm" onclick="switchAdminTab('adm-subcat', this)">폴더 소분류 관리</button>
+        <button class="admin-tab py-3 px-5 text-sm" id="adm-tab-mission" onclick="switchAdminTab('adm-mission', this);renderAdminMissions()">🎯 지식 미션 관리 <span id="adm-mission-proposal-badge" class="hidden text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full font-black ml-1">0</span></button>
     </div>
 
     <!-- 스크롤 영역 -->
@@ -3004,16 +3402,16 @@
                 <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                         <div class="text-[10px] text-hi-org font-bold tracking-widest uppercase mb-1">2026년 연간 지식 생태계 예산</div>
-                        <div class="text-3xl font-black">₩100,000,000</div>
-                        <div class="text-xs text-blue-100 mt-1">총 100,000 Hi-Point · Hi-Point당 ₩1,000 · 교환 단위: 10 Hi-Point = ₩10,000</div>
+                        <div class="text-3xl font-black">100,000 Hi-Point</div>
+                        <div class="text-xs text-blue-100 mt-1">총 100,000 Hi-Point</div>
                     </div>
                     <div class="flex gap-3">
                         <div class="bg-white/10 rounded-xl px-4 py-3 text-center min-w-[90px]">
-                            <div class="text-lg font-black text-hi-org">₩23,500,000</div>
+                            <div class="text-lg font-black text-hi-org">23,500 P</div>
                             <div class="text-[9px] text-blue-100 mt-0.5">집행 금액</div>
                         </div>
                         <div class="bg-white/10 rounded-xl px-4 py-3 text-center min-w-[90px]">
-                            <div class="text-lg font-black text-green-300">₩76,500,000</div>
+                            <div class="text-lg font-black text-green-300">76,500 P</div>
                             <div class="text-[9px] text-blue-100 mt-0.5">잔여 예산</div>
                         </div>
                         <div class="bg-white/10 rounded-xl px-4 py-3 text-center min-w-[90px]">
@@ -3024,8 +3422,8 @@
                 </div>
                 <div class="relative z-10 mt-4">
                     <div class="flex justify-between text-[10px] text-blue-100 mb-1">
-                        <span>집행: ₩23,500,000 (23,500 Hi-Point)</span>
-                        <span>잔여: ₩76,500,000</span>
+                        <span>집행: 23,500 Hi-Point</span>
+                        <span>잔여: 76,500 Hi-Point</span>
                     </div>
                     <div class="w-full rounded-full h-2" style="background:rgba(255,255,255,.15)">
                         <div class="h-2 rounded-full" style="width:23.5%;background:#ff9e1b"></div>
@@ -3038,25 +3436,22 @@
                 <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div class="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wide">총 발행 Hi-Point</div>
                     <div class="text-2xl font-black text-hi-navy">23,500<span class="text-sm font-normal text-gray-400 ml-1">Hi-Point</span></div>
-                    <div class="text-[10px] text-gray-400 mt-1">= ₩23,500,000 발행</div>
                     <div class="text-[10px] text-green-500 mt-0.5">▲ 이번 달 +1,240 Hi-Point</div>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div class="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wide">현재 유통 Hi-Point</div>
                     <div class="text-2xl font-black text-hi-org">8,340<span class="text-sm font-normal text-gray-400 ml-1">Hi-Point</span></div>
-                    <div class="text-[10px] text-gray-400 mt-1">= ₩8,340,000 (미교환 잔액)</div>
                     <div class="text-[10px] text-orange-400 mt-0.5">직원 보유 합계</div>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div class="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wide">교환 완료</div>
                     <div class="text-2xl font-black text-gray-700">1,516<span class="text-sm font-normal text-gray-400 ml-1">회</span></div>
                     <div class="text-[10px] text-gray-400 mt-1">= 15,160 Hi-Point 교환</div>
-                    <div class="text-[10px] text-green-500 mt-0.5">= ₩15,160,000 지급</div>
                 </div>
                 <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div class="text-[10px] text-gray-400 font-medium mb-1 uppercase tracking-wide">교환 대기 (미처리)</div>
                     <div class="text-2xl font-black text-red-500">84<span class="text-sm font-normal text-gray-400 ml-1">건</span></div>
-                    <div class="text-[10px] text-gray-400 mt-1">= 840 Hi-Point (₩840,000)</div>
+                    <div class="text-[10px] text-gray-400 mt-1">= 840 Hi-Point</div>
                     <div class="text-[10px] text-red-400 mt-0.5">▲ 처리 필요</div>
                 </div>
             </div>
@@ -3104,7 +3499,7 @@
                         <rect x="730" y="95" width="38" height="5" rx="2" fill="#e5e7eb"/>
                         <text x="749" y="115" font-size="8" fill="#d1d5db" text-anchor="middle">12월</text>
                     </svg>
-                    <div class="text-[9px] text-gray-400 mt-1">*5월은 집계 중 · 예상 연간: 약 ₩35,000,000 (35% 집행 예상)</div>
+                    <div class="text-[9px] text-gray-400 mt-1">*5월은 집계 중 · 예상 연간 집계 중</div>
                 </div>
                 <div class="bg-white rounded-xl border border-red-200 p-4 shadow-sm">
                     <div class="font-black text-xs text-red-600 mb-3 uppercase tracking-wide flex items-center justify-between">
@@ -3119,7 +3514,6 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-black text-hi-org">100 Hi-Point</div>
-                                <div class="text-[9px] text-gray-400">₩100,000</div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between py-1.5 border-b border-gray-100">
@@ -3129,7 +3523,6 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-black text-hi-org">50 Hi-Point</div>
-                                <div class="text-[9px] text-gray-400">₩50,000</div>
                             </div>
                         </div>
                         <div class="flex items-center justify-between py-1.5 border-b border-gray-100">
@@ -3139,10 +3532,9 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-xs font-black text-hi-org">30 Hi-Point</div>
-                                <div class="text-[9px] text-gray-400">₩30,000</div>
                             </div>
                         </div>
-                        <div class="text-center text-[9px] text-gray-400 pt-1">외 81건 · 총 840 Hi-Point (₩840,000)</div>
+                        <div class="text-center text-[9px] text-gray-400 pt-1">외 81건 · 총 840 Hi-Point</div>
                     </div>
                     <button class="w-full mt-2 bg-hi-navy hover:bg-hi-navy/90 text-white text-[10px] font-bold py-1.5 rounded transition">일괄 처리하기</button>
                 </div>
@@ -3175,7 +3567,7 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-xs text-gray-600">이번 달 Hi-Point 거래</span>
-                            <span class="font-bold text-xs text-hi-org">1,240 Hi-Point (₩1,240,000)</span>
+                            <span class="font-bold text-xs text-hi-org">1,240 Hi-Point</span>
                         </div>
                     </div>
                 </div>
@@ -3224,13 +3616,13 @@
                             <div class="flex items-center gap-2 mb-3">
                                 <span class="text-xs text-gray-500 font-medium whitespace-nowrap">Hi-Point 1개 =</span>
                                 <div class="relative flex-1">
-                                    <span class="absolute left-3 top-2 text-xs text-gray-400">₩</span>
+                                    
                                     <input type="number" id="admin-drop-value" value="1000" min="100" step="100"
                                         class="w-full border border-gray-300 rounded-lg pl-6 pr-3 py-1.5 text-xs text-right font-bold outline-none focus:border-hi-navy transition">
                                 </div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3 text-[10px] text-gray-500 space-y-1.5 border border-gray-100">
-                                <div class="flex justify-between"><span>교환 단위 (10 Hi-Point)</span><span id="calc-unit" class="font-bold text-hi-navy">₩10,000</span></div>
+                                <div class="flex justify-between"><span>교환 단위 (10 Hi-Point)</span><span id="calc-unit" class="font-bold text-hi-navy">10 P</span></div>
                                 <div class="flex justify-between"><span>최대 발행 (현재 예산 기준)</span><span id="calc-max" class="font-bold text-hi-navy">100,000 Hi-Point</span></div>
                             </div>
                         </div>
@@ -3240,14 +3632,14 @@
                             <div class="flex items-center gap-2 mb-3">
                                 <span class="text-xs text-gray-500 font-medium whitespace-nowrap">연간 예산</span>
                                 <div class="relative flex-1">
-                                    <span class="absolute left-3 top-2 text-xs text-gray-400">₩</span>
+                                    
                                     <input type="number" id="admin-budget" value="100000000" min="1000000" step="1000000"
                                         class="w-full border border-gray-300 rounded-lg pl-6 pr-3 py-1.5 text-xs text-right font-bold outline-none focus:border-hi-navy transition">
                                 </div>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3 text-[10px] text-gray-500 space-y-1.5 border border-gray-100">
-                                <div class="flex justify-between"><span>현재 집행</span><span class="font-bold text-hi-org">₩23,500,000</span></div>
-                                <div id="calc-remain" class="flex justify-between"><span>잔여 예산</span><span class="font-bold text-green-600">₩76,500,000</span></div>
+                                <div class="flex justify-between"><span>현재 집행</span><span class="font-bold text-hi-org">23,500 P</span></div>
+                                <div id="calc-remain" class="flex justify-between"><span>잔여 예산</span><span class="font-bold text-green-600">76,500 P</span></div>
                             </div>
                         </div>
                     </div>
@@ -3293,7 +3685,7 @@
                         <div class="flex items-center justify-between px-5 py-3.5">
                             <div>
                                 <div class="font-bold text-gray-800 text-sm">퀘스트 제출 채택 (관리자 부여)</div>
-                                <div class="text-[10px] text-gray-500 mt-0.5">본사 퀘스트에 제출된 우수 응모작 채택 시 지급</div>
+                                <div class="text-[10px] text-gray-500 mt-0.5">지식 미션에 제출된 우수 응모작 채택 시 지급</div>
                             </div>
                             <div class="flex items-center gap-2">
                                 <input type="number" value="100" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 text-center font-bold text-xs outline-none focus:border-hi-navy">
@@ -3447,13 +3839,196 @@
 
         </div>
 
+        <!-- ===== 탭 4: 지식 미션 관리 ===== -->
+        <div id="tab-adm-mission" class="admin-panel hidden p-6">
+
+            <!-- 섹션 헤더 + 신규 미션 등록 버튼 -->
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h2 class="font-black text-base text-gray-800">지식 미션 관리</h2>
+                    <p class="text-xs text-gray-500 mt-0.5">공식 미션 등록·수정·완료 처리 및 직원 미션 제안 검토</p>
+                </div>
+                <button onclick="openMissionCreateModal()" class="flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-lg text-white transition shadow" style="background:#00205b">
+                    + 새 미션 등록
+                </button>
+            </div>
+
+            <!-- 서브탭: 공식 미션 목록 / 제안 검토 -->
+            <div class="flex gap-0 border-b border-gray-200 mb-5">
+                <button class="adm-mission-subtab active text-xs py-2 px-5 border-b-2 border-hi-navy font-bold text-hi-navy" data-subtab="official" onclick="setAdmMissionSubtab(this)">공식 미션 목록</button>
+                <button class="adm-mission-subtab text-xs py-2 px-5 border-b-2 border-transparent text-gray-500 font-medium" data-subtab="proposals" onclick="setAdmMissionSubtab(this)">직원 제안 검토 <span id="adm-proposal-cnt" class="text-red-500 font-black ml-0.5"></span></button>
+            </div>
+
+            <!-- 공식 미션 목록 패널 -->
+            <div id="adm-subtab-official">
+                <div id="adm-mission-official-list" class="space-y-3"></div>
+            </div>
+
+            <!-- 직원 제안 검토 패널 -->
+            <div id="adm-subtab-proposals" class="hidden">
+                <div id="adm-mission-proposal-list" class="space-y-3"></div>
+            </div>
+
+        </div>
+
     </div>
 </div><!-- /view-admin -->
 
+<!-- ================================================================ -->
+<!-- 지식 미션 등록 모달 (관리자)                                     -->
+<!-- ================================================================ -->
+<div id="mission-create-modal" class="modal-bg" onclick="if(event.target===this)closeMissionCreateModal()">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden" style="max-height:92vh;overflow-y:auto" onclick="event.stopPropagation()">
+        <!-- 헤더 -->
+        <div class="text-white px-6 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#00205b,#0d3073)">
+            <div>
+                <div class="text-[10px] font-bold mb-0.5" style="color:rgba(255,255,255,.55)">관리자 전용</div>
+                <div id="mcreate-modal-title" class="font-black text-sm text-white">새 지식 미션 등록</div>
+            </div>
+            <button onclick="closeMissionCreateModal()" class="text-white/60 hover:text-white text-lg leading-none font-bold">✕</button>
+        </div>
 
+        <div class="px-6 py-5 space-y-4">
 
+            <!-- 미션 제목 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">미션 제목 <span class="text-red-400">*</span></label>
+                <input id="mcreate-title" type="text" placeholder="예: 고객 거절 극복 화법을 구합니다!"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+            </div>
 
+            <!-- 주관 부서 + 발신 유형 -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[10px] font-black text-gray-700 block mb-1">주관 부서 <span class="text-red-400">*</span></label>
+                    <input id="mcreate-dept" type="text" placeholder="예: 마케팅팀"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-gray-700 block mb-1">발신 유형</label>
+                    <select id="mcreate-issuer" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
+                        <option value="본사">🏢 본사 공모</option>
+                        <option value="현장">🌿 현장 제안</option>
+                    </select>
+                </div>
+            </div>
 
+            <!-- 채택 방식 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1.5">채택 방식 <span class="text-red-400">*</span></label>
+                <div class="grid grid-cols-2 gap-2" id="mcreate-type-group">
+                    <label class="flex items-start gap-2.5 border-2 rounded-xl p-3 cursor-pointer transition has-[:checked]:border-teal-500 has-[:checked]:bg-teal-50" style="border-color:#5DCAA5;background:#E1F5EE">
+                        <input type="radio" name="mcreate-type" value="multi" checked class="mt-0.5 accent-teal-600 shrink-0">
+                        <div>
+                            <div class="text-[11px] font-black" style="color:#085041">복수 채택</div>
+                            <div class="text-[9px] text-gray-500 mt-0.5 leading-relaxed">여러 건 중복 채택 가능.<br>각 채택 건마다 포인트 지급.</div>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-2.5 border-2 rounded-xl p-3 cursor-pointer transition has-[:checked]:border-orange-400 has-[:checked]:bg-orange-50 border-gray-200 bg-white">
+                        <input type="radio" name="mcreate-type" value="single" class="mt-0.5 accent-orange-500 shrink-0">
+                        <div>
+                            <div class="text-[11px] font-black text-gray-700">단일 채택</div>
+                            <div class="text-[9px] text-gray-500 mt-0.5 leading-relaxed">1건만 채택 후 즉시 포인트<br>지급 + 아카이빙.</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 보상 Hi-Point + 마감일 -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[10px] font-black text-gray-700 block mb-1">보상 Hi-Point <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400">⭐</span>
+                        <input id="mcreate-reward" type="number" min="1" placeholder="예: 500"
+                            class="w-full border border-gray-200 rounded-lg pl-8 pr-3 py-2 text-xs outline-none focus:border-hi-navy">
+                    </div>
+                    <div id="mcreate-reward-won" class="text-[9px] text-hi-org mt-0.5"></div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-gray-700 block mb-1">마감일 <span class="text-red-400">*</span></label>
+                    <input id="mcreate-deadline" type="date"
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy bg-white">
+                </div>
+            </div>
+
+            <!-- 목표 응모 수 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">목표 응모 수</label>
+                <input id="mcreate-target" type="number" min="1" placeholder="예: 20 (기본값: 20)"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+            </div>
+
+            <!-- 미션 설명 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">미션 설명 <span class="text-red-400">*</span></label>
+                <textarea id="mcreate-desc" rows="3" placeholder="어떤 지식이 필요한지, 왜 공모하는지 설명해 주세요."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy resize-none leading-relaxed"></textarea>
+            </div>
+
+            <!-- 응모 요건 -->
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">응모 요건 <span class="text-gray-400 font-normal">(선택)</span></label>
+                <input id="mcreate-requirements" type="text" placeholder="예: ① 사례 3건 이상 ② 스크립트 포함"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-hi-navy">
+            </div>
+
+            <!-- 예산 확인 박스 -->
+            <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-[10px] text-amber-800">
+                💰 <strong>예산 잔여:</strong> 76,500 Hi-Point — 등록 시 보상 Hi-Point만큼 예약 차감됩니다.
+            </div>
+
+            <!-- 버튼 -->
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeMissionCreateModal()" class="flex-1 border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
+                <button onclick="submitMissionCreate()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#00205b">
+                    미션 등록하기 →
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- 미션 등록 제안 모달 (일반 직원)                                  -->
+<!-- ================================================================ -->
+<div id="mission-proposal-modal" class="modal-bg" onclick="if(event.target===this)closeMissionProposalModal()">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden" onclick="event.stopPropagation()">
+        <div class="text-white px-6 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#0f6e56,#085041)">
+            <div>
+                <div class="text-[10px] font-bold mb-0.5" style="color:rgba(255,255,255,.6)">🌿 직원 미션 제안</div>
+                <div class="font-black text-sm text-white">이런 미션이 있으면 어떨까요?</div>
+            </div>
+            <button onclick="closeMissionProposalModal()" class="text-white/60 hover:text-white text-lg font-bold">✕</button>
+        </div>
+        <div class="px-6 py-5 space-y-4">
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">제안 미션 제목 <span class="text-red-400">*</span></label>
+                <input id="mproposal-title" type="text" placeholder="예: 고령 고객 디지털 가입 개선 아이디어 공모"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-teal-500">
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">제안 배경 및 설명 <span class="text-red-400">*</span></label>
+                <textarea id="mproposal-desc" rows="4" placeholder="왜 이 미션이 필요한지, 어떤 지식이 모이면 좋을지 간략히 적어주세요."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-teal-500 resize-none leading-relaxed"></textarea>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-700 block mb-1">제안 부서 (관련 부서)</label>
+                <input id="mproposal-dept" type="text" placeholder="예: 고객지원팀 (비워도 됩니다)"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-teal-500">
+            </div>
+            <div class="bg-teal-50 border border-teal-100 rounded-lg px-4 py-3 text-[10px] text-teal-800">
+                💡 제안은 관리자 검토 후 공식 미션으로 전환될 수 있습니다. 채택 시 <strong>10 Hi-Point</strong>가 지급됩니다.
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeMissionProposalModal()" class="flex-1 border border-gray-200 text-gray-600 text-xs font-bold py-2.5 rounded-xl hover:bg-gray-50 transition">취소</button>
+                <button onclick="submitMissionProposal()" class="flex-[2] text-white text-xs font-black py-2.5 rounded-xl transition shadow" style="background:#0f6e56">
+                    제안 제출하기 →
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- ================================================================ -->
@@ -3478,7 +4053,21 @@
     </div>
 
     <div class="px-6 py-5">
-        <!-- 통계 카드 + 내 Hi-Point 지갑 -->
+
+        <!-- ── 대시보드 탭 네비게이션 ── -->
+        <div class="flex items-center gap-0 mb-5 border-b border-gray-200" style="margin-left:-1px">
+            <button id="dash-tab-activity" onclick="switchDashTab('activity',this)"
+                class="dash-tab-btn px-5 py-2.5 text-xs font-bold border-b-2 border-hi-navy text-hi-navy transition whitespace-nowrap">
+                📊 활동 현황
+            </button>
+            <button id="dash-tab-heart" onclick="switchDashTab('heart',this)"
+                class="dash-tab-btn px-5 py-2.5 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-hi-navy transition whitespace-nowrap">
+                ✦ H.E.A.R.T. 가치 증거함
+            </button>
+        </div>
+
+        <!-- ── 탭 패널 A: 활동 현황 (기존 콘텐츠) ── -->
+        <div id="dash-panel-activity">
         <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
             <div class="lg:col-span-1 rounded-xl p-4 shadow text-white" style="background:linear-gradient(135deg,#00205b,#0a3080)">
                 <div class="text-xs text-blue-100 font-medium mb-1">전체 지식 자산</div>
@@ -3510,7 +4099,7 @@
                     </div>
                     <div>
                         <div class="text-sm font-black text-hi-org">12 Hi-Point</div>
-                        <div class="text-[9px] text-gray-400">= ₩12,000</div>
+                        <div class="text-[9px] text-gray-400">누적 획득 기록 확인</div>
                     </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-1 mt-2 mb-1.5"><div class="bg-hi-org h-1 rounded-full" style="width:60%"></div></div>
@@ -3529,8 +4118,8 @@
                         <div class="text-white/70 font-bold text-[8px] mt-0.5">⭐</div>
                     </div>
                     <div>
-                        <div class="text-2xl font-black text-hi-org">12Hi-Point (₩12,000)</div>
-                        <div class="text-[10px] text-blue-100 mt-0.5">다음 교환(₩10,000)까지 +8 Hi-Point</div>
+                        <div class="text-2xl font-black text-hi-org">12 Hi-Point</div>
+                        <div class="text-[10px] text-blue-100 mt-0.5">다음 목표까지 +8 Hi-Point</div>
                         <div class="w-32 bg-white/20 rounded-full h-1.5 mt-2">
                             <div class="bg-hi-org h-1.5 rounded-full" style="width:60%"></div>
                         </div>
@@ -3776,7 +4365,228 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div><!-- /dash-panel-activity -->
+
+    <!-- ── 탭 패널 B: H.E.A.R.T. 가치 증거함 (신규) ── -->
+    <div id="dash-panel-heart" class="hidden">
+        <!-- 캐릭터 헤더 -->
+        <div class="rounded-xl overflow-hidden mb-5" style="background:#00205b">
+            <div class="px-5 py-4">
+                <div class="text-[9px] font-bold mb-3" style="color:rgba(255,255,255,0.4);letter-spacing:.1em">나의 하이미 공간 — H.E.A.R.T. 가치 실천 포트폴리오</div>
+                <div class="flex items-center gap-4">
+                    <!-- 캐릭터 아바타 (이미지 업데이트 예정) -->
+                    <div id="dash-char-avatar" style="width:56px;height:56px;border-radius:50%;background:#3eb49b;border:2.5px solid rgba(255,158,27,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <span style="font-size:22px;font-weight:900;color:white">T</span>
+                    </div>
+                    <div class="flex-1">
+                        <div style="font-size:15px;font-weight:700;color:white;margin-bottom:3px">김현대 선임</div>
+                        <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,158,27,0.12);border:0.5px solid rgba(255,158,27,0.35);border-radius:12px;padding:3px 10px">
+                            <span style="width:5px;height:5px;border-radius:50%;background:#ff9e1b;flex-shrink:0;display:inline-block"></span>
+                            <span id="dash-char-typename" style="font-size:11px;font-weight:700;color:#ff9e1b">신뢰의 파수꾼</span>
+                            <span style="font-size:9px;color:rgba(255,158,27,0.5);margin-left:2px">T-TYPE</span>
+                        </div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:4px">보상본부 장기보상 2팀 · 입사 4년차</div>
+                    </div>
+                    <!-- 핵심 지표 -->
+                    <div class="flex gap-4 shrink-0">
+                        <div class="text-center">
+                            <div style="font-size:18px;font-weight:700;color:white">84</div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.4)">누적 획득 P</div>
+                        </div>
+                        <div class="text-center">
+                            <div style="font-size:18px;font-weight:700;color:#ff9e1b">12</div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.4)">현재 잔고 P</div>
+                        </div>
+                        <div class="text-center">
+                            <div style="font-size:18px;font-weight:700;color:#3eb49b">14</div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.4)">Trust 연속 월</div>
+                        </div>
+                        <div class="text-center">
+                            <div style="font-size:18px;font-weight:700;color:white">38</div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.4)">기여 증거 건</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 도메인 전문가 타이틀 -->
+            <div class="px-5 py-2.5" style="background:rgba(0,0,0,0.2);border-top:0.5px solid rgba(255,255,255,0.07)">
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <span style="background:rgba(255,158,27,0.1);border:0.5px solid rgba(255,158,27,0.3);border-radius:10px;padding:2px 9px;font-size:9px;font-weight:700;color:#ff9e1b">★ 장기보상 전문가</span>
+                    <span style="background:rgba(255,158,27,0.1);border:0.5px solid rgba(255,158,27,0.3);border-radius:10px;padding:2px 9px;font-size:9px;font-weight:700;color:#ff9e1b">★ 자동차보상 고수</span>
+                    <span style="background:rgba(255,255,255,0.05);border:0.5px dashed rgba(255,255,255,0.2);border-radius:10px;padding:2px 9px;font-size:9px;color:rgba(255,255,255,0.35)">+3건 시 자동차보상 전문가 달성</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+            <!-- H.E.A.R.T. 성장 프로필 (오각형) -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <div class="font-black text-sm text-gray-800 mb-1">H.E.A.R.T. 성장 프로필</div>
+                <div class="text-[10px] text-gray-400 mb-4">점선: 진단 초기값 · 실선: 현재 기여 반영값</div>
+                <div class="flex items-center gap-4">
+                    <!-- 오각형 차트 -->
+                    <svg width="190" height="190" viewBox="0 0 260 260" style="flex-shrink:0">
+                        <defs><marker id="arw2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                        <polygon points="130,40 215.6,102.2 182.9,202.8 77.1,202.8 44.4,102.2" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <polygon points="130,62.5 194.2,109.1 169.7,184.6 90.3,184.6 65.8,109.1" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <polygon points="130,85 172.8,116.1 156.5,166.4 103.5,166.4 87.2,116.1" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <line x1="130" y1="130" x2="130" y2="40" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <line x1="130" y1="130" x2="215.6" y2="102.2" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <line x1="130" y1="130" x2="182.9" y2="202.8" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <line x1="130" y1="130" x2="77.1" y2="202.8" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <line x1="130" y1="130" x2="44.4" y2="102.2" stroke="#e2e8f0" stroke-width="0.5"/>
+                        <!-- 초기 진단 (점선) H60 E62 A68 R55 T75 -->
+                        <polygon points="130,76 183.1,112.8 166,179.5 100.9,170 65.8,109.1" fill="rgba(62,180,155,0.06)" stroke="#3eb49b" stroke-width="1" stroke-dasharray="3 2"/>
+                        <!-- 현재 (실선) H68 E70 A82 R67 T91 -->
+                        <polygon points="130,68.8 189.9,110.5 173.4,189.7 94.6,178.8 52.1,104.7" fill="rgba(0,32,91,0.1)" stroke="#00205b" stroke-width="1.5"/>
+                        <!-- T축 강조 점 (최다 성장) -->
+                        <circle cx="52.1" cy="104.7" r="4" fill="#ff9e1b" stroke="white" stroke-width="1"/>
+                        <!-- 축 레이블 -->
+                        <text x="130" y="26" text-anchor="middle" font-size="10" fill="#534AB7" font-weight="bold">H</text>
+                        <text x="228" y="104" text-anchor="start" font-size="10" fill="#BA7517" font-weight="bold">E</text>
+                        <text x="188" y="222" text-anchor="middle" font-size="10" fill="#1D9E75" font-weight="bold">A</text>
+                        <text x="62" y="222" text-anchor="middle" font-size="10" fill="#D4537E" font-weight="bold">R</text>
+                        <text x="24" y="104" text-anchor="end" font-size="10" fill="#185FA5" font-weight="bold">T ★</text>
+                    </svg>
+                    <!-- 수치 바 -->
+                    <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:#534AB7;font-weight:600">H 정도</span><span style="color:#6b7280">60 → <strong style="color:#534AB7">68</strong></span></div>
+                            <div style="height:5px;background:#f1f5f9;border-radius:3px;overflow:hidden"><div style="width:68%;height:100%;background:#534AB7;border-radius:3px"></div></div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:#BA7517;font-weight:600">E 탁월</span><span style="color:#6b7280">62 → <strong style="color:#BA7517">70</strong></span></div>
+                            <div style="height:5px;background:#f1f5f9;border-radius:3px;overflow:hidden"><div style="width:70%;height:100%;background:#EF9F27;border-radius:3px"></div></div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:#1D9E75;font-weight:600">A 실행</span><span style="color:#6b7280">68 → <strong style="color:#1D9E75">82</strong></span></div>
+                            <div style="height:5px;background:#f1f5f9;border-radius:3px;overflow:hidden"><div style="width:82%;height:100%;background:#1D9E75;border-radius:3px"></div></div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:#D4537E;font-weight:600">R 존중</span><span style="color:#6b7280">55 → <strong style="color:#D4537E">67</strong></span></div>
+                            <div style="height:5px;background:#f1f5f9;border-radius:3px;overflow:hidden"><div style="width:67%;height:100%;background:#D4537E;border-radius:3px"></div></div>
+                        </div>
+                        <div>
+                            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:#185FA5;font-weight:700">T 신뢰</span><span style="color:#6b7280">75 → <strong style="color:#185FA5">91</strong> <span style="font-size:9px;background:#E6F1FB;color:#0C447C;padding:1px 5px;border-radius:3px;margin-left:2px">최다 성장</span></span></div>
+                            <div style="height:6px;background:#E6F1FB;border-radius:3px;overflow:hidden"><div style="width:91%;height:100%;background:#185FA5;border-radius:3px"></div></div>
+                        </div>
+                        <div style="font-size:10px;color:#475569;background:#f8fafc;border-radius:6px;padding:6px 8px;margin-top:2px">
+                            진단 이후 플랫폼 기여로 <strong style="color:#00205b">T축 +16pt</strong> 성장.<br>가치 지향이 실천으로 증명된 상태입니다.
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content:center;gap:14px;margin-top:10px;font-size:10px;color:#6b7280">
+                    <div style="display:flex;align-items:center;gap:4px"><div style="width:18px;border-top:1.5px dashed #3eb49b"></div>진단 시</div>
+                    <div style="display:flex;align-items:center;gap:4px"><div style="width:18px;height:2px;background:#00205b;border-radius:1px"></div>현재</div>
+                </div>
+            </div>
+
+            <!-- Trust 스트릭 + 가치 증거함 -->
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <!-- Trust 묵묵한 기여 섹션 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm" style="border:1.5px solid #3eb49b">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                        <div>
+                            <div style="font-size:12px;font-weight:700;color:#085041;margin-bottom:1px">묵묵한 기여 — Trust 실천 기록</div>
+                            <div style="font-size:10px;color:#0F6E56">꾸준한 업데이트가 신뢰의 핵심 증거입니다</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:5px;background:#E1F5EE;border-radius:6px;padding:3px 10px">
+                            <div style="width:6px;height:6px;border-radius:50%;background:#3eb49b"></div>
+                            <span style="font-size:12px;font-weight:700;color:#085041">14개월 연속</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap">
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#e2e8f0;margin:0 auto 2px"></div><div style="font-size:7px;color:#9ca3af">23.9</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#e2e8f0;margin:0 auto 2px"></div><div style="font-size:7px;color:#9ca3af">10</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">11</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">12</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">24.1</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">2</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">3</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">4</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">5</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">6</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">7</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">8</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">9</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">10</div></div>
+                        <div style="text-align:center"><div style="width:18px;height:18px;border-radius:50%;background:#3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#3eb49b;font-weight:700">11</div></div>
+                        <div style="text-align:center;opacity:0.4"><div style="width:18px;height:18px;border-radius:50%;background:#e2e8f0;border:1.5px dashed #3eb49b;margin:0 auto 2px"></div><div style="font-size:7px;color:#9ca3af">12</div></div>
+                    </div>
+                    <div style="font-size:10px;color:#0F6E56;margin-top:7px;padding-top:7px;border-top:0.5px solid #a7f3d0">
+                        유지 관리 중: 대형보상 방어전략집 <strong>v3.1</strong> · 자동차 보상 Q&amp;A <strong>v2.4</strong> · 장기심사 체크리스트 <strong>v1.8</strong>
+                    </div>
+                </div>
+
+                <!-- Hi-Point 잔고/누적 분리 카드 -->
+                <div class="bg-white rounded-xl p-4 border border-orange-200 shadow-sm">
+                    <div style="font-size:11px;font-weight:700;color:#64748b;margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                        <div style="width:14px;height:14px;border-radius:3px;background:#ff9e1b;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:white;flex-shrink:0">P</div>
+                        Hi-Point 현황
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+                        <div style="background:#f8fafc;border-radius:8px;padding:8px 10px;border:0.5px solid #e2e8f0;text-align:center">
+                            <div style="font-size:9px;color:#94a3b8;margin-bottom:2px">현재 잔고</div>
+                            <div style="font-size:20px;font-weight:700;color:#ff9e1b;line-height:1">12</div>
+                            <div style="font-size:9px;color:#94a3b8">P</div>
+                        </div>
+                        <div style="background:#f8fafc;border-radius:8px;padding:8px 10px;border:0.5px solid #e2e8f0;text-align:center">
+                            <div style="font-size:9px;color:#94a3b8;margin-bottom:2px">누적 획득 (전체)</div>
+                            <div style="font-size:16px;font-weight:700;color:#1e293b;line-height:1">84</div>
+                            <div style="font-size:9px;color:#94a3b8">P · 이력 12건</div>
+                        </div>
+                    </div>
+                    <div style="font-size:9px;color:#94a3b8;text-align:center">잔고가 줄어도 누적 이력은 영구 보존됩니다</div>
+                </div>
+
+                <!-- 다음 달성 목표 카드 -->
+                <div style="border-radius:10px;padding:14px 16px;border:1.5px dashed #3eb49b;background:#f0fdf9">
+                    <div style="font-size:9px;font-weight:600;color:#0F6E56;letter-spacing:.06em;margin-bottom:5px">다음 달성 목표</div>
+                    <div style="font-size:13px;font-weight:700;color:#085041;margin-bottom:10px">자동차보상 전문가 타이틀</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+                        <div style="flex:1;height:7px;background:#d1fae5;border-radius:4px;overflow:hidden">
+                            <div style="width:78.6%;height:100%;background:#3eb49b;border-radius:4px;transition:width .4s"></div>
+                        </div>
+                        <span style="font-size:11px;font-weight:700;color:#3eb49b;white-space:nowrap;flex-shrink:0">-3건</span>
+                    </div>
+                    <div style="font-size:10px;color:#6b7280">11건 완료 · 목표 14건</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 가치 증거함 카드 3종 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+            <div style="border-radius:10px;padding:14px;border:0.5px solid #85B7EB;background:#E6F1FB">
+                <div style="width:26px;height:26px;border-radius:6px;background:#B5D4F4;display:flex;align-items:center;justify-content:center;margin-bottom:7px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="#0C447C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="font-size:9px;font-weight:700;color:#185FA5;letter-spacing:.05em;margin-bottom:2px">TRUST 신뢰</div>
+                <div style="font-size:12px;font-weight:500;color:#1e293b;margin-bottom:4px;line-height:1.35">대형보상 방어전략집 3회 업데이트</div>
+                <div style="font-size:11px;color:#185FA5;line-height:1.5">판례 변동사항 반영, 현장 피드백 수렴하여 자발적 개정</div>
+                <div style="font-size:10px;color:#185FA5;margin-top:6px">2024.11 · 증거 #14</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;border:0.5px solid #5DCAA5;background:#E1F5EE">
+                <div style="width:26px;height:26px;border-radius:6px;background:#9FE1CB;display:flex;align-items:center;justify-content:center;margin-bottom:7px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="#085041" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="font-size:9px;font-weight:700;color:#085041;letter-spacing:.05em;margin-bottom:2px">ACTION 실행</div>
+                <div style="font-size:12px;font-weight:500;color:#1e293b;margin-bottom:4px;line-height:1.35">장기보상 Q&amp;A 32건 채택 답변</div>
+                <div style="font-size:11px;color:#085041;line-height:1.5">현장 질문에 평균 4시간 내 답변, 채택률 91%</div>
+                <div style="font-size:10px;color:#085041;margin-top:6px">누적 · 증거 #9</div>
+            </div>
+            <div style="border-radius:10px;padding:14px;border:0.5px solid #FAC775;background:#FAEEDA">
+                <div style="width:26px;height:26px;border-radius:6px;background:#FAC775;display:flex;align-items:center;justify-content:center;margin-bottom:7px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke="#633806" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="font-size:9px;font-weight:700;color:#854F0B;letter-spacing:.05em;margin-bottom:2px">EXCELLENCE 탁월</div>
+                <div style="font-size:12px;font-weight:500;color:#1e293b;margin-bottom:4px;line-height:1.35">동료 추천 배지 5회 획득</div>
+                <div style="font-size:11px;color:#854F0B;line-height:1.5">"실제로 써서 계약 성사됐습니다" 후기 포함 동료 인증</div>
+                <div style="font-size:10px;color:#854F0B;margin-top:6px">동료 추천 · 증거 #5</div>
+            </div>
+        </div>
+    </div><!-- /dash-panel-heart -->
+
+    </div><!-- /px-6 py-5 -->
 </div><!-- /view-dashboard -->
 
 <!-- ================================================================ -->
@@ -4082,9 +4892,11 @@
         <!-- ① 모달 헤더 (shrink-0) -->
         <div class="bg-hi-navy text-white p-4 flex items-start justify-between shrink-0" style="background:#00205b">
             <div class="flex-1 min-w-0 pr-3">
-                <div class="flex items-center gap-2 mb-1">
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
                     <span id="modal-badge" class="badge-cert text-[9px] px-2 py-0.5 rounded font-bold">👑 인증됨</span>
                     <span id="modal-cat" class="text-[10px] text-blue-100">영업 화법</span>
+                    <span id="modal-heart-tag" style="display:none;font-size:8px;font-weight:700;padding:1px 6px;border-radius:3px;background:#E1F5EE;color:#1D9E75"></span>
+                    <span id="modal-price-badge" style="display:none;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;background:#fff7ed;color:#c2410c"></span>
                 </div>
                 <h3 id="modal-title" class="font-black text-sm leading-tight">26년 개정 실손의료비 화법 스크립트</h3>
             </div>
@@ -4102,6 +4914,10 @@
 
             <!-- 상세 탭 -->
             <div id="modal-detail" class="p-4">
+                <!-- 아카이빙 D-day 바 -->
+                <div id="modal-archive-bar" style="display:none;margin-bottom:10px;padding:7px 10px;background:#f8fafc;border-radius:7px;border:0.5px solid #e2e8f0"></div>
+                <!-- Early Access 쿼터 -->
+                <div id="modal-ea-quota" style="display:none;align-items:center;margin-bottom:10px;padding:7px 10px;background:#fff7ed;border-radius:7px;border:0.5px solid #fed7aa"></div>
                 <div class="grid grid-cols-2 gap-3 mb-4">
                     <div class="bg-gray-50 rounded-lg p-3">
                         <div class="text-[10px] text-gray-400 mb-0.5">작성자</div>
@@ -4248,9 +5064,12 @@
             <button class="flex-1 border border-blue-200 text-hi-navy text-xs font-bold py-2.5 rounded-lg hover:bg-blue-50 transition flex items-center justify-center gap-1.5 bg-white" onclick="reqUpdate()">
                 <span style="font-style:normal">🔄</span> 업데이트 요청
             </button>
-            <button class="flex-1 text-white text-xs font-bold py-2.5 px-5 rounded-lg shadow-md transition flex items-center justify-center gap-1.5 hover:brightness-110" style="background:#00205b;min-width:100px">
-                ⬇ 다운로드
-            </button>
+            <!-- 동적 구매/다운로드 버튼 -->
+            <div id="modal-action-wrap" class="flex-[2] flex">
+                <button onclick="purchaseContent(0)" class="flex-1 text-white text-xs font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-1.5 hover:brightness-110" style="background:#00205b">
+                    ⬇ 구매하기
+                </button>
+            </div>
         </div>
 
     </div>
@@ -4914,6 +5733,8 @@ function nav(viewName) {
     });
     const target = document.getElementById('view-' + viewName);
     if (target) target.classList.add('active');
+    // 현장노하우 뷰 진입 시 H.E.A.R.T. 태그 + status 뱃지 자동 삽입
+    if (viewName === 'field') { setTimeout(() => { initFieldHeartTags(); initFieldStatusBadges(); }, 50); }
 }
 
 // ── Hi-pedia 위키 함수 ───────────────────────────────────────
@@ -5093,11 +5914,11 @@ function saveAdminSettings() {
     const spent = 23500000;
     const maxCells = Math.floor(budget / val);
     const remain = budget - spent;
-    if (document.getElementById('calc-unit')) document.getElementById('calc-unit').textContent = '₩' + (val * 10).toLocaleString();
+    if (document.getElementById('calc-unit')) document.getElementById('calc-unit').textContent = (val * 10).toLocaleString() + ' P';
     if (document.getElementById('calc-max')) document.getElementById('calc-max').textContent = maxCells.toLocaleString() + ' Hi-Point';
     if (document.getElementById('calc-remain')) {
         const remainEl = document.getElementById('calc-remain').querySelector('span:last-child');
-        if (remainEl) remainEl.textContent = '₩' + remain.toLocaleString();
+        if (remainEl) remainEl.textContent = remain.toLocaleString() + ' P';
     }
     showToast('관리자 설정이 저장되었습니다 ✅');
 }
@@ -5204,9 +6025,11 @@ function switchBridgeTab(tab) {
 function openAskModal() { document.getElementById('modal-ask')?.classList.add('open'); }
 function closeAskModal() { document.getElementById('modal-ask')?.classList.remove('open'); }
 function submitAsk() {
+    const heartVal = document.querySelector('input[name="faq-heart"]:checked');
+    const axis = heartVal ? heartVal.value : 'A';
+    const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[axis] || {label:axis};
+    showToast('✅ 질문 등록 완료! -5P · ' + hs.label + ' 축 기여 기록됨');
     closeAskModal();
-    switchBridgeTab('wait');
-    showToast('질문이 등록되었습니다. 본사 담당자에게 알림이 전달됩니다.', '✅');
 }
 
 function openDetailModal(type) {
@@ -5296,8 +6119,111 @@ function submitGlossary() {
 
 // ── 목록 페이지로 이동 ─────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════
-// 가치사슬별 콘텐츠 데이터
+// H.E.A.R.T. 캐릭터 시스템 데이터
 // ══════════════════════════════════════════════════════════════
+const HEART_USER = {
+    name: '김현대',
+    dept: '보상본부 장기보상 2팀',
+    // 진단 시 초기값 (오각형 점선)
+    initial: { H:60, E:62, A:68, R:55, T:75 },
+    // 현재 플랫폼 기여 반영값 (오각형 실선)
+    current: { H:68, E:70, A:82, R:67, T:91 },
+    // 누적 Hi-Point 이력 (잔고와 별개)
+    hipoint: { balance: 12, lifetime: 84, contributions: 12 },
+    // 주 캐릭터 타입 (가장 높은 축)
+    charType: 'T',
+    // 캐릭터 타입 명칭 (추후 5종 이미지 업데이트 예정)
+    charTypes: {
+        H: { name: '정도의 수호자',  color: '#534AB7', desc: '원칙과 정확함으로 신뢰를 쌓습니다' },
+        E: { name: '탁월함의 개척자', color: '#EF9F27', desc: '깊이 있는 전문성으로 기여합니다' },
+        A: { name: '실행의 선봉장',   color: '#1D9E75', desc: '적극적 참여로 생태계를 이끕니다' },
+        R: { name: '존중의 연결자',   color: '#D4537E', desc: '동료를 응원하고 함께 성장합니다' },
+        T: { name: '신뢰의 파수꾼',   color: '#185FA5', desc: '꾸준한 기여로 신뢰를 증명합니다' }
+    },
+    // Trust 스트릭 (묵묵한 기여 연속 개월)
+    trustStreak: 14,
+    // 도메인 전문가 타이틀
+    domainTitles: ['장기보상 전문가', '자동차보상 고수'],
+    // 다음 목표
+    nextGoal: { title: '자동차보상 전문가', current: 11, target: 14 }
+};
+
+// GNB 및 홈 캐릭터 UI 초기화
+function initHeartUI() {
+    const ct = HEART_USER.charTypes[HEART_USER.charType];
+    // GNB 캐릭터 타입 표시
+    const gnbAvatar = document.getElementById('gnb-char-avatar');
+    const gnbType   = document.getElementById('gnb-char-type');
+    if (gnbAvatar) { gnbAvatar.style.background = '#3eb49b'; }
+    if (gnbType)   { gnbType.textContent = ct.name; }
+    // 홈 캐릭터 카드
+    const homeAvatar   = document.getElementById('home-char-avatar');
+    const homeTypeName = document.getElementById('home-char-typename');
+    if (homeAvatar)   { homeAvatar.style.borderColor = 'rgba(255,158,27,0.5)'; }
+    if (homeTypeName) { homeTypeName.textContent = ct.name; homeTypeName.style.color = ct.color || '#00205b'; }
+}
+
+// 페이지 로드 시 실행
+document.addEventListener('DOMContentLoaded', function() { initHeartUI(); });
+
+// ══════════════════════════════════════════════════════════════
+// H.E.A.R.T. 태그 유틸리티 — 콘텐츠 카드·미션 공용
+// ══════════════════════════════════════════════════════════════
+const HEART_TAG_MAP = {
+    // 콘텐츠 유형 → H.E.A.R.T. 축
+    '영업화법': 'A', '영업 화법': 'A', '화법': 'A',
+    '제안서': 'E', '제안서/PPT': 'E', 'PPT': 'E',
+    '교육자료': 'E', '교육 자료': 'E',
+    '케이스스터디': 'T', '사례공유': 'T', '성공사례': 'T', '보상사례': 'T',
+    '매뉴얼': 'H', '체크리스트': 'H', '기준서': 'H', '가이드': 'H',
+    '자동화툴': 'A', '데이터/툴': 'A', '조회자료': 'A', 'FAQ': 'A', 'Q&A': 'A',
+    '보상': 'T', '장기보상': 'T', '자동차보상': 'T',
+    '언더라이팅': 'H', '심사': 'H',
+    '이벤트자료': 'A', '전체': 'A'
+};
+const HEART_STYLE = {
+    H: { bg:'#EEEDFE', color:'#534AB7', label:'Honor'     },
+    E: { bg:'#FAEEDA', color:'#BA7517', label:'Excellence'},
+    A: { bg:'#E1F5EE', color:'#1D9E75', label:'Action'    },
+    R: { bg:'#FBEAF0', color:'#D4537E', label:'Respect'   },
+    T: { bg:'#E6F1FB', color:'#185FA5', label:'Trust'     }
+};
+
+function getHeartAxis(typeOrCategory) {
+    if (!typeOrCategory) return 'A';
+    for (const [key, axis] of Object.entries(HEART_TAG_MAP)) {
+        if (typeOrCategory.includes(key)) return axis;
+    }
+    return 'A';
+}
+
+function heartTagHTML(axis, size) {
+    const s = HEART_STYLE[axis] || HEART_STYLE['A'];
+    const fs = size === 'sm' ? '8px' : '9px';
+    const px = size === 'sm' ? '4px 5px' : '2px 6px';
+    return `<span style="font-size:${fs};font-weight:700;padding:${px};border-radius:3px;background:${s.bg};color:${s.color};white-space:nowrap">${s.label}</span>`;
+}
+
+// 현장노하우 뷰의 카드에 H.E.A.R.T. 태그 자동 삽입
+function initFieldHeartTags() {
+    document.querySelectorAll('.field-section[data-section]').forEach(sec => {
+        const secName = sec.dataset.section;
+        const axis = getHeartAxis(secName);
+        sec.querySelectorAll('.kcard').forEach(card => {
+            const badgeRow = card.querySelector('.flex.items-center.gap-1');
+            if (badgeRow && !badgeRow.querySelector('.heart-tag')) {
+                const tag = document.createElement('span');
+                tag.className = 'heart-tag';
+                const s = HEART_STYLE[axis] || HEART_STYLE['A'];
+                tag.style.cssText = `font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:${s.bg};color:${s.color};white-space:nowrap`;
+                tag.textContent = s.label;
+                badgeRow.appendChild(tag);
+            }
+        });
+    });
+}
+
+
 const LIST_DATA = {
   '영업/마케팅': {
     desc: '전속·GA·기업 영업 현장에서 검증된 화법, 제안서, 영업 전략 자료를 찾아보세요',
@@ -5565,6 +6491,7 @@ function renderFeaturedCard(f) {
             <div class="flex items-center gap-1.5 mb-1">
                 <span class="badge-cert text-[9px] px-1.5 py-0.5 rounded font-bold">👑 인증됨</span>
                 <span class="text-[9px] text-gray-400">${f.type}</span>
+                ${heartTagHTML(getHeartAxis(f.type), 'sm')}
             </div>
             <div class="font-bold text-xs text-gray-800 mb-0.5 line-clamp-1">${f.title}</div>
             <div class="text-[10px] text-gray-500 mb-2 line-clamp-1">${f.desc}</div>
@@ -5591,7 +6518,10 @@ function renderTableRow(r, isLast) {
     ).join('');
     const preview = r.preview || r.sub || '';
     return `<tr class="${rowCls}" style="position:relative" onclick="openModal(0)">
-        <td class="px-4 py-3">${badge}</td>
+        <td class="px-4 py-3">
+            ${badge}
+            <div style="margin-top:3px">${heartTagHTML(getHeartAxis(r.sub + ' ' + r.title), 'sm')}</div>
+        </td>
         <td class="px-4 py-3">
             <div class="flex items-center gap-2">
                 <span style="color:${r.ic}">${r.icon}</span>
@@ -5764,11 +6694,227 @@ function sweetClick(btn) {
 let sweetCount = 89;
 let sweeted = false;
 
+
+// ══════════════════════════════════════════════════════════════
+// CONTENT_DATA — Hi-Point 경제 시스템 통합 데이터 모델
+// ══════════════════════════════════════════════════════════════
+// status: 'market' | 'early_access' | 'archived' | 'public'
+// heartAxis: 'H'|'E'|'A'|'R'|'T'
+const CONTENT_DATA = [
+  { id:0, title:'26년 개정 실손의료비 화법 스크립트 v3.2',
+    status:'market', price:1, heartAxis:'A',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:30,
+    purchased:false, rating:4.9, ratingCount:47,
+    author:'이현대 과장', authorCharType:'T',
+    badge:'인증됨', cat:'영업/마케팅', sub:'전속영업', contentType:'영업화법',
+    desc:'고객의 거절을 극복하고 계약으로 이어질 핵심 화법 스크립트입니다. 26년 개정 실손의료비 상품의 주요 변경 포인트를 쉽게 설명하는 방법을 담았습니다.',
+    file:'실손의료비_화법스크립트_26년개정.pdf', hifive:89, dl:342,
+    date:'2026-03-15', updated:'2026-05-01',
+    tags:['#실손의료비','#화법스크립트','#26년개정'] },
+  { id:1, title:'VIP 고객 대상 종신보험 제안서 PPT (수정가능)',
+    status:'early_access', price:3, heartAxis:'E',
+    earlyAccess:true, quota:5, quotaUsed:3, archiveDaysLeft:null,
+    purchased:false, rating:4.7, ratingCount:23,
+    author:'김지식 대리', authorCharType:'E',
+    badge:'인증됨', cat:'영업/마케팅', sub:'전속영업', contentType:'제안서/PPT',
+    desc:'법인 CEO 및 고액 자산가 대상 종신보험 제안서 원본. 브랜드 가이드에 맞게 수정 가능한 PPT 원본 파일입니다.',
+    file:'VIP종신보험제안서.pptx', hifive:45, dl:128,
+    date:'2026-04-01', updated:'2026-05-10',
+    tags:['#제안서','#VIP','#종신보험'] },
+  { id:2, title:'장기보험 청약철회 및 취소 매뉴얼 (2026.05)',
+    status:'public', price:0, heartAxis:'H',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:null,
+    purchased:true, rating:4.5, ratingCount:89,
+    author:'장기계약관리부', authorCharType:'H',
+    badge:'본사표준', cat:'계약관리/보전', sub:'계약체결', contentType:'매뉴얼',
+    desc:'5세대 실손의료비 출시로 문구 수정된 최신 버전. 청약철회 및 계약취소 전반의 프로세스를 정리한 공식 매뉴얼입니다.',
+    file:'청약철회매뉴얼_202605.pdf', hifive:210, dl:521,
+    date:'2024-01-01', updated:'2026-05-06',
+    tags:['#청약철회','#매뉴얼'] },
+  { id:3, title:'2026 언더라이팅 인수기준 가이드 개정판',
+    status:'market', price:2, heartAxis:'H',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:45,
+    purchased:false, rating:4.6, ratingCount:12,
+    author:'언더라이팅팀', authorCharType:'H',
+    badge:'인증됨', cat:'언더라이팅/심사', sub:'개인 언더라이팅', contentType:'가이드',
+    desc:'2026년 인수기준 개정을 반영한 언더라이팅 가이드. 고위험군 심사 판단 기준 및 주요 케이스를 정리했습니다.',
+    file:'언더라이팅가이드_2026.pdf', hifive:34, dl:87,
+    date:'2026-04-20', updated:'2026-05-08',
+    tags:['#언더라이팅','#인수기준','#2026'] },
+  { id:4, title:'자동차보험 과실비율 산정 케이스북 v2',
+    status:'archived', price:0, heartAxis:'T',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:null,
+    purchased:false, rating:4.8, ratingCount:67,
+    author:'박노하우 팀장', authorCharType:'T',
+    badge:'인증됨', cat:'보상/손해사정', sub:'자동차보상', contentType:'케이스스터디',
+    desc:'실제 사례 기반의 과실비율 산정 케이스북. 법원 판례와 현장 적용 사례를 망라했습니다.',
+    file:'과실비율케이스북.pdf', hifive:189, dl:412,
+    date:'2025-12-01', updated:'2026-03-15',
+    tags:['#자동차보상','#과실비율'] },
+  { id:5, title:'실손 5세대 전환 고객 권유 스크립트',
+    status:'market', price:1, heartAxis:'A',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:60,
+    purchased:false, rating:4.4, ratingCount:18,
+    author:'이영업 선임', authorCharType:'A',
+    badge:'인증됨', cat:'영업/마케팅', sub:'전속영업', contentType:'영업화법',
+    desc:'1~4세대 실손 가입자 대상 5세대 전환 권유 스크립트. 주요 반론 처리 화법 포함.',
+    file:'실손5세대전환스크립트.pdf', hifive:51, dl:143,
+    date:'2026-04-10', updated:'2026-05-02',
+    tags:['#실손','#5세대전환','#영업화법'] },
+  { id:6, title:'보험사기 의심 패턴 체크리스트',
+    status:'archived', price:0, heartAxis:'H',
+    earlyAccess:false, quota:null, quotaUsed:null, archiveDaysLeft:null,
+    purchased:false, rating:4.7, ratingCount:43,
+    author:'보상본부', authorCharType:'H',
+    badge:'본사표준', cat:'보상/손해사정', sub:'보험사기', contentType:'체크리스트',
+    desc:'보험사기 의심 사례 패턴 분류 및 대응 가이드. 현장 적발 사례 38건 수록.',
+    file:'보험사기패턴체크리스트.pdf', hifive:127, dl:298,
+    date:'2025-11-01', updated:'2026-02-20',
+    tags:['#보험사기','#체크리스트'] },
+  { id:7, title:'신입 영업가족을 위한 100일 플랜 가이드',
+    status:'early_access', price:1, heartAxis:'A',
+    earlyAccess:true, quota:5, quotaUsed:1, archiveDaysLeft:null,
+    purchased:false, rating:0, ratingCount:0,
+    author:'박노하우 팀장', authorCharType:'T',
+    badge:'평가중', cat:'영업/마케팅', sub:'전속영업', contentType:'교육자료',
+    desc:'신입 영업가족의 초기 정착을 위한 단계별 100일 가이드.',
+    file:'신입100일플랜.pdf', hifive:7, dl:231,
+    date:'2026-05-01', updated:'2026-05-01',
+    tags:['#신입','#100일플랜'] },
+  { id:8, title:'반복 수작업 줄여주는 엑셀 매크로',
+    status:'early_access', price:2, heartAxis:'A',
+    earlyAccess:true, quota:5, quotaUsed:0, archiveDaysLeft:null,
+    purchased:false, rating:0, ratingCount:0,
+    author:'이현대 선임', authorCharType:'T',
+    badge:'평가중', cat:'보상/손해사정', sub:'장기보상', contentType:'자동화툴',
+    desc:'반복 수작업을 자동화하는 실무 엑셀 매크로 모음. 보상 산출, 청구 집계 등 8종.',
+    file:'실무자동화매크로.xlsx', hifive:2, dl:187,
+    date:'2026-05-05', updated:'2026-05-05',
+    tags:['#엑셀','#자동화','#매크로'] },
+];
+
+// CONTENT_DATA 조회 헬퍼
+function getContent(idx) {
+    return CONTENT_DATA[idx] || CONTENT_DATA[0];
+}
+
+// 포인트 잔고 (세션 상태)
+let userBalance = 12;
+
+// 구매 처리
+function purchaseContent(idx) {
+    const d = getContent(idx);
+    if (d.purchased) { downloadContent(d); return; }
+    if (d.price === 0 || d.status === 'archived' || d.status === 'public') {
+        downloadContent(d); return;
+    }
+    if (userBalance < d.price) {
+        showToast('⚠️ Hi-Point 잔고가 부족합니다. 현재 잔고: ' + userBalance + 'P', true);
+        return;
+    }
+    userBalance -= d.price;
+    d.purchased = true;
+    if (d.earlyAccess && d.quota) d.quotaUsed++;
+    // 잔고 UI 업데이트
+    document.querySelectorAll('.hp-balance-display').forEach(el => el.textContent = userBalance + ' P');
+    const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[d.heartAxis] || {};
+    const axisName = hs.label || d.heartAxis;
+    showToast('✅ 구매 완료! -' + d.price + 'P → 잔고 ' + userBalance + 'P · ' + axisName + ' 기여 기록됨');
+    // 버튼 상태 전환
+    renderModalFooter(d);
+}
+
+function downloadContent(d) {
+    showToast('⬇ "' + d.title.substring(0,18) + '..." 다운로드를 시작합니다.');
+}
+
 function openModal(idx) {
+    const d = getContent(idx);
     document.getElementById('modal-bg').classList.add('open');
-    // 버전 탭 표시 여부
-    document.getElementById('version-tab-btn').style.display = (idx === 2 || idx === 5) ? 'block' : 'block';
-    switchModalTab('detail', document.querySelector('[onclick*="detail"]'));
+    document.getElementById('version-tab-btn').style.display = 'block';
+    switchModalTab('detail', document.querySelector('[onclick*=\'detail\']'));
+
+    // ── 헤더 ──
+    document.getElementById('modal-title').textContent = d.title;
+    document.getElementById('modal-cat').textContent = d.cat + ' · ' + d.sub;
+    const badge = document.getElementById('modal-badge');
+    badge.textContent = d.badge === '본사표준' ? '🏢 본사표준' : '👑 ' + d.badge;
+    badge.className = d.badge === '본사표준' ? 'badge-hq text-[9px] px-2 py-0.5 rounded font-bold' : 'badge-cert text-[9px] px-2 py-0.5 rounded font-bold';
+
+    // HEART 태그
+    const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[d.heartAxis] || {bg:'#E1F5EE',color:'#085041',label:d.heartAxis};
+    const htEl = document.getElementById('modal-heart-tag');
+    if (htEl) { htEl.textContent = hs.label; htEl.style.background = hs.bg; htEl.style.color = hs.color; htEl.style.display = 'inline'; }
+
+    // 가격 뱃지
+    const priceEl = document.getElementById('modal-price-badge');
+    if (priceEl) {
+        if (d.status === 'archived' || d.status === 'public' || d.price === 0) {
+            priceEl.textContent = '무료'; priceEl.style.background='#dcfce7'; priceEl.style.color='#15803d';
+        } else if (d.earlyAccess) {
+            priceEl.textContent = 'EA ' + d.price + 'P'; priceEl.style.background='#fff7ed'; priceEl.style.color='#c2410c';
+        } else {
+            priceEl.textContent = d.price + 'P'; priceEl.style.background='#fff7ed'; priceEl.style.color='#c2410c';
+        }
+        priceEl.style.display = 'inline';
+    }
+
+    // ── 본문 ──
+    document.getElementById('modal-author').textContent = d.author;
+    document.getElementById('modal-date').textContent = d.date + ' / ' + d.updated;
+    document.getElementById('modal-class').textContent = d.cat + ' · ' + d.sub;
+    document.getElementById('modal-stats').textContent = '❤ ' + d.hifive + '회 / ⬇ ' + d.dl + '회';
+    document.getElementById('modal-desc').textContent = d.desc;
+    const sweetBtn = document.getElementById('modal-sweet-btn');
+    if (sweetBtn) sweetBtn.innerHTML = '⭐ 하이파이브! (' + d.hifive + ')';
+
+    // 아카이빙 D-day 바
+    const arcBar = document.getElementById('modal-archive-bar');
+    if (arcBar) {
+        if (d.status === 'market' && d.archiveDaysLeft) {
+            const pct = Math.max(5, 100 - d.archiveDaysLeft * 2);
+            arcBar.innerHTML = '<div style="display:flex;justify-content:space-between;font-size:9px;color:#64748b;margin-bottom:3px"><span>가격 감가 진행</span><span style="color:#ef4444;font-weight:600">D-' + d.archiveDaysLeft + ' → 아카이빙(무료)</span></div>' +
+            '<div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:linear-gradient(90deg,#3eb49b,#ef4444);border-radius:2px"></div></div>';
+            arcBar.style.display = 'block';
+        } else if (d.status === 'archived') {
+            arcBar.innerHTML = '<span style="font-size:9px;font-weight:600;color:#085041;background:#dcfce7;padding:2px 8px;border-radius:3px">🌿 아카이빙 완료 — 전사 무료 공개</span>';
+            arcBar.style.display = 'block';
+        } else { arcBar.style.display = 'none'; }
+    }
+
+    // Early Access 쿼터
+    const eaEl = document.getElementById('modal-ea-quota');
+    if (eaEl) {
+        if (d.earlyAccess && d.quota) {
+            const remain = d.quota - d.quotaUsed;
+            eaEl.innerHTML = '<span style="font-size:10px;font-weight:700;color:#ff9e1b">⚡ Early Access</span>' +
+            '<span style="font-size:10px;color:#64748b;margin-left:6px">잔여 <strong style=\"color:#ff9e1b\">' + remain + '</strong>/' + d.quota + '석</span>' +
+            '<span style="font-size:9px;color:#9ca3af;margin-left:6px">소진 후 ' + (d.price * 2) + 'P 예정 · 구매 시 30% 환급 보장</span>';
+            eaEl.style.display = 'flex';
+        } else { eaEl.style.display = 'none'; }
+    }
+
+    // ── 하단 버튼 ──
+    renderModalFooter(d);
+}
+
+function renderModalFooter(d) {
+    const wrap = document.getElementById('modal-action-wrap');
+    if (!wrap) return;
+    let html = '';
+    if (d.status === 'archived' || d.status === 'public' || d.price === 0) {
+        html = '<button onclick="downloadContent(getContent(' + d.id + '))" class="flex-[2] text-white text-xs font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-1.5 hover:brightness-110" style="background:#1D9E75">⬇ 무료 다운로드</button>';
+    } else if (d.purchased) {
+        html = '<button onclick="downloadContent(getContent(' + d.id + '))" class="flex-[2] text-white text-xs font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-1.5" style="background:#1D9E75">✓ 구매완료 · 다운로드</button>';
+    } else if (d.earlyAccess) {
+        const remain = d.quota - d.quotaUsed;
+        html = '<button onclick="purchaseContent(' + d.id + ')" class="flex-[2] text-white text-xs font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-1.5 hover:brightness-110" style="background:#ff9e1b;color:#1a1a1a">' +
+        '⚡ Early Access 구매 (' + d.price + 'P) · 잔여 ' + remain + '석</button>';
+    } else {
+        html = '<button onclick="purchaseContent(' + d.id + ')" class="flex-[2] text-white text-xs font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-1.5 hover:brightness-110" style="background:#00205b">' +
+        '⬇ 구매하기 (' + d.price + 'P 차감)</button>';
+    }
+    wrap.innerHTML = html;
 }
 
 function closeModal() {
@@ -5823,6 +6969,11 @@ function toggleHqMode(radio) {
     document.getElementById('hq-validation-info').classList.toggle('hidden', !hqSelected);
 }
 
+function toggleEarlyAccess(on) {
+    const area = document.getElementById('ea-quota-area');
+    if (area) area.classList.toggle('hidden', !on);
+}
+
 function toggleRegType(radio) {
     const isUpdate = document.querySelector('input[value="update"]').checked;
     document.getElementById('update-ref-area').classList.toggle('hidden', !isUpdate);
@@ -5862,8 +7013,25 @@ function submitKnowledge() {
         showToast('⚠️ 정보보호 확인 체크박스를 모두 체크해주세요.', true);
         return;
     }
-    nav('list');
-    showToast('지식 자산이 등록되었습니다! Hi-Point 1개 지급 ✅');
+    const axisEl = document.querySelector('input[name="heart-axis"]:checked');
+    const axis = axisEl ? axisEl.value : 'A';
+    const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[axis] || {label:axis};
+    const eaOn = document.getElementById('ea-toggle') && document.getElementById('ea-toggle').checked;
+    const eaQuota = eaOn ? (document.querySelector('input[name="ea-quota"]:checked')?.value || '5') : null;
+    const eaMsg = eaOn ? ' · Early Access ' + eaQuota + '석 설정' : '';
+    userBalance = (userBalance || 12) + 20;
+    document.querySelectorAll('.hp-balance-display').forEach(el => el.textContent = userBalance + ' P');
+    nav('market');
+    showToast('✅ 등록 완료! +20P 지급 · ' + hs.label + ' 축 기여 기록' + eaMsg);
+}
+
+
+// ── FAQ 채택 처리 (HEART 연동) ────────────────────────────────
+function acceptFaqAnswer(answerer, heartAxis) {
+    const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[heartAxis || 'A'] || {label:'Action'};
+    userBalance = (userBalance || 12) + 15;
+    document.querySelectorAll('.hp-balance-display').forEach(el => el.textContent = userBalance + ' P');
+    showToast('🎉 답변 채택! 답변자 +15P · ' + hs.label + ' 축 성장 기록됨');
 }
 
 // ── 토스트 ─────────────────────────────────────────────────────
@@ -6077,6 +7245,693 @@ function showToast(msg, isWarn = false) {
 
 
 
+
+
+    // ════════════════════════════════════════════════════════════════
+    // 지식 미션 (구: 본사 퀘스트) — 데이터 + 로직
+    // ════════════════════════════════════════════════════════════════
+
+    const MISSION_DATA = [
+        { id:1, title:'신상품 Hi2606 고객 거절 극복 화법을 구합니다!', dept:'마케팅팀',
+          issuerType:'본사', status:'active', reward:500, heartAxis:'A', missionType:'multi',
+          desc:'5월 출시 예정인 신상품에 대한 고객 반응과 거절 유형을 현장에서 직접 겪은 상황을 바탕으로 화법 스크립트를 작성해 주세요. 우수작은 전사 공공 자산으로 등재됩니다.',
+          deadline:'2026-06-30', entries:12, target:30, created:'2026-05-01',
+          requirements:'① 실제 고객 거절 유형 3가지 이상 ② 화법 스크립트 포함 ③ 현장 경험 기반' },
+        { id:2, title:'현장에서 가장 많이 받는 보험금 청구 Q&A 20선', dept:'보상팀',
+          issuerType:'본사', status:'active', reward:200, heartAxis:'T', missionType:'multi',
+          desc:'고객이 자주 묻는 보험금 청구 관련 질문과 현장에서 실제 효과적인 답변 방식을 정리해 주세요.',
+          deadline:'2026-07-15', entries:5, target:20, created:'2026-05-03',
+          requirements:'① Q&A 20쌍 이상 ② 실제 고객 응대 사례 포함' },
+        { id:3, title:'2026년 하반기 보험료 산출 오류 사례 수집', dept:'계리팀',
+          issuerType:'본사', status:'active', reward:300, heartAxis:'H', missionType:'multi',
+          desc:'현장에서 발견된 보험료 계산 오류 케이스와 고객 응대 방법을 정리해 주세요. 오류 재현 방법 포함 시 가점.',
+          deadline:'2026-05-25', entries:8, target:15, created:'2026-04-28',
+          requirements:'① 오류 케이스 3건 이상 ② 재현 방법 또는 스크린샷' },
+        { id:4, title:'고령 고객 디지털 가입 안내 개선 아이디어', dept:'고객지원팀',
+          issuerType:'현장', status:'active', reward:150, heartAxis:'R', missionType:'multi',
+          desc:'60대 이상 고객의 모바일 가입 과정에서 발생하는 어려움과 현장 직원의 대응 노하우를 공유해 주세요.',
+          deadline:'2026-06-10', entries:3, target:25, created:'2026-05-05',
+          requirements:'① 구체적 어려움 사례 ② 현장 대응 방법' },
+        { id:5, title:'단체보험 심사 기준 현장 적용 사례 공모', dept:'언더라이팅팀',
+          issuerType:'본사', status:'active', reward:400, heartAxis:'H', missionType:'multi',
+          desc:'단체보험 심사 시 모호한 기준으로 어려움을 겪은 사례와 현장에서 자체 해결한 방법을 정리해 주세요.',
+          deadline:'2026-05-20', entries:2, target:10, created:'2026-05-06',
+          requirements:'① 심사 기준 모호 사례 ② 자체 해결 방법 ③ 개선 제안' },
+        { id:6, title:'실손의료비 5세대 개정 관련 현장 반응 보고서', dept:'보상팀',
+          issuerType:'본사', status:'done', reward:300, heartAxis:'E', missionType:'single',
+          desc:'5세대 실손 개정 이후 고객 반응과 현장 대응 사례를 정리한 보고서.',
+          deadline:'2026-04-30', entries:23, target:20, created:'2026-03-01',
+          requirements:'', winner:'이현대 과장' },
+        { id:7, title:'하이드라이브 부서 폴더 정비 노하우 공유', dept:'데이터사이언스파트',
+          issuerType:'본사', status:'active', reward:100, heartAxis:'T', missionType:'multi',
+          desc:'클라우드 기반 전사 지식 저장소 하이드라이브(Hi-Drive)가 새로 도입되었습니다. 부서 폴더를 효율적으로 정비한 노하우를 공유해 주세요. 파일 네이밍 규칙, 폴더 계층 구조 설계, 불필요 파일 정리 기준 등 실제 적용 경험을 담아주시면 복수 채택됩니다.',
+          deadline:'2026-07-31', entries:2, target:20, created:'2026-05-13',
+          requirements:'① 정비 전/후 폴더 구조 비교 또는 설계 원칙 ② 파일 네이밍 규칙 ③ 팀원 공유 방법' },
+        { id:8, title:'하이웍스 채널 관리 노하우 공유', dept:'시스템관리파트',
+          issuerType:'본사', status:'active', reward:80, heartAxis:'A', missionType:'multi',
+          desc:'FLOW 기반 사내 메신저 협업 툴 하이웍스(Hi-Works)가 새로 도입되었습니다. 채널 분류 방법, 알림 관리 노하우, 업무 효율화 실전 팁을 공유해 주세요. 팀 규모나 업무 특성에 따라 다양한 활용법이 복수 채택될 수 있습니다.',
+          deadline:'2026-07-31', entries:0, target:20, created:'2026-05-13',
+          requirements:'① 사용 중인 채널 구조 설명 ② 알림/채널 관리 팁 ③ 도입 전/후 업무 효율 변화' },
+    ];
+
+    // ── 미션 제출 목록 (복수채택 미션 전용) ─────────────────────────
+    const MISSION_SUBMISSIONS = {
+        7: [
+            { id:'s701', author:'이현대 과장', dept:'보상본부 장기보상 2팀', date:'2026-05-14',
+              title:'3계층 폴더 구조로 정비한 노하우',
+              summary:'팀 공통 > 업무유형 > 연도 3계층 구조로 전환. 파일명은 "YYYYMMDD_업무구분_제목_v버전" 형식으로 통일. 분기별 아카이빙 기준도 포함.',
+              status:'accepted', acceptedAt:'2026-05-15' },
+            { id:'s702', author:'김지식 대리', dept:'IT기획팀', date:'2026-05-14',
+              title:'파일 네이밍 규칙 가이드 공유',
+              summary:'영문/한글 혼용 방지, 특수문자 금지, 날짜 앞자리 통일 3가지 규칙만 적용해도 검색 효율이 크게 올라갔습니다. 팀 공지로 뿌린 템플릿도 첨부합니다.',
+              status:'reviewing', acceptedAt:null },
+        ],
+        8: [],
+    };
+    // 동적 응모 추가 시 병합
+    let missionSubmissionsState = JSON.parse(JSON.stringify(MISSION_SUBMISSIONS));
+
+    // 내 응모 현황 (Phase 2: 로컬 상태)
+    let myMissionApplies = {};  // { missionId: { title, status:'submitted'|'reviewing'|'accepted'|'rejected' } }
+    let missionAnonMode = false;
+    let missionState = { tab:'all', dept:'all', keyword:'', sort:'deadline' };
+
+    function mDaysLeft(deadline) {
+        return Math.ceil((new Date(deadline) - new Date()) / 86400000);
+    }
+    function mIsUrgent(m) {
+        return m.status === 'active' && mDaysLeft(m.deadline) <= 7;
+    }
+
+    function mFilteredMissions() {
+        const { tab, dept, keyword } = missionState;
+        const kw = keyword.toLowerCase();
+        return MISSION_DATA.filter(m => {
+            if (tab === 'active' && m.status !== 'active') return false;
+            if (tab === 'urgent' && !mIsUrgent(m))        return false;
+            if (tab === 'done'   && m.status !== 'done')  return false;
+            if (tab === 'mine'   && !myMissionApplies[m.id]) return false;
+            if (dept !== 'all'   && m.dept !== dept)      return false;
+            if (kw && !m.title.toLowerCase().includes(kw) && !m.desc.toLowerCase().includes(kw)) return false;
+            return true;
+        });
+    }
+
+    function mSortedMissions(list) {
+        const s = missionState.sort;
+        return [...list].sort((a, b) => {
+            if (s === 'deadline') return new Date(a.deadline) - new Date(b.deadline);
+            if (s === 'reward')   return b.reward - a.reward;
+            if (s === 'entries')  return b.entries - a.entries;
+            if (s === 'newest')   return new Date(b.created) - new Date(a.created);
+            return 0;
+        });
+    }
+
+    function mBuildDeptChips() {
+        const depts = [...new Set(MISSION_DATA.map(m => m.dept))];
+        const container = document.getElementById('mission-dept-chips');
+        if (!container) return;
+        container.innerHTML = ['전체', ...depts].map(d => {
+            const val = d === '전체' ? 'all' : d;
+            const active = missionState.dept === val ? 'bg-hi-navy text-white border-hi-navy' : 'bg-white text-gray-500 border-gray-200 hover:border-hi-navy';
+            return `<button class="chip text-[10px] px-3 py-1 rounded-full border transition font-medium ${active}"
+                onclick="mSetDept('${val}')">${d}</button>`;
+        }).join('');
+    }
+
+    function mSetDept(val) {
+        missionState.dept = val;
+        renderMissions();
+    }
+
+    function setMissionTab(btn) {
+        document.querySelectorAll('.mission-tab-btn').forEach(b => {
+            b.classList.remove('active','border-hi-navy','font-bold','text-hi-navy');
+            b.classList.add('border-transparent','text-gray-500','font-medium');
+        });
+        btn.classList.add('active','border-hi-navy','font-bold','text-hi-navy');
+        btn.classList.remove('border-transparent','text-gray-500','font-medium');
+        missionState.tab = btn.dataset.mtab;
+        renderMissions();
+    }
+
+    function renderMissions() {
+        missionState.keyword = (document.getElementById('mission-search')?.value || '').trim();
+        missionState.sort    = document.getElementById('mission-sort')?.value || 'deadline';
+
+        const active  = MISSION_DATA.filter(m => m.status === 'active');
+        const urgent  = MISSION_DATA.filter(m => mIsUrgent(m));
+        const done    = MISSION_DATA.filter(m => m.status === 'done');
+        const mine    = MISSION_DATA.filter(m => myMissionApplies[m.id]);
+        const totalE  = MISSION_DATA.reduce((s,m) => s + m.entries, 0);
+        const totalR  = MISSION_DATA.filter(m=>m.status==='active').reduce((s,m) => s + m.reward, 0);
+
+        // 통계 카드
+        const sa = document.getElementById('mstat-active');   if(sa) sa.textContent = active.length;
+        const su = document.getElementById('mstat-urgent');   if(su) su.textContent = urgent.length;
+        const se = document.getElementById('mstat-entries');  if(se) se.textContent = totalE;
+        const sr = document.getElementById('mstat-reward');   if(sr) sr.textContent = totalR.toLocaleString();
+
+        // 탭 카운트
+        const tc = (id, n) => { const el = document.getElementById(id); if(el) el.textContent = `(${n})`; };
+        tc('mtab-cnt-all',    MISSION_DATA.length);
+        tc('mtab-cnt-active', active.length);
+        tc('mtab-cnt-urgent', urgent.length);
+        tc('mtab-cnt-done',   done.length);
+        tc('mtab-cnt-mine',   mine.length);
+
+        // 부서 칩
+        mBuildDeptChips();
+
+        const list = mSortedMissions(mFilteredMissions());
+        const ri = document.getElementById('mission-result-info');
+        if (ri) ri.textContent = `${list.length}개 미션`;
+
+        const container = document.getElementById('mission-list');
+        if (!container) return;
+
+        if (!list.length) {
+            container.innerHTML = `<div class="text-center py-12 text-gray-400 text-xs">🔍 조건에 맞는 미션이 없습니다.</div>`;
+            return;
+        }
+
+        container.innerHTML = list.map(m => {
+            const isDone   = m.status === 'done';
+            const urgent   = mIsUrgent(m);
+            const d        = isDone ? null : mDaysLeft(m.deadline);
+            const pct      = Math.min(100, Math.round(m.entries / m.target * 100));
+            const myApply  = myMissionApplies[m.id];
+
+            // D-day 뱃지 색상
+            let ddayCls = 'bg-green-100 text-green-700';
+            let ddayTxt = `D-${d}`;
+            if (isDone)    { ddayCls = 'bg-gray-100 text-gray-500'; ddayTxt = '완료'; }
+            else if (d<=7) { ddayCls = 'bg-red-100 text-red-600'; }
+            else if (d<=21){ ddayCls = 'bg-orange-100 text-orange-600'; }
+
+            // 발신자 뱃지
+            const issuerBadge = m.issuerType === '현장'
+                ? '<span class="text-[9px] bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded font-bold border border-teal-200">🌿 현장 제안</span>'
+                : '<span class="text-[9px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold border border-blue-100">🏢 본사 공모</span>';
+
+            // 내 응모 상태
+            let myStatusHtml = '';
+            if (myApply) {
+                const sc = { submitted:'bg-blue-50 text-blue-700', reviewing:'bg-amber-50 text-amber-700', accepted:'bg-green-50 text-green-700', rejected:'bg-gray-100 text-gray-500' };
+                const st = { submitted:'접수 완료', reviewing:'검토 중', accepted:'🎉 채택!', rejected:'미채택' };
+                myStatusHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded ${sc[myApply.status]||sc.submitted}">내 응모: ${st[myApply.status]||'접수 완료'}</span>`;
+            }
+
+            // 카드 테두리 (긴급 = 좌측 레드 라인)
+            const borderCls = urgent ? 'border-l-4 border-l-red-400 border-y border-r border-gray-200'
+                            : isDone ? 'border border-gray-200 opacity-70'
+                            : 'border border-gray-200';
+
+            // 미션 유형 뱃지
+            const isMulti = m.missionType === 'multi';
+            const typeBadge = isMulti
+                ? '<span class="text-[9px] font-black px-2 py-0.5 rounded" style="background:#E1F5EE;color:#085041">복수 채택</span>'
+                : '<span class="text-[9px] font-black px-2 py-0.5 rounded" style="background:#fff7ed;color:#c2410c">단일 채택</span>';
+
+            // 복수채택 보상 안내
+            const rewardNote = isMulti
+                ? (isDone ? '복수 채택 완료' : '채택 건별 지급')
+                : (isDone ? '지급 완료' : '1건 채택 후 아카이빙');
+
+            // 제출 목록 (복수채택 미션)
+            const subs = (missionSubmissionsState[m.id] || []);
+            const acceptedSubs = subs.filter(s => s.status === 'accepted');
+            const subsSection = isMulti ? renderMissionSubmissions(m.id, subs) : '';
+
+            return `<div class="bg-white rounded-xl ${borderCls} shadow-sm transition hover:shadow-md" id="mission-card-${m.id}">
+                <div class="p-5">
+                <div class="flex items-start justify-between mb-2">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        ${urgent ? '<span class="text-[9px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-black">🔥 마감 임박</span>' : ''}
+                        ${!isDone && !urgent ? '<span class="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-black">진행중</span>' : ''}
+                        ${isDone ? '<span class="text-[9px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded font-black">완료</span>' : ''}
+                        ${typeBadge}
+                        ${issuerBadge}
+                        <span class="text-[9px] text-gray-400">${m.dept} 주관</span>
+                        ${myStatusHtml}
+                    </div>
+                    <div class="text-right shrink-0 ml-2">
+                        <div class="text-hi-org font-black text-base">⭐ ${m.reward.toLocaleString()} Hi-Point</div>
+                        <div class="text-[9px] text-gray-400">${rewardNote}</div>
+                        ${isMulti && acceptedSubs.length > 0 ? `<div class="text-[9px] font-bold mt-0.5" style="color:#085041">${acceptedSubs.length}건 채택됨</div>` : ''}
+                    </div>
+                </div>
+                <h3 class="font-black text-sm text-gray-900 mb-1 leading-snug ${isDone?'line-through text-gray-500':''}">${m.title}</h3>
+                ${m.heartAxis ? (() => { const hs = (typeof HEART_STYLE !== 'undefined' ? HEART_STYLE : {})[m.heartAxis]; return hs ? `<div class="flex items-center gap-1.5 mb-2"><span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:${hs.bg};color:${hs.color}">✦ ${hs.label} 성장</span><span style="font-size:9px;color:#9ca3af">이 미션 완료 시 ${hs.label} 축이 올라갑니다</span></div>` : ''; })() : ''}
+                <p class="text-xs text-gray-600 mb-2 leading-relaxed" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${m.desc}</p>
+                ${m.requirements && !isDone ? `<div class="text-[10px] text-blue-700 bg-blue-50 rounded px-2 py-1 mb-2 border border-blue-100">📋 ${m.requirements}</div>` : ''}
+                ${!isDone ? `<div class="flex items-center gap-2 mb-2">
+                    <div class="flex-1 bg-gray-100 rounded-full h-1.5">
+                        <div class="h-1.5 rounded-full bg-hi-navy transition-all" style="width:${pct}%"></div>
+                    </div>
+                    <span class="text-[9px] text-gray-400 shrink-0">${m.entries}/${m.target}건 (${pct}%)</span>
+                </div>` : ''}
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                        <span class="font-bold px-2 py-0.5 rounded ${ddayCls}">${ddayTxt}</span>
+                        <span>마감 ${m.deadline}</span>
+                        ${isDone && m.winner ? `<span>채택: <strong class="text-gray-600">${m.winner}</strong></span>` : ''}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${isMulti && subs.length > 0 ? `<button onclick="toggleMissionSubmissions(${m.id})" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border transition" style="color:#3eb49b;border-color:#3eb49b">제출 현황 (${subs.length}건) ▾</button>` : ''}
+                        ${!isDone ? `<button onclick="openMissionApplyModal(${m.id})" class="text-xs font-bold px-4 py-1.5 rounded-lg text-white transition shadow-sm hover:opacity-90" style="background:#00205b">응모하기 →</button>` : ''}
+                    </div>
+                </div>
+                </div>
+                ${subsSection}
+            </div>`;
+        }).join('');
+    }
+
+
+    // ── 복수채택 미션 제출 목록 렌더링 ──────────────────────────────
+    function renderMissionSubmissions(mId, subs) {
+        if (!subs || subs.length === 0) return '';
+        const statusBadge = (s) => {
+            if (s.status === 'accepted') return '<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;background:#dcfce7;color:#15803d">✓ 채택됨</span>';
+            if (s.status === 'rejected') return '<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;background:#f3f4f6;color:#6b7280">미채택</span>';
+            return '<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;background:#E6F1FB;color:#0C447C">검토중</span>';
+        };
+        const rows = subs.map(s => `
+            <div class="flex items-start gap-3 py-3 border-b last:border-b-0" style="border-color:#f1f5f9">
+                <div style="width:28px;height:28px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#475569;flex-shrink:0">
+                    ${s.author.charAt(0)}
+                </div>
+                <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">
+                        <span style="font-size:11px;font-weight:700;color:#1e293b">${s.title}</span>
+                        ${statusBadge(s)}
+                    </div>
+                    <div style="font-size:10px;color:#64748b;line-height:1.55;margin-bottom:4px">${s.summary}</div>
+                    <div style="font-size:9px;color:#94a3b8">${s.author} · ${s.dept} · ${s.date}</div>
+                </div>
+                ${s.status !== 'accepted' ? `<button onclick="acceptSubmission(${mId},'${s.id}')" style="font-size:9px;font-weight:600;padding:3px 8px;border-radius:5px;border:0.5px solid #5DCAA5;color:#085041;background:white;cursor:pointer;flex-shrink:0;white-space:nowrap" onmouseover="this.style.background='#E1F5EE'" onmouseout="this.style.background='white'">채택하기</button>` : ''}
+            </div>`).join('');
+        return `<div id="submissions-${mId}" style="display:none;border-top:0.5px solid #e2e8f0;background:#fafafa;border-radius:0 0 12px 12px;padding:0 16px">
+            <div style="font-size:10px;font-weight:700;color:#64748b;padding:10px 0 6px;letter-spacing:.05em">제출 현황 — ${subs.length}건</div>
+            <div>${rows}</div>
+            <div style="padding:10px 0 12px">
+                <button onclick="openMissionApplyModal(${mId})" style="font-size:10px;font-weight:600;color:#00205b;border:0.5px dashed #93c5fd;background:#eff6ff;border-radius:6px;padding:5px 14px;cursor:pointer;width:100%" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">+ 내 노하우도 제출하기</button>
+            </div>
+        </div>`;
+    }
+
+    function toggleMissionSubmissions(mId) {
+        const el = document.getElementById('submissions-' + mId);
+        if (!el) return;
+        const isHidden = el.style.display === 'none';
+        el.style.display = isHidden ? 'block' : 'none';
+        // 버튼 텍스트 토글
+        const card = document.getElementById('mission-card-' + mId);
+        if (card) {
+            const btn = card.querySelector('button[onclick*="toggleMissionSubmissions"]');
+            if (btn) {
+                const subs = missionSubmissionsState[mId] || [];
+                btn.textContent = isHidden ? `제출 현황 (${subs.length}건) ▴` : `제출 현황 (${subs.length}건) ▾`;
+            }
+        }
+    }
+
+    function acceptSubmission(mId, subId) {
+        const subs = missionSubmissionsState[mId];
+        if (!subs) return;
+        const sub = subs.find(s => s.id === subId);
+        if (!sub) return;
+        sub.status = 'accepted';
+        sub.acceptedAt = new Date().toISOString().slice(0,10);
+        // 제출자에게 포인트 지급 (시뮬레이션)
+        const m = MISSION_DATA.find(x => x.id === mId);
+        const reward = m ? m.reward : 100;
+        showToast(`✅ "${sub.title.slice(0,16)}..." 채택 완료! 제출자 +${reward}P 지급됨`);
+        renderMissions();
+        // 제출 목록 다시 열기
+        setTimeout(() => { toggleMissionSubmissions(mId); }, 100);
+    }
+
+    // ── 응모 모달 열기/닫기 ──────────────────────────────────────
+    let _curMissionId = null;
+    function openMissionApplyModal(missionId) {
+        _curMissionId = missionId;
+        const modal = document.getElementById('mission-apply-modal');
+        if (!modal) return;
+
+        if (missionId === null) {
+            // 미션 등록 제안 모드
+            document.getElementById('mmodal-title').textContent = '새 미션 등록 제안';
+            document.getElementById('mmodal-info').innerHTML = `<div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 text-[10px] text-blue-800 mb-2">
+                💡 어떤 지식이 필요한지 제안해 주세요. 관리자 검토 후 공식 미션으로 등록됩니다.</div>`;
+            document.getElementById('mmodal-reward-notice').classList.add('hidden');
+        } else {
+            const m = MISSION_DATA.find(x => x.id === missionId);
+            if (!m) return;
+            document.getElementById('mmodal-title').textContent = m.title;
+            document.getElementById('mmodal-info').innerHTML = `
+                <div class="bg-gray-50 rounded-lg px-4 py-3 mb-2 text-[10px] text-gray-600 space-y-1 border border-gray-200">
+                    <div class="flex gap-2"><span class="text-gray-400 w-16 shrink-0">주관 부서</span><strong>${m.dept}</strong></div>
+                    <div class="flex gap-2"><span class="text-gray-400 w-16 shrink-0">보상</span><strong class="text-hi-org">⭐ ${m.reward.toLocaleString()} Hi-Point</strong></div>
+                    <div class="flex gap-2"><span class="text-gray-400 w-16 shrink-0">마감일</span><strong>${m.deadline}</strong></div>
+                    ${m.requirements ? `<div class="flex gap-2"><span class="text-gray-400 w-16 shrink-0">요건</span><span>${m.requirements}</span></div>` : ''}
+                </div>`;
+            const rn = document.getElementById('mmodal-reward-notice');
+            const rt = document.getElementById('mmodal-reward-text');
+            if (rn) rn.classList.remove('hidden');
+            if (rt) rt.textContent = `채택 시 ${m.reward.toLocaleString()} Hi-Point 즉시 지급`;
+        }
+
+        // 폼 초기화
+        const tf = document.getElementById('mapply-title');
+        const cf = document.getElementById('mapply-content');
+        if (tf) tf.value = '';
+        if (cf) cf.value = '';
+        document.getElementById('mapply-char').textContent = '0';
+        missionAnonMode = false;
+        _updateAnonUI();
+        modal.classList.add('open');
+    }
+
+    function closeMissionModal() {
+        const modal = document.getElementById('mission-apply-modal');
+        if (modal) modal.classList.remove('open');
+    }
+
+    function toggleMissionAnon() {
+        missionAnonMode = !missionAnonMode;
+        _updateAnonUI();
+    }
+    function _updateAnonUI() {
+        const track = document.getElementById('mapply-anon-track');
+        const thumb = document.getElementById('mapply-anon-thumb');
+        const label = document.getElementById('mapply-anon-label');
+        if (track) track.style.background = missionAnonMode ? '#00205b' : '#e5e7eb';
+        if (thumb) thumb.style.transform = missionAnonMode ? 'translateX(16px)' : '';
+        if (label) label.textContent = missionAnonMode ? '익명 제출' : '실명 공개';
+    }
+
+    // 글자수 카운트 (응모 모달)
+    document.addEventListener('DOMContentLoaded', function() {
+        const cf = document.getElementById('mapply-content');
+        if (cf) cf.addEventListener('input', function() {
+            const el = document.getElementById('mapply-char');
+            if (el) el.textContent = this.value.length;
+        });
+        renderMissions();
+    });
+
+    function submitMissionApply() {
+        const title   = document.getElementById('mapply-title')?.value.trim();
+        const content = document.getElementById('mapply-content')?.value.trim();
+        if (!title)   { showToast('응모 제목을 입력해 주세요.', '✏️'); return; }
+        if (!content) { showToast('응모 내용을 입력해 주세요.', '✏️'); return; }
+
+        if (_curMissionId !== null) {
+            myMissionApplies[_curMissionId] = { title, status: 'submitted' };
+        }
+        // 복수채택 미션이면 제출 목록에 실시간 추가
+        if (_curMissionId !== null) {
+            const m = MISSION_DATA.find(x => x.id === _curMissionId);
+            if (m && m.missionType === 'multi') {
+                if (!missionSubmissionsState[_curMissionId]) missionSubmissionsState[_curMissionId] = [];
+                missionSubmissionsState[_curMissionId].unshift({
+                    id: 'sub_' + Date.now(),
+                    author: '김현대 선임', dept: '보상본부 장기보상 2팀',
+                    date: new Date().toISOString().slice(0,10),
+                    title: title || '제출된 노하우',
+                    summary: content ? content.slice(0,80) + (content.length > 80 ? '...' : '') : '내용 확인 필요',
+                    status: 'reviewing', acceptedAt: null
+                });
+                m.entries++;
+            }
+        }
+        closeMissionModal();
+        renderMissions();
+        showToast(_curMissionId ? '응모가 완료되었습니다! 결과는 My-Page에서 확인하세요 ✅' : '미션 제안이 접수되었습니다! 관리자 검토 후 안내드립니다 ✅', '🎯');
+    }
+
+    // ── 관리자 페이지 탭 전환 ──
+    // ── 관리자: 지식 미션 관리 ──────────────────────────────────────
+
+    // 직원 제안 목업 데이터 (Phase 2: 실제로는 서버 DB에서 가져옴)
+    const MISSION_PROPOSALS = [
+        { id:'p1', title:'콜센터 응대 우수 화법 수집', proposer:'김지식 대리', dept:'보상1팀',
+          date:'2026-05-10', desc:'콜센터에서 효과적인 응대로 고객 만족도를 높인 사례를 수집하면 좋을 것 같습니다.', status:'pending' },
+        { id:'p2', title:'장기보험 갱신 안내 문자 개선안 공모', proposer:'이현대 과장', dept:'영업1팀',
+          date:'2026-05-09', desc:'현재 갱신 안내 문자가 고객에게 혼란을 주는 경우가 많아 개선 아이디어를 모으면 좋겠습니다.', status:'pending' },
+        { id:'p3', title:'GA채널 신계약 체결 노하우 공모', proposer:'박노하우 팀장', dept:'GA영업팀',
+          date:'2026-05-07', desc:'GA채널에서 높은 계약 성사율을 달성한 현장 노하우를 전사 공유하면 도움이 될 것 같습니다.', status:'approved' },
+    ];
+
+    function setAdmMissionSubtab(btn) {
+        document.querySelectorAll('.adm-mission-subtab').forEach(b => {
+            b.classList.remove('active','border-hi-navy','font-bold','text-hi-navy');
+            b.classList.add('border-transparent','text-gray-500','font-medium');
+        });
+        btn.classList.add('active','border-hi-navy','font-bold','text-hi-navy');
+        btn.classList.remove('border-transparent','text-gray-500','font-medium');
+        const tab = btn.dataset.subtab;
+        document.getElementById('adm-subtab-official').classList.toggle('hidden', tab !== 'official');
+        document.getElementById('adm-subtab-proposals').classList.toggle('hidden', tab !== 'proposals');
+    }
+
+    function renderAdminMissions() {
+        // 공식 미션 목록
+        const ol = document.getElementById('adm-mission-official-list');
+        if (ol) {
+            ol.innerHTML = MISSION_DATA.map(m => {
+                const isDone = m.status === 'done';
+                const d = isDone ? null : Math.ceil((new Date(m.deadline) - new Date()) / 86400000);
+                const pct = Math.min(100, Math.round(m.entries / m.target * 100));
+                return `<div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-[9px] font-black px-2 py-0.5 rounded ${isDone?'bg-gray-200 text-gray-500':'bg-blue-100 text-blue-700'}">${isDone?'완료':'진행중'}</span>
+                            <span class="text-[9px] ${m.issuerType==='현장'?'bg-teal-100 text-teal-700':'bg-blue-50 text-blue-700'} px-1.5 py-0.5 rounded font-bold border ${m.issuerType==='현장'?'border-teal-200':'border-blue-100'}">${m.issuerType==='현장'?'🌿 현장 제안':'🏢 본사 공모'}</span>
+                            <span class="text-[9px] text-gray-500 font-medium">${m.dept}</span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            ${!isDone?`<button onclick="openMissionEditModal(${m.id})" class="text-[10px] font-bold px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 transition">수정</button>
+                            <button onclick="admCompleteMission(${m.id},this)" class="text-[10px] font-bold px-3 py-1 rounded border border-green-400 text-green-700 hover:bg-green-50 transition">완료 처리</button>`
+                            :`<span class="text-[9px] text-gray-400">완료됨</span>`}
+                        </div>
+                    </div>
+                    <div class="font-black text-sm text-gray-900 mb-1 ${isDone?'line-through text-gray-400':''}">${m.title}</div>
+                    <div class="flex items-center gap-4 text-[10px] text-gray-400 mb-2">
+                        <span>⭐ ${m.reward.toLocaleString()} Hi-Point</span>
+                        <span>마감 ${m.deadline}${!isDone?` (D-${d})`:''}</span>
+                        <span>응모 ${m.entries}/${m.target}건</span>
+                    </div>
+                    ${!isDone?`<div class="w-full bg-gray-100 rounded-full h-1.5"><div class="h-1.5 rounded-full bg-hi-navy" style="width:${pct}%"></div></div>`:''}
+                </div>`;
+            }).join('');
+        }
+
+        // 직원 제안 목록
+        const pl = document.getElementById('adm-mission-proposal-list');
+        const pending = MISSION_PROPOSALS.filter(p => p.status === 'pending');
+        const badge = document.getElementById('adm-mission-proposal-badge');
+        const cnt   = document.getElementById('adm-proposal-cnt');
+        if (badge) { badge.textContent = pending.length; badge.classList.toggle('hidden', pending.length === 0); }
+        if (cnt)   cnt.textContent = pending.length ? `(${pending.length})` : '';
+
+        if (pl) {
+            pl.innerHTML = MISSION_PROPOSALS.map(p => {
+                const isPending = p.status === 'pending';
+                return `<div class="bg-white rounded-xl border ${isPending?'border-orange-200':'border-gray-200'} p-4 shadow-sm">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-black px-2 py-0.5 rounded ${isPending?'bg-amber-100 text-amber-700':'bg-green-100 text-green-700'}">${isPending?'검토 대기':'승인됨'}</span>
+                            <span class="text-[9px] text-gray-500">${p.proposer} · ${p.dept} · ${p.date}</span>
+                        </div>
+                        ${isPending?`<div class="flex gap-2 shrink-0">
+                            <button onclick="admApproveMissionProposal('${p.id}',this)" class="text-[10px] font-bold px-3 py-1 rounded border border-hi-navy text-hi-navy hover:bg-blue-50 transition">공식 미션으로 등록</button>
+                            <button onclick="admRejectMissionProposal('${p.id}',this)" class="text-[10px] font-bold px-3 py-1 rounded border border-gray-300 text-gray-500 hover:bg-gray-50 transition">반려</button>
+                        </div>`:`<span class="text-[9px] text-green-600 font-bold">✓ 공식 미션 등록 완료</span>`}
+                    </div>
+                    <div class="font-bold text-sm text-gray-800 mb-1">${p.title}</div>
+                    <div class="text-xs text-gray-500 leading-relaxed">${p.desc}</div>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    function admCompleteMission(id, btn) {
+        const m = MISSION_DATA.find(x => x.id === id);
+        if (!m) return;
+        m.status = 'done';
+        renderAdminMissions();
+        renderMissions();
+        showToast(`"${m.title.slice(0,20)}..." 미션이 완료 처리되었습니다.`, '✅');
+    }
+
+    function admApproveMissionProposal(pid, btn) {
+        const p = MISSION_PROPOSALS.find(x => x.id === pid);
+        if (!p) return;
+        p.status = 'approved';
+        // 공식 미션으로 자동 변환하여 MISSION_DATA에 추가
+        const newId = Math.max(...MISSION_DATA.map(m=>m.id)) + 1;
+        MISSION_DATA.push({
+            id: newId, title: p.title, dept: p.dept, issuerType: '현장',
+            status: 'active', reward: 100,
+            desc: p.desc, deadline: '2026-08-31',
+            entries: 0, target: 20, created: p.date, requirements: ''
+        });
+        renderAdminMissions();
+        renderMissions();
+        showToast('제안이 공식 미션으로 등록되었습니다! 세부 설정은 수정 버튼으로 조정하세요.', '🎯');
+    }
+
+    function admRejectMissionProposal(pid, btn) {
+        const p = MISSION_PROPOSALS.find(x => x.id === pid);
+        if (p) { p.status = 'rejected'; renderAdminMissions(); showToast('제안이 반려되었습니다.', '🗑️'); }
+    }
+
+    function openMissionEditModal(id) {
+        const m = MISSION_DATA.find(x => x.id === id);
+        if (!m) return;
+        // 등록 모달을 수정 모드로 재활용
+        document.getElementById('mcreate-modal-title').textContent = '미션 수정';
+        document.getElementById('mcreate-title').value       = m.title;
+        document.getElementById('mcreate-dept').value        = m.dept;
+        document.getElementById('mcreate-issuer').value      = m.issuerType;
+        document.getElementById('mcreate-reward').value      = m.reward;
+        document.getElementById('mcreate-deadline').value    = m.deadline;
+        document.getElementById('mcreate-target').value      = m.target;
+        document.getElementById('mcreate-desc').value        = m.desc;
+        document.getElementById('mcreate-requirements').value= m.requirements || '';
+        // 채택 방식 복원
+        const typeVal = m.missionType || 'multi';
+        document.querySelectorAll('input[name="mcreate-type"]').forEach(r => { r.checked = (r.value === typeVal); });
+        _missionEditId = id;
+        document.getElementById('mission-create-modal').classList.add('open');
+    }
+
+    // ── 미션 등록 모달 (관리자) ──────────────────────────────────
+    let _missionEditId = null;
+
+    function openMissionCreateModal() {
+        _missionEditId = null;
+        document.getElementById('mcreate-modal-title').textContent = '새 지식 미션 등록';
+        ['mcreate-title','mcreate-dept','mcreate-desc','mcreate-requirements'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.value='';
+        });
+        document.getElementById('mcreate-reward').value   = '';
+        document.getElementById('mcreate-target').value   = '';
+        document.getElementById('mcreate-deadline').value = '';
+        document.getElementById('mcreate-issuer').value   = '본사';
+        document.getElementById('mcreate-reward-won').textContent = '';
+        document.getElementById('mission-create-modal').classList.add('open');
+    }
+
+    function closeMissionCreateModal() {
+        document.getElementById('mission-create-modal').classList.remove('open');
+    }
+
+    // 보상 원화 실시간 표시
+    document.addEventListener('DOMContentLoaded', function() {
+        const rw = document.getElementById('mcreate-reward');
+        if (rw) rw.addEventListener('input', function() {
+            const el = document.getElementById('mcreate-reward-won');
+            if (el) el.textContent = '';
+        });
+    });
+
+    function openMissionProposalModal() {
+        ['mproposal-title','mproposal-desc','mproposal-dept'].forEach(id => {
+            const el = document.getElementById(id); if(el) el.value='';
+        });
+        document.getElementById('mission-proposal-modal').classList.add('open');
+    }
+
+    function closeMissionProposalModal() {
+        document.getElementById('mission-proposal-modal').classList.remove('open');
+    }
+
+    function submitMissionProposal() {
+        const title = document.getElementById('mproposal-title')?.value.trim();
+        const desc  = document.getElementById('mproposal-desc')?.value.trim();
+        const dept  = document.getElementById('mproposal-dept')?.value.trim() || '미지정';
+        if (!title) { showToast('제안 미션 제목을 입력해 주세요.', '✏️'); return; }
+        if (!desc)  { showToast('제안 배경을 입력해 주세요.', '✏️'); return; }
+        // 제안 목록에 추가
+        MISSION_PROPOSALS.push({ id:'p'+Date.now(), title, proposer:'김현대 매니저', dept,
+            date: new Date().toISOString().slice(0,10), desc, status:'pending' });
+        closeMissionProposalModal();
+        showToast('미션 제안이 접수되었습니다! 관리자 검토 후 공식 미션으로 등록될 수 있습니다. (+10 Hi-Point 예정)', '🌿');
+    }
+
+    function submitMissionCreate() {
+        const title    = document.getElementById('mcreate-title')?.value.trim();
+        const dept     = document.getElementById('mcreate-dept')?.value.trim();
+        const reward   = parseInt(document.getElementById('mcreate-reward')?.value);
+        const deadline = document.getElementById('mcreate-deadline')?.value;
+        const desc     = document.getElementById('mcreate-desc')?.value.trim();
+        const issuer   = document.getElementById('mcreate-issuer')?.value || '본사';
+        const target   = parseInt(document.getElementById('mcreate-target')?.value) || 20;
+        const req      = document.getElementById('mcreate-requirements')?.value.trim() || '';
+        const mType    = document.querySelector('input[name="mcreate-type"]:checked')?.value || 'multi';
+
+        if (!title)    { showToast('미션 제목을 입력해 주세요.', '⚠️'); return; }
+        if (!dept)     { showToast('주관 부서를 입력해 주세요.', '⚠️'); return; }
+        if (!reward || reward < 1) { showToast('보상 Hi-Point를 입력해 주세요.', '⚠️'); return; }
+        if (!deadline) { showToast('마감일을 선택해 주세요.', '⚠️'); return; }
+        if (!desc)     { showToast('미션 설명을 입력해 주세요.', '⚠️'); return; }
+
+        const today = new Date().toISOString().slice(0,10);
+
+        if (_missionEditId !== null) {
+            // 수정 모드
+            const m = MISSION_DATA.find(x => x.id === _missionEditId);
+            if (m) { m.title=title; m.dept=dept; m.issuerType=issuer; m.reward=reward;
+                     m.deadline=deadline; m.target=target; m.desc=desc; m.requirements=req;
+                     m.missionType=mType; }
+            showToast('미션이 수정되었습니다. ✅', '🎯');
+        } else {
+            // 신규 등록
+            const newId = Math.max(...MISSION_DATA.map(m=>m.id)) + 1;
+            MISSION_DATA.push({ id:newId, title, dept, issuerType:issuer, status:'active',
+                reward, desc, deadline, entries:0, target, created:today, requirements:req,
+                missionType:mType });
+            showToast(`"${title.slice(0,20)}..." 미션이 등록되었습니다! ✅`, '🎯');
+        }
+
+        closeMissionCreateModal();
+        renderAdminMissions();
+        renderMissions();
+    }
+
+    // ── 가치 증거함 직접 이동 (홈 캐릭터 카드 버튼용) ──
+    function navToHeartTab() {
+        nav('dashboard');
+        setLnbActive2('lnb-dashboard');
+        setTimeout(() => {
+            const btn = document.getElementById('dash-tab-heart');
+            if (btn) switchDashTab('heart', btn);
+        }, 80);
+    }
+
+    // ── 대시보드 탭 전환 ──
+    function switchDashTab(tabName, btn) {
+        document.querySelectorAll('.dash-tab-btn').forEach(b => {
+            b.classList.remove('border-hi-navy','text-hi-navy','font-bold');
+            b.classList.add('border-transparent','text-gray-500','font-medium');
+        });
+        btn.classList.add('border-hi-navy','text-hi-navy','font-bold');
+        btn.classList.remove('border-transparent','text-gray-500','font-medium');
+        document.querySelectorAll('#dash-panel-activity, #dash-panel-heart').forEach(p => p.classList.add('hidden'));
+        const target = document.getElementById('dash-panel-' + tabName);
+        if (target) target.classList.remove('hidden');
+        // 캐릭터 타입명 동기화
+        if (tabName === 'heart') {
+            const ct = HEART_USER.charTypes[HEART_USER.charType];
+            const el = document.getElementById('dash-char-typename');
+            if (el && ct) { el.textContent = ct.name; el.style.color = '#ff9e1b'; }
+        }
+    }
 
     // ── 관리자 페이지 탭 전환 ──
     function switchAdminTab(tabName, btn) {
