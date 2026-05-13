@@ -5148,7 +5148,7 @@
 <!-- ================================================================ -->
 <div id="view-persons" class="view flex-col flex-1 overflow-hidden">
 
-    <!-- ① 헤더 (네이비 헥사곤) -->
+    <!-- ① 헤더 -->
     <div class="shrink-0 text-white px-8 py-5 flex items-center justify-between relative overflow-hidden" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
         <div class="absolute inset-0 overflow-hidden opacity-10">
             <svg width="100%" height="100%"><defs><pattern id="pm-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#pm-hex)"/></svg>
@@ -5157,31 +5157,18 @@
             <div class="text-[12px] font-bold mb-1" style="color:rgba(255,255,255,.55)">HI-VE 홈 › 담당자 맵</div>
             <div class="flex items-center gap-2 mb-0.5">
                 <h1 class="text-xl font-black">담당자 맵</h1>
-                <span class="text-[10px] font-black px-1.5 py-0.5 rounded" style="background:rgba(255,158,27,.25);color:#fcd34d;border:1px solid rgba(255,158,27,.4)">NEW · v2</span>
+                <span class="text-[10px] font-black px-1.5 py-0.5 rounded" style="background:rgba(255,158,27,.25);color:#fcd34d;border:1px solid rgba(255,158,27,.4)">시범 운영</span>
             </div>
-            <p class="text-xs" style="color:#93c5fd">담당자에게 같은 질문이 반복되지 않도록 — 본사·현장이 함께 만드는 협력 공간</p>
-            <!-- Stats inline -->
-            <div class="flex items-center gap-3 mt-2.5 text-[11px]">
-                <div class="flex items-center gap-1.5"><span style="color:rgba(255,255,255,.5)">밸류체인</span><span class="font-black text-white">12</span></div>
-                <span style="color:rgba(255,255,255,.2)">·</span>
-                <div class="flex items-center gap-1.5"><span style="color:rgba(255,255,255,.5)">업무 영역</span><span class="font-black text-white">187</span></div>
-                <span style="color:rgba(255,255,255,.2)">·</span>
-                <div class="flex items-center gap-1.5"><span style="color:rgba(255,255,255,.5)">등록 담당자</span><span class="font-black text-white">178</span></div>
-                <span style="color:rgba(255,255,255,.2)">·</span>
-                <div class="flex items-center gap-1.5"><span style="color:rgba(255,255,255,.5)">담당 부서</span><span class="font-black text-white">24</span></div>
-            </div>
+            <p class="text-xs" style="color:#93c5fd">본사·현장이 서로의 시간을 아끼는 협력 공간 — 충분히 찾아본 뒤 채널에 문의해주세요</p>
         </div>
         <div class="relative z-10 flex gap-2 shrink-0">
-            <button onclick="showToast('자주 찾는 담당자에 추가합니다.','⭐')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5">
-                ⭐ 즐겨찾기
-            </button>
-            <button onclick="showToast('우리 부서 담당자 등록/수정 요청을 전송했습니다.','📝')" class="bg-white font-bold text-xs px-4 py-2 rounded-lg shadow flex items-center gap-1.5 transition hover:bg-gray-100" style="color:#00205b">
-                담당자 등록 · 수정 요청
+            <button onclick="showToast('담당자 맵에 대한 의견을 보냅니다','💬')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5">
+                💬 의견 보내기
             </button>
         </div>
     </div>
 
-    <!-- ② 뷰 토글 + 검색 -->
+    <!-- ② 탭 + 검색 -->
     <div class="shrink-0 bg-white border-b border-gray-200 px-6 flex items-center justify-between">
         <div class="flex items-center gap-0">
             <button id="pm-mode-vc"   onclick="pmSetMode('vc')"   class="pm-mode-btn active text-[12px] font-bold px-4 py-3 border-b-2 border-hi-navy text-hi-navy transition flex items-center gap-1.5">
@@ -5191,1225 +5178,156 @@
                 🏢 부서 뷰
             </button>
             <button id="pm-mode-fav"  onclick="pmSetMode('fav')"  class="pm-mode-btn text-[12px] font-medium px-4 py-3 border-b-2 border-transparent text-gray-500 hover:text-hi-navy transition flex items-center gap-1.5">
-                ⭐ 즐겨찾기 <span class="ml-0.5 bg-gray-100 text-gray-500 text-[11px] px-1.5 py-0.5 rounded-full font-bold">3</span>
+                ⭐ 즐겨찾기
             </button>
         </div>
         <div class="flex items-center gap-2 py-2.5">
             <div class="relative">
-                <input type="text" placeholder="담당자명 · 부서 · 업무 영역 검색 (예: 사후환급, 김OO, 장기보전부)"
-                       class="border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-xs outline-none focus:border-hi-navy w-[360px]"
-                       oninput="showToast('전체 담당자에서 검색 중...','🔍')">
+                <input type="text" placeholder="업무 영역 · 부서명 검색..."
+                       class="border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-xs outline-none focus:border-hi-navy w-[320px]">
                 <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-300">🔍</span>
             </div>
-            <button class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:border-hi-navy hover:text-hi-navy transition">
-                자리비움 제외
-            </button>
         </div>
     </div>
 
     <!-- ③ 메인 스크롤 영역 -->
     <div class="flex-1 overflow-y-auto msb bg-gray-50">
 
-        <!-- ───────────── A. 밸류체인 뷰 (default) ───────────── -->
-        <div id="pm-pane-vc" class="px-6 py-4">
+        <div class="px-6 py-4">
 
-            <!-- 안내 배너 — 본사·현장 협력 철학 -->
+            <!-- 시범 운영 안내 -->
             <div class="bg-white border border-blue-100 rounded-xl px-4 py-3 mb-4 flex items-start gap-3 text-[12px] text-gray-600" style="border-left:4px solid #00205b">
-                <span class="text-lg shrink-0">💙</span>
+                <span class="text-lg shrink-0">🌱</span>
                 <div class="flex-1 leading-relaxed">
-                    <div class="font-black text-hi-navy mb-0.5">본사·현장이 서로의 시간을 아끼는 공간입니다</div>
-                    <span>충분히 찾아본 뒤 정말 필요할 때만 채널에 문의해주세요. 좋은 답변은 자료로 누적되어 — 같은 질문이 반복되지 않습니다.</span>
+                    <div class="font-black text-hi-navy mb-0.5">시범 운영 중 — 마케팅/영업 영역(마케팅지원파트)부터 시작합니다</div>
+                    <span>이 공간이 활성화되면 2026 하반기에 다른 밸류체인·부서로 확대됩니다. 좋은 답변이 자료로 누적되면 — 같은 질문이 반복되지 않습니다.</span>
                 </div>
             </div>
 
-            <!-- ── A-1. 주요 밸류체인 selector ── -->
-            <div class="mb-3">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest">주요 밸류체인</span>
-                    <span class="text-[11px] text-gray-400">카드를 클릭하면 하단에 담당자 디렉토리가 표시됩니다</span>
+            <!-- ════════════ A. 밸류체인 뷰 ════════════ -->
+            <div id="pm-pane-vc">
+
+                <!-- 주요 밸류체인 -->
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest">주요 밸류체인</span>
+                        <span class="text-[11px] text-gray-400">활성 영역을 클릭하면 자료·담당자가 표시됩니다</span>
+                    </div>
+                    <div id="pm-vc-main-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2.5">
+                        <!-- JS 렌더 -->
+                    </div>
                 </div>
-                <div class="grid grid-cols-3 lg:grid-cols-6 gap-2">
 
-                    <!-- 상품개발 -->
-                    <div class="pm-vc-card" data-vc="상품개발" onclick="pmPickVC(this)">
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer transition hover:border-hi-navy/40 hover:-translate-y-0.5 hover:shadow-md">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-slate-100 flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="12" rx="1.5" fill="#00205b" fill-opacity="0.12" stroke="#00205b" stroke-width="1.8"/><path d="M8 8V6a4 4 0 018 0v2" stroke="#00205b" stroke-width="1.8" stroke-linecap="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] text-gray-800">상품개발</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">12명 · 5영역</div>
-                        </div>
+                <!-- 지원 밸류체인 -->
+                <div class="mb-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest">지원 밸류체인</span>
                     </div>
-
-                    <!-- 마케팅/영업 -->
-                    <div class="pm-vc-card" data-vc="마케팅/영업" onclick="pmPickVC(this)">
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer transition hover:border-hi-navy/40 hover:-translate-y-0.5 hover:shadow-md">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-amber-50 flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="3,17 9,11 13,15 21,7" stroke="#ff9e1b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="15,7 21,7 21,13" stroke="#ff9e1b" stroke-width="1.8" stroke-linecap="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] text-gray-800">마케팅/영업</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">28명 · 18영역</div>
-                        </div>
+                    <div id="pm-vc-support-grid" class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        <!-- JS 렌더 -->
                     </div>
+                </div>
 
-                    <!-- 언더라이팅/심사 -->
-                    <div class="pm-vc-card" data-vc="언더라이팅/심사" onclick="pmPickVC(this)">
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer transition hover:border-hi-navy/40 hover:-translate-y-0.5 hover:shadow-md">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-slate-100 flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z" fill="#00205b" fill-opacity="0.10" stroke="#00205b" stroke-width="1.8" stroke-linejoin="round"/><polyline points="14,3 14,9 20,9" stroke="#00205b" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#00205b" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] text-gray-800 leading-tight">언더라이팅<br>심사</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">18명 · 25영역</div>
-                        </div>
+            </div>
+
+            <!-- ════════════ B. 부서 뷰 ════════════ -->
+            <div id="pm-pane-dept" class="hidden">
+                <div class="mb-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest">부서</span>
+                        <span class="text-[11px] text-gray-400">활성 부서를 클릭하면 자료·담당자가 표시됩니다</span>
                     </div>
-
-                    <!-- 계약관리/보전 (default selected) -->
-                    <div class="pm-vc-card active" data-vc="계약관리/보전" onclick="pmPickVC(this)">
-                        <div class="bg-white rounded-xl p-3 text-center cursor-pointer transition shadow-md" style="border:2px solid #ff9e1b;background:#fff7ed">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg flex items-center justify-center" style="background:rgba(255,158,27,.18)">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="16" rx="2" fill="#ff9e1b" fill-opacity="0.18" stroke="#ff9e1b" stroke-width="1.8"/><path d="M8 3v4M16 3v4M4 11h16" stroke="#ff9e1b" stroke-width="1.7" stroke-linecap="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] leading-tight" style="color:#c2410c">계약관리<br>보전</div>
-                            <div class="text-[11px] font-bold mt-0.5" style="color:#ea580c">24명 · 28영역</div>
-                        </div>
-                    </div>
-
-                    <!-- 보상/손해사정 -->
-                    <div class="pm-vc-card" data-vc="보상/손해사정" onclick="pmPickVC(this)">
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer transition hover:border-hi-navy/40 hover:-translate-y-0.5 hover:shadow-md">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-slate-100 flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#00205b" stroke-width="1.8" stroke-linecap="round"/><line x1="5" y1="3" x2="19" y2="3" stroke="#00205b" stroke-width="1.8" stroke-linecap="round"/><path d="M5 3L2 10h6L5 3z" fill="#00205b" fill-opacity="0.18" stroke="#00205b" stroke-width="1.4" stroke-linejoin="round"/><path d="M19 3l-3 7h6l-3-7z" fill="#00205b" fill-opacity="0.12" stroke="#00205b" stroke-width="1.4" stroke-linejoin="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] text-gray-800 leading-tight">보상<br>손해사정</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">32명 · 44영역</div>
-                        </div>
-                    </div>
-
-                    <!-- 고객서비스 -->
-                    <div class="pm-vc-card" data-vc="고객서비스" onclick="pmPickVC(this)">
-                        <div class="bg-white border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer transition hover:border-hi-navy/40 hover:-translate-y-0.5 hover:shadow-md">
-                            <div class="w-8 h-8 mx-auto mb-1.5 rounded-lg bg-slate-100 flex items-center justify-center">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#00205b" fill-opacity="0.12" stroke="#00205b" stroke-width="1.8" stroke-linejoin="round"/></svg>
-                            </div>
-                            <div class="font-bold text-[12px] text-gray-800">고객서비스</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">14명 · 27영역</div>
-                        </div>
+                    <div id="pm-dept-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2.5">
+                        <!-- JS 렌더 -->
                     </div>
                 </div>
             </div>
 
-            <!-- ── A-2. 지원 밸류체인 selector (compact) ── -->
-            <div class="mb-4">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest">지원 밸류체인</span>
-                </div>
-                <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    <div class="pm-vc-card" data-vc="경영기획/전략" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700 leading-tight">경영기획·전략</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">8명 · 6영역</div>
-                        </div>
-                    </div>
-                    <div class="pm-vc-card" data-vc="재무회계" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700">재무·회계</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">7명 · 5영역</div>
-                        </div>
-                    </div>
-                    <div class="pm-vc-card" data-vc="IT/디지털" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700">IT·디지털</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">16명 · 12영역</div>
-                        </div>
-                    </div>
-                    <div class="pm-vc-card" data-vc="인사/조직" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700">인사·조직</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">9명 · 7영역</div>
-                        </div>
-                    </div>
-                    <div class="pm-vc-card" data-vc="리스크/내부통제" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700">리스크·내부통제</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">6명 · 5영역</div>
-                        </div>
-                    </div>
-                    <div class="pm-vc-card" data-vc="감사/준법" onclick="pmPickVC(this)">
-                        <div class="bg-white border border-gray-200 rounded-lg p-2 text-center cursor-pointer transition hover:border-hi-navy/40 hover:shadow-sm">
-                            <div class="font-bold text-[11px] text-gray-700">감사·준법</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">4명 · 4영역</div>
-                        </div>
-                    </div>
+            <!-- ════════════ C. 즐겨찾기 뷰 ════════════ -->
+            <div id="pm-pane-fav" class="hidden">
+                <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 text-center">
+                    <div class="text-3xl mb-2">⭐</div>
+                    <div class="font-black text-sm text-gray-700 mb-1">즐겨찾기한 담당자가 없어요</div>
+                    <div class="text-[12px] text-gray-500">자주 찾는 영역의 담당자 옆 별표(☆)를 누르면 여기에 표시됩니다.</div>
                 </div>
             </div>
 
-            <!-- ── A-3. 선택된 밸류체인 상세 패널 ── -->
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <!-- ════════════ 공통 상세 패널 (밸류체인/부서 둘 다 사용) ════════════ -->
+            <div id="pm-detail" class="hidden mt-5">
 
-                <!-- 패널 헤더 -->
-                <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between" style="background:linear-gradient(90deg,#fff7ed 0%,#fffbf5 100%)">
-                    <div>
-                        <div class="flex items-center gap-2 mb-0.5">
-                            <span class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(255,158,27,.15);color:#c2410c;border:1px solid #fed7aa">주요 밸류체인</span>
-                            <span class="text-[11px] text-gray-400">선택된 영역</span>
-                        </div>
-                        <h3 id="pm-detail-title" class="font-black text-base text-gray-800">계약관리 / 보전</h3>
-                        <p id="pm-detail-meta" class="text-[11px] text-gray-500 mt-0.5">담당부서: <strong>장기보전부</strong> · 28개 업무영역 · 24명 담당자 · 부서장: 박OO 부장 (내선 1200)</p>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="showList('계약관리/보전','계약체결')" class="ecm-btn text-[11px]">📚 해당 지식 보기</button>
-                        <button onclick="showToast('장기보전부 페이지로 이동합니다.','🏢')" class="ecm-btn ecm-btn-primary text-[11px]">🏢 부서 페이지</button>
-                    </div>
-                </div>
-
-                <!-- 업무 영역 (소분류) 칩 -->
-                <div class="px-5 py-3 border-b border-gray-100 bg-gray-50 flex items-center gap-2 flex-wrap">
-                    <span class="text-[11px] font-black text-gray-500 uppercase tracking-widest mr-1">업무 영역</span>
-                    <button class="pm-sub-chip chip active text-[12px] font-bold px-3 py-1 rounded-full border border-hi-navy text-white" style="background:#00205b">전체 <span class="ml-0.5 text-[10px] font-bold opacity-80">24</span></button>
-                    <button class="pm-sub-chip chip text-[12px] px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-hi-navy transition">보전 처리 <span class="ml-0.5 text-[10px] text-gray-400">8</span></button>
-                    <button class="pm-sub-chip chip text-[12px] px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-hi-navy transition">환급 <span class="ml-0.5 text-[10px] text-gray-400">5</span></button>
-                    <button class="pm-sub-chip chip text-[12px] px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-hi-navy transition">계약 변경 <span class="ml-0.5 text-[10px] text-gray-400">7</span></button>
-                    <button class="pm-sub-chip chip text-[12px] px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-hi-navy transition">사후 관리 <span class="ml-0.5 text-[10px] text-gray-400">2</span></button>
-                    <button class="pm-sub-chip chip text-[12px] px-3 py-1 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-hi-navy transition">갱신·부활 <span class="ml-0.5 text-[10px] text-gray-400">2</span></button>
-                    <span class="text-[11px] text-gray-300 ml-auto">정렬: <span class="font-bold text-gray-500">문의량 많은 순 ▾</span></span>
-                </div>
-
-                <!-- 담당자 카드 그리드 -->
-                <div class="p-5">
-
-                    <!-- 🤝 서로의 시간을 아낀 결과 -->
-                    <div class="pm-cycle-strip mb-4 flex items-center justify-between flex-wrap gap-2">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-base">🤝</span>
-                            <span class="font-black text-[12px] text-gray-700">서로의 시간을 아낀 결과 (이번 달)</span>
-                        </div>
-                        <div class="flex items-center text-[11px]">
-                            <div class="pm-cycle-stat" title="현장이 자료에서 답을 찾고 담당자 호출 없이 끝낸 건수"><span style="color:#15803d">✅</span><strong class="text-gray-800">47건</strong> 자료로 해결</div>
-                            <div class="pm-cycle-stat" title="채널 답변이 FAQ로 누적되어 다음에는 검색으로 끝나는 건수"><span style="color:#1d4ed8">📝</span><strong class="text-gray-800">8건</strong> FAQ로 누적</div>
-                            <div class="pm-cycle-stat" title="작년 동월 대비 같은 질문이 반복된 비율의 감소폭"><span style="color:#c2410c">📉</span><strong class="text-gray-800">-23%</strong> 반복 문의</div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-3.5">
-
-                        <!-- ════════════ 담당자 카드 #1: 사후환급 ════════════ -->
-                        <div id="pm-card-1" class="pm-owner-card">
-                            <!-- 헤더: breadcrumb + FAQ기여 + 즐겨찾기 -->
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">환급</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">사후환급</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에 추가했습니다','⭐'); event.stopPropagation();" class="text-gray-300 hover:text-yellow-500 transition text-base">☆</button>
-                            </div>
-
-                            <!-- ─── STAGE A: 검색 먼저 ─── -->
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 먼저 아래 자료를 충분히 살펴봐주세요 — 이 영역의 자료는 잘 정비되어 있어요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('사후환급 처리 매뉴얼 v2.4 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">사후환급 처리 매뉴얼 v2.4</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 최신 2026.03.15 · 활용 92회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 사후환급 Q&A 12선 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 사후환급 자주묻는 질문 12선</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 12건 채택 · 조회 234회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('단체→개인 환급 차액 가이드 열기','📋')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#e0e7ff;color:#3730a3">📋</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">단체→개인 환급 차액 처리 가이드</div>
-                                            <div class="text-[10px] text-gray-400">케이스 · 조회 120회 · 활용 38회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(1)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(1)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        더 자세한 답이 필요해요 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- ─── STAGE B: 문의 (채널 우선) ─── -->
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(1)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">김</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-1 flex-wrap">
-                                            <span class="font-black text-[12px] text-gray-800">김지훈 차장</span>
-                                            <span class="text-[10px] text-gray-500">· 장기보전부</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 1-2 영업일 안에 회신드려요</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 마감 임박 건에만 부탁드려요</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널에 질문 보내기</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">팀원 누구나 답할 수 있어요</span>
-                                    </div>
-                                    <textarea id="pm-q-1" rows="2" placeholder="예) 단체→개인 전환 시 환급 차액이 다른데 어떻게 처리하나요?" class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-1" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(1,'#장기보전')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#ff9e1b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-1" onclick="pmToggleDirect(1)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 직통 연락처 보기 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-1" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fef2f2;border:1px solid #fecaca">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 긴급·마감 임박 건에만 사용해 주세요</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 내선 <strong>1234</strong></div>
-                                                <div>✉ <strong>kim.refund@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">부재 시 대행자: 이수진 과장 (내선 1235)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ════════════ 담당자 카드 #2: 단체→개인 전환 ════════════ -->
-                        <div id="pm-card-2" class="pm-owner-card">
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">계약 변경</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">단체→개인 전환</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에 추가했습니다','⭐'); event.stopPropagation();" class="text-gray-300 hover:text-yellow-500 transition text-base">☆</button>
-                            </div>
-
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 먼저 아래 자료를 살펴봐주세요 — 5세대 실손 출시 후 FAQ가 보강됐어요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('단체→개인 전환 가이드 v3.0 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">단체→개인 전환 가이드 v3.0</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 5세대 실손 반영 · 활용 156회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 전환 시 보험금 불일치 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 전산상 보험금이 실제와 다를 때</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 8건 채택 · 조회 312회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('5세대 실손 전환 권유 케이스 열기','📋')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#e0e7ff;color:#3730a3">📋</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">5세대 실손 전환 권유 표준 케이스</div>
-                                            <div class="text-[10px] text-gray-400">케이스 · 조회 198회 · 활용 47회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(2)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(2)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        더 자세한 답이 필요해요 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(2)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">박</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-1 flex-wrap">
-                                            <span class="font-black text-[12px] text-gray-800">박서연 차장</span>
-                                            <span class="text-[10px] text-gray-500">· 장기보전부</span>
-                                            <span class="text-[9.5px] font-bold px-1 py-0.5 rounded ml-auto" style="background:#fef3c7;color:#92400e">🟡 회의 중</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 1-2 영업일 안에 회신드려요</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 마감 임박 건에만 부탁드려요</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널에 질문 보내기</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">팀원 누구나 답할 수 있어요</span>
-                                    </div>
-                                    <textarea id="pm-q-2" rows="2" placeholder="예) 단체 보험 5세대 전환 시 기존 환급금 차액은 어떻게 산정되나요?" class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-2" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(2,'#장기보전')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#ff9e1b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-2" onclick="pmToggleDirect(2)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 직통 연락처 보기 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-2" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fef2f2;border:1px solid #fecaca">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 긴급·마감 임박 건에만 사용해 주세요</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 내선 <strong>1240</strong></div>
-                                                <div>✉ <strong>park.change@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">부재 시 대행자: 정민호 대리 (내선 1241)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ════════════ 담당자 카드 #3: 청약 철회 · 취소 ════════════ -->
-                        <div id="pm-card-3" class="pm-owner-card">
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">보전 처리</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">청약 철회 · 취소</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에서 제거합니다','⭐'); event.stopPropagation();" class="text-yellow-500 transition text-base">★</button>
-                            </div>
-
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 이 영역은 FAQ가 잘 정비되어 있어 대부분 자료에서 답이 보여요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('청약철회 매뉴얼 v3.2 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">청약철회 및 취소 매뉴얼 v3.2</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 최신 · 활용 211회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 30일 이내/이후 처리 기준 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 30일 이내 vs 이후 처리 기준</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 18건 채택 · 조회 487회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 취소 vs 해지 구분 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 취소와 해지의 차이 (환급 영향)</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 11건 채택 · 조회 298회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(3)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(3)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        더 자세한 답이 필요해요 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(3)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">최</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-1 flex-wrap">
-                                            <span class="font-black text-[12px] text-gray-800">최영준 과장</span>
-                                            <span class="text-[10px] text-gray-500">· 장기보전부</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 보통 당일 안에 회신드려요</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 마감 임박 건에만 부탁드려요</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널에 질문 보내기</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">팀원 누구나 답할 수 있어요</span>
-                                    </div>
-                                    <textarea id="pm-q-3" rows="2" placeholder="예) 청약 후 35일 지났는데 철회 가능할까요?" class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-3" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(3,'#장기보전')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#ff9e1b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-3" onclick="pmToggleDirect(3)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 직통 연락처 보기 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-3" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fef2f2;border:1px solid #fecaca">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 긴급·마감 임박 건에만 사용해 주세요</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 내선 <strong>1220</strong></div>
-                                                <div>✉ <strong>choi.cancel@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">부재 시 대행자: 한지은 대리 (내선 1221)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ════════════ 담당자 카드 #4: 실효 부활 (담당자 부재 - 대행자 활성) ════════════ -->
-                        <div id="pm-card-4" class="pm-owner-card">
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">갱신·부활</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">실효 부활</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에 추가했습니다','⭐'); event.stopPropagation();" class="text-gray-300 hover:text-yellow-500 transition text-base">☆</button>
-                            </div>
-
-                            <!-- 부재 알림 배너 -->
-                            <div class="mb-3 rounded-lg p-2.5 flex items-center gap-2" style="background:#fef2f2;border:1.5px solid #fecaca">
-                                <span class="text-base">⚡</span>
-                                <div class="flex-1 text-[11px]">
-                                    <span class="font-black" style="color:#b91c1c">윤재민 대리 휴가 중 (~5/16)</span>
-                                    <span class="text-gray-600"> — 문의 시 대행자 <strong>조혜원 과장</strong>에게 자동 연결됩니다</span>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 부활 기한·서류 등 FAQ에서 답이 보이는 경우가 많아요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 실효 부활 가능 기한 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 실효 후 부활 가능 기한은 언제까지?</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 9건 채택 · 조회 167회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('부활 시 추가 보험료 산정 가이드 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">부활 시 추가 보험료 산정 가이드</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 활용 84회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('부활 거부 케이스 모음 열기','📋')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#e0e7ff;color:#3730a3">📋</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">부활 거부 케이스 모음 (건강고지 위반 등)</div>
-                                            <div class="text-[10px] text-gray-400">케이스 · 조회 95회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(4)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(4)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        대행자에게 문의 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(4)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <!-- 부재 + 대행자 표시 -->
-                                <div class="mb-3 pb-3 border-b border-gray-100">
-                                    <div class="flex items-center gap-2 mb-2 opacity-60">
-                                        <div class="w-7 h-7 rounded-full flex items-center justify-center font-black text-gray-500 text-[11px] shrink-0" style="background:#e5e7eb">윤</div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-1">
-                                                <span class="font-bold text-[11.5px] text-gray-500 line-through">윤재민 대리</span>
-                                                <span class="text-[9.5px] font-bold px-1 py-0.5 rounded ml-auto" style="background:#fee2e2;color:#b91c1c">🔴 휴가 ~5/16</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-[10px] font-black px-1.5 py-0.5 rounded" style="background:#fff7ed;color:#c2410c">⚡ 대행자</span>
-                                        <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#ff9e1b 0%,#ea580c 100%)">조</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center gap-1">
-                                                <span class="font-black text-[12px] text-gray-800">조혜원 과장</span>
-                                                <span class="text-[10px] text-gray-500">· 장기보전부 갱신팀</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내 (대행자)</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 1-2 영업일 안에 회신드려요</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 대행자도 본업이 있으니 정말 급한 건만</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box absent mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널 · 대행자에게 질문</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">자동 멘션</span>
-                                    </div>
-                                    <textarea id="pm-q-4" rows="2" placeholder="예) 실효된 지 2년 지난 계약도 부활 가능한가요?" class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-4" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(4,'#장기보전 (대행자 호출)')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#00205b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-4" onclick="pmToggleDirect(4)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 대행자 직통 연락처 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-4" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fff7ed;border:1px solid #fed7aa">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#c2410c">⚠ 대행자도 본업 中 — 긴급 건만 사용</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 조혜원 과장 내선 <strong>1261</strong></div>
-                                                <div>✉ <strong>cho.renewal@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">5/17 이후: 윤재민 대리 (내선 1260) 복귀 예정</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ════════════ 담당자 카드 #5: 증권 재발급 · 수익자 변경 ════════════ -->
-                        <div id="pm-card-5" class="pm-owner-card">
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">사후 관리</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">증권 재발급 · 수익자 변경</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에 추가했습니다','⭐'); event.stopPropagation();" class="text-gray-300 hover:text-yellow-500 transition text-base">☆</button>
-                            </div>
-
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 이 영역은 매뉴얼이 잘 갖춰져 있어 대부분 자료에서 답이 보여요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('증권 재발급 절차 v2.1 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">증권 재발급 절차 가이드 v2.1</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 활용 156회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 수익자 변경 서류 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 수익자 변경에 필요한 서류는?</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 14건 채택 · 조회 421회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 계약자 변경 가이드 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 계약자 변경 시 세금 이슈</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 6건 채택 · 조회 178회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(5)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(5)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        더 자세한 답이 필요해요 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(5)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">송</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-1 flex-wrap">
-                                            <span class="font-black text-[12px] text-gray-800">송미라 과장</span>
-                                            <span class="text-[10px] text-gray-500">· 장기보전부</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 2 영업일 안에 회신드려요</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 마감 임박 건에만 부탁드려요</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널에 질문 보내기</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">팀원 누구나 답할 수 있어요</span>
-                                    </div>
-                                    <textarea id="pm-q-5" rows="2" placeholder="예) 미성년 수익자 변경 시 친권자 동의 필요한가요?" class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-5" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(5,'#장기보전')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#ff9e1b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-5" onclick="pmToggleDirect(5)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 직통 연락처 보기 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-5" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fef2f2;border:1px solid #fecaca">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 긴급·마감 임박 건에만 사용해 주세요</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 내선 <strong>1280</strong></div>
-                                                <div>✉ <strong>song.aftercare@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">부재 시 대행자: 강동훈 대리 (내선 1281)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ════════════ 담당자 카드 #6: 환급액 산정 오류 (시스템) ════════════ -->
-                        <div id="pm-card-6" class="pm-owner-card">
-                            <div class="flex items-start justify-between mb-3 pb-3 border-b border-dashed border-gray-200">
-                                <div class="flex flex-wrap items-center gap-1 text-[11px]">
-                                    <span class="px-2 py-0.5 rounded font-bold" style="background:#fff7ed;color:#c2410c">계약관리/보전</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="text-gray-500">환급</span>
-                                    <span class="text-gray-300">›</span>
-                                    <span class="font-black text-gray-800">환급액 산정 오류</span>
-                                </div>
-                                <button onclick="showToast('즐겨찾기에서 제거합니다','⭐'); event.stopPropagation();" class="text-yellow-500 transition text-base">★</button>
-                            </div>
-
-                            <div class="pm-stage-search">
-                                <div class="flex items-center justify-between mb-2.5">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-base">📖</span>
-                                        <span class="font-black text-[12.5px] text-gray-800">먼저 답을 찾아보세요</span>
-                                    </div>
-                                    <span class="text-[10px] text-gray-400">관련 자료 자동 큐레이션</span>
-                                </div>
-                                <div class="text-[11px] text-gray-500 mb-3 leading-relaxed">
-                                    <strong class="text-hi-navy">담당자도 사람입니다.</strong> 시스템 오류는 화면번호를 먼저 확인해주시면 — 양쪽 모두 처리가 한결 수월해져요.
-                                </div>
-                                <div class="space-y-1.5 mb-3">
-                                    <div class="pm-rel-row" onclick="showToast('전산 환급 오류 신고 절차 열기','📄')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#dbeafe;color:#1d4ed8">📄</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">전산 환급 오류 신고 절차 (화면번호 포함)</div>
-                                            <div class="text-[10px] text-gray-400">정본 · 활용 67회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('[FAQ] 화면번호 확인 방법 열기','❓')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#fef3c7;color:#92400e">❓</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">[FAQ] 화면번호는 어디서 확인하나요?</div>
-                                            <div class="text-[10px] text-gray-400">FAQ · 22건 채택 · 조회 654회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                    <div class="pm-rel-row" onclick="showToast('IT 협업 케이스 모음 열기','📋')">
-                                        <div class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-black shrink-0" style="background:#e0e7ff;color:#3730a3">📋</div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="text-[11.5px] font-bold text-gray-800 truncate">IT/디지털부 협업 케이스 모음</div>
-                                            <div class="text-[10px] text-gray-400">케이스 · 조회 87회</div>
-                                        </div>
-                                        <span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="pmSolvedSelf(6)" class="text-[11.5px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
-                                        ✅ 자료로 해결됐어요
-                                    </button>
-                                    <button onclick="pmAskGate(6)" class="text-[11.5px] font-bold py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        더 자세한 답이 필요해요 →
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="pm-stage-contact">
-                                <div class="flex items-center justify-between mb-3">
-                                    <button onclick="pmBackToSearch(6)" class="text-[10.5px] text-gray-500 hover:text-hi-navy transition flex items-center gap-1">← 자료 다시 찾아보기</button>
-                                    <span class="text-[10px] text-gray-400">담당자 정보</span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">임</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center gap-1 flex-wrap">
-                                            <span class="font-black text-[12px] text-gray-800">임도윤 차장</span>
-                                            <span class="text-[10px] text-gray-500">· 장기보전부 시스템팀</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">⏱ 답변 안내</div>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="pm-sla pm-sla-ok">💬 채널 답변: 시스템 영역이라 보통 당일 안에</span>
-                                        <span class="pm-sla pm-sla-urgent">📞 직통은 시스템 장애·화면번호 보유 시에만</span>
-                                    </div>
-                                </div>
-                                <div class="pm-channel-box mb-2.5">
-                                    <div class="flex items-center gap-1.5 mb-2 flex-wrap">
-                                        <span class="text-base">💬</span>
-                                        <span class="font-black text-[12.5px] text-white">#장기보전 채널에 질문 보내기</span>
-                                        <span class="ml-auto text-[10px]" style="color:rgba(255,255,255,.85)">화면번호 첨부 시 ⚡</span>
-                                    </div>
-                                    <textarea id="pm-q-6" rows="2" placeholder="예) 화면번호 LT0234에서 환급액이 30만원 차이 납니다." class="w-full text-[11.5px] px-2.5 py-2 rounded-md outline-none resize-none mb-2" style="background:rgba(255,255,255,.95);color:#374151"></textarea>
-                                    <div class="flex items-center justify-between flex-wrap gap-2">
-                                        <label class="flex items-center gap-1.5 cursor-pointer text-[10.5px]" style="color:rgba(255,255,255,.95)">
-                                            <input type="checkbox" id="pm-faq-6" checked class="rounded">
-                                            <span>도움이 된 답변은 FAQ로 등재해 다음 사람의 검색을 돕습니다 (익명 가능)</span>
-                                        </label>
-                                        <button onclick="pmSendQuestion(6,'#장기보전')" class="text-[11px] font-black px-3 py-1.5 rounded transition hover:opacity-90" style="background:#ff9e1b;color:#fff">질문 보내기 →</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button id="pm-direct-btn-6" onclick="pmToggleDirect(6)" class="w-full text-[10.5px] font-medium py-1.5 rounded border border-gray-200 text-gray-500 hover:bg-gray-50 transition flex items-center justify-center gap-1">
-                                        📞 직통 연락처 보기 <span style="margin-left:4px">↓</span>
-                                    </button>
-                                    <div id="pm-direct-6" class="pm-direct mt-1.5">
-                                        <div class="rounded-lg p-2.5" style="background:#fef2f2;border:1px solid #fecaca">
-                                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 시스템 장애 · 화면번호 보유 시만 사용</div>
-                                            <div class="text-[11px] text-gray-700 space-y-0.5">
-                                                <div>📞 내선 <strong>1236</strong></div>
-                                                <div>✉ <strong>lim.refund@hi.co.kr</strong></div>
-                                                <div class="text-[10px] text-gray-500 mt-1">부재 시 대행자: 김지훈 차장 (내선 1234)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                                        </div><!-- /grid -->
-
-                    <!-- 추가 + 부서 통합 안내 -->
-                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <div class="text-[12px] text-gray-500">
-                            전체 <strong class="text-gray-800">24명</strong> 중 <strong class="text-gray-800">6명</strong>을 표시 중
-                        </div>
-                        <button class="ecm-btn text-[11px]">담당자 더 보기 (18명) ↓</button>
-                    </div>
-
-                    <!-- 부서 일괄 연결 패널 (footer) — 채널 우선 -->
-                    <div class="mt-4 rounded-xl p-4" style="background:linear-gradient(90deg,#f0f9ff 0%,#fffbf5 100%);border:1.5px solid #bfdbfe">
-                        <div class="flex items-center justify-between flex-wrap gap-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white text-base shrink-0" style="background:#00205b">🏢</div>
-                                <div>
-                                    <div class="font-black text-[12.5px] text-gray-800">담당이 모호한 경우, <strong style="color:#00205b">장기보전부 채널</strong>에 먼저 올려주세요</div>
-                                    <div class="text-[11px] text-gray-500 mt-0.5">채널 멤버 중 가장 적합한 담당자가 응답합니다 · 평균 1 영업일 내</div>
-                                </div>
-                            </div>
-                            <div class="flex gap-1.5">
-                                <button onclick="showToast('하이웍스 #장기보전 채널로 이동합니다.','💬')" class="text-[11px] font-black px-3 py-2 rounded text-white transition flex items-center gap-1 shadow" style="background:#0ea5e9">💬 #장기보전 채널 열기</button>
-                                <button onclick="document.getElementById('pm-dept-direct').classList.toggle('hidden')" class="text-[11px] font-medium px-3 py-2 rounded border border-gray-300 text-gray-500 hover:bg-white transition">부서 직통 ↓</button>
-                            </div>
-                        </div>
-                        <div id="pm-dept-direct" class="hidden mt-3 pt-3 border-t border-blue-200">
-                            <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#b91c1c">⚠ 부서 직통 — 시스템 장애 · 임원 보고 등 채널로 처리 어려운 건만 사용</div>
-                            <div class="text-[11px] text-gray-700 flex items-center gap-3 flex-wrap">
-                                <span>📞 부서 대표 <strong>내선 1200</strong></span>
-                                <span class="text-gray-300">|</span>
-                                <span>👤 부서장 박OO 부장</span>
-                                <span class="text-gray-300">|</span>
-                                <span>✉ <strong>lt.contract@hi.co.kr</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- /pm-pane-vc -->
-
-        <!-- ───────────── B. 부서 뷰 ───────────── -->
-        <div id="pm-pane-dept" class="hidden px-6 py-4">
-
-            <!-- ─── B-1. 부서 목록 ─── -->
-            <div id="pm-dept-list" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                <div class="px-5 py-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-                    <div>
-                        <div class="text-[11px] font-black text-gray-500 uppercase tracking-widest">부서별 담당자</div>
-                        <div class="text-[12px] text-gray-400 mt-0.5">24개 본사 부서 · 178명 담당자</div>
-                    </div>
-                    <input type="text" placeholder="부서명 검색..." class="border border-gray-200 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-hi-navy w-[200px]">
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 p-5">
-
-                    <!-- 부서 카드: 장기보전부 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('장기보전부')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">장기보전부</div>
-                            <span class="text-[10px] font-bold text-gray-400">24명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">계약관리/보전 · 갱신 · 환급 · 사후관리</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 박OO 부장</span><span class="text-gray-300">·</span><span>📞 1200</span>
-                        </div>
-                    </div>
-
-                    <!-- 부서 카드: 자동차보상팀 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('자동차보상팀')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">자동차보상팀</div>
-                            <span class="text-[10px] font-bold text-gray-400">18명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">자동차 보상 · 사고 처리 · 렌트/대차 · 구상</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 김OO 부장</span><span class="text-gray-300">·</span><span>📞 7700</span>
-                        </div>
-                    </div>
-
-                    <!-- 부서 카드: 장기보상부 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('장기보상부')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">장기보상부</div>
-                            <span class="text-[10px] font-bold text-gray-400">21명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">장기보험 보상 · 의료심사 · 진단서 검토</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 이OO 부장</span><span class="text-gray-300">·</span><span>📞 7800</span>
-                        </div>
-                    </div>
-
-                    <!-- 부서 카드: 상품기획부 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('상품기획부')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">상품기획부</div>
-                            <span class="text-[10px] font-bold text-gray-400">12명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">상품 인허가 · 요율 산출 · 신상품 R&D</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 정OO 부장</span><span class="text-gray-300">·</span><span>📞 5100</span>
-                        </div>
-                    </div>
-
-                    <!-- 부서 카드: 마케팅지원파트 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('마케팅지원파트')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">마케팅지원파트</div>
-                            <span class="text-[10px] font-bold text-gray-400">9명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">영업 화법 · 제안서 · 현장 소통 담당 (총괄)</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 조OO 파트장</span><span class="text-gray-300">·</span><span>📞 3200</span>
-                        </div>
-                    </div>
-
-                    <!-- 부서 카드: 디지털혁신부 -->
-                    <div class="bg-white border border-gray-200 rounded-lg p-3.5 hover:border-hi-navy/60 hover:shadow-md transition cursor-pointer" onclick="pmShowDept('디지털혁신부')">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="font-black text-[13px] text-gray-800">디지털혁신부</div>
-                            <span class="text-[10px] font-bold text-gray-400">16명</span>
-                        </div>
-                        <div class="text-[11px] text-gray-500 mb-2">하이카앱 · CRM · AI/RPA · 데이터 분석</div>
-                        <div class="flex items-center gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100">
-                            <span>👤 윤OO 부장</span><span class="text-gray-300">·</span><span>📞 4400</span>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="px-5 py-3 border-t border-gray-100 text-center">
-                    <button class="text-[12px] font-bold text-hi-navy hover:underline">전체 24개 부서 보기 →</button>
-                </div>
-            </div>
-
-            <!-- ─── B-2. 부서 상세 (클릭 시 표시) ─── -->
-            <div id="pm-dept-detail" class="hidden">
-
-                <!-- 뒤로 가기 + 상단 액션 -->
-                <div class="flex items-center justify-between mb-3">
-                    <button onclick="pmBackToDeptList()" class="text-[12px] font-bold text-gray-500 hover:text-hi-navy transition flex items-center gap-1.5">
-                        ← 부서 목록으로
+                <!-- 뒤로가기 -->
+                <div class="flex items-center justify-between mb-2.5">
+                    <button onclick="pmCloseDetail()" class="text-[12px] font-bold text-gray-500 hover:text-hi-navy transition flex items-center gap-1">
+                        ← 목록으로
                     </button>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="showToast('부서 즐겨찾기 추가','⭐')" class="text-[11px] font-bold px-2.5 py-1.5 rounded border border-gray-300 text-gray-500 hover:bg-white hover:text-hi-navy transition">⭐ 부서 즐겨찾기</button>
-                        <button onclick="showToast('부서장 직통 라인은 임원·VIP 응대에만 사용해 주세요','📞')" class="text-[11px] font-bold px-2.5 py-1.5 rounded border border-gray-300 text-gray-500 hover:bg-white transition">👔 부서장 라인</button>
-                    </div>
+                    <button onclick="showToast('이 영역을 즐겨찾기에 추가합니다','⭐')" class="text-[11px] font-bold px-2.5 py-1 rounded border border-gray-300 text-gray-500 hover:bg-white hover:text-hi-navy transition">
+                        ⭐ 즐겨찾기 추가
+                    </button>
                 </div>
 
-                <!-- 부서 헤더 배너 (네이비 + 헥사곤) -->
+                <!-- 헤더 -->
                 <div class="text-white px-6 py-5 relative overflow-hidden rounded-t-xl" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">
                     <div class="absolute inset-0 overflow-hidden opacity-10">
-                        <svg width="100%" height="100%"><defs><pattern id="pm-dept-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#pm-dept-hex)"/></svg>
+                        <svg width="100%" height="100%"><defs><pattern id="pm-d-hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 58,17 58,46 30,61 2,46 2,17" fill="none" stroke="white" stroke-width="1.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#pm-d-hex)"/></svg>
                     </div>
-                    <div class="relative z-10 flex items-start justify-between gap-4">
+                    <div class="relative z-10 flex items-start justify-between gap-4 flex-wrap">
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span id="pm-dept-vc-badge" class="text-[10px] font-black px-2 py-0.5 rounded" style="background:rgba(255,158,27,.25);color:#fcd34d;border:1px solid rgba(255,158,27,.4)">계약관리/보전 (주요)</span>
-                                <span class="text-[10.5px]" style="color:rgba(255,255,255,.55)">담당 밸류체인</span>
-                            </div>
-                            <h2 id="pm-dept-name" class="text-xl font-black mb-1">장기보전부</h2>
-                            <p id="pm-dept-coverage" class="text-[12px]" style="color:#93c5fd">계약관리/보전 · 갱신 · 환급 · 사후관리</p>
-                            <div class="flex items-center gap-3 mt-2.5 text-[11px]" style="color:rgba(255,255,255,.75)">
-                                <span>👤 부서장 <strong id="pm-dept-head">박OO 부장</strong></span>
-                                <span style="color:rgba(255,255,255,.25)">|</span>
-                                <span id="pm-dept-count"><strong>24명</strong> 담당자</span>
-                                <span style="color:rgba(255,255,255,.25)">|</span>
-                                <span><strong id="pm-dept-area-count">5</strong>개 업무 영역</span>
-                            </div>
+                            <span id="pm-detail-type" class="text-[10px] font-black px-2 py-0.5 rounded inline-block mb-2" style="background:rgba(255,158,27,.25);color:#fcd34d;border:1px solid rgba(255,158,27,.4)">주요 밸류체인</span>
+                            <h2 id="pm-detail-title" class="text-xl font-black mb-0.5">마케팅/영업</h2>
+                            <p id="pm-detail-sub" class="text-[12px]" style="color:#93c5fd">담당 부서: 마케팅지원파트 (현장 소통 총괄)</p>
                         </div>
-                        <div class="flex flex-col gap-1.5 shrink-0">
-                            <button id="pm-dept-channel-btn" onclick="showToast('하이웍스 #장기보전 채널로 이동합니다','💬')" class="text-[11.5px] font-black px-3.5 py-2 rounded-lg text-white shadow flex items-center gap-1.5 transition hover:opacity-90" style="background:#0ea5e9">
-                                💬 <span id="pm-dept-channel-label">#장기보전</span> 채널 열기
-                            </button>
-                            <button onclick="document.getElementById('pm-dept-direct-box').classList.toggle('hidden')" class="text-[10.5px] font-medium px-3.5 py-1.5 rounded-lg border text-white transition flex items-center justify-center gap-1" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)">
-                                부서 직통 ↓
-                            </button>
-                        </div>
-                    </div>
-                    <!-- 부서 직통 (접힘) -->
-                    <div id="pm-dept-direct-box" class="hidden relative z-10 mt-3 pt-3" style="border-top:1px solid rgba(255,255,255,.15)">
-                        <div class="text-[10px] font-bold mb-1.5 flex items-center gap-1" style="color:#fcd34d">⚠ 부서 직통 — 시스템 장애·임원 보고 등 채널로 처리 어려운 건만 사용</div>
-                        <div class="text-[11px] flex items-center gap-3 flex-wrap" style="color:rgba(255,255,255,.85)">
-                            <span>📞 부서 대표 <strong id="pm-dept-ext">내선 1200</strong></span>
-                            <span style="color:rgba(255,255,255,.25)">|</span>
-                            <span>✉ <strong id="pm-dept-email">lt.contract@hi.co.kr</strong></span>
-                        </div>
+                        <button onclick="pmOpenChannel()" class="text-[12px] font-black px-4 py-2.5 rounded-lg text-white shadow flex items-center gap-1.5 transition hover:opacity-90 shrink-0" style="background:#0ea5e9">
+                            💬 하이웍스 - 현장소통채널 이동 →
+                        </button>
                     </div>
                 </div>
 
-                <!-- 선순환 stats + 본문 -->
-                <div class="bg-white border border-t-0 border-gray-200 rounded-b-xl shadow-sm p-5">
+                <!-- 본문 -->
+                <div class="bg-white border border-t-0 border-gray-200 rounded-b-xl shadow-sm">
 
-                    <!-- 🔁 부서 선순환 지표 -->
-                    <div class="pm-cycle-strip mb-4 flex items-center justify-between flex-wrap gap-2">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-base">🔁</span>
-                            <span class="font-black text-[12px] text-gray-700">부서 지식 선순환 (이번 달)</span>
-                        </div>
-                        <div class="flex items-center text-[11px]">
-                            <div class="pm-cycle-stat"><span style="color:#15803d">✅</span><strong id="pm-dept-stat-solved" class="text-gray-800">142건</strong> 자기해결</div>
-                            <div class="pm-cycle-stat"><span style="color:#1d4ed8">📝</span><strong id="pm-dept-stat-faq" class="text-gray-800">23건</strong> FAQ 등재</div>
-                            <div class="pm-cycle-stat"><span style="color:#c2410c">📉</span><strong id="pm-dept-stat-decreased" class="text-gray-800">-28%</strong> 반복 문의</div>
-                            <div class="pm-cycle-stat"><span style="color:#92400e">⭐</span><strong id="pm-dept-stat-adopted" class="text-gray-800">11건</strong> 채택 답변</div>
-                        </div>
-                    </div>
-
-                    <!-- 담당 업무 영역 -->
-                    <div class="mb-4">
-                        <div class="text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2">담당 업무 영역</div>
-                        <div id="pm-dept-areas" class="flex flex-wrap gap-1.5">
-                            <!-- JS 렌더 -->
-                        </div>
-                    </div>
-
-                    <!-- 담당자 리스트 -->
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="text-[11px] font-black text-gray-500 uppercase tracking-widest">담당자 (<span id="pm-dept-persons-shown">6</span>명 표시 / <span id="pm-dept-persons-total">24</span>명)</div>
+                    <!-- 자료 섹션 -->
+                    <div class="px-6 py-5 border-b border-gray-100">
+                        <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-1.5">
-                                <button class="text-[10.5px] font-bold px-2 py-1 rounded border border-hi-navy text-white transition" style="background:#00205b">전체</button>
-                                <button class="text-[10.5px] font-bold px-2 py-1 rounded border border-gray-200 text-gray-500 hover:border-hi-navy hover:text-hi-navy transition">현재 응대 가능</button>
+                                <span class="text-base">📖</span>
+                                <span class="font-black text-[13px] text-gray-800">먼저 찾아볼 자료</span>
                             </div>
+                            <button onclick="pmSolvedSelf()" class="text-[11px] font-bold px-2.5 py-1 rounded transition" style="background:#dcfce7;color:#15803d;border:1.5px solid #86efac">
+                                ✅ 자료로 해결됐어요
+                            </button>
                         </div>
-                        <div id="pm-dept-persons" class="space-y-1.5">
+                        <div id="pm-detail-resources" class="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <!-- JS 렌더 -->
                         </div>
                     </div>
 
-                    <!-- 안내 -->
-                    <div class="mt-4 rounded-lg p-3 flex items-center gap-2 flex-wrap" style="background:#eff6ff;border:1px solid #bfdbfe">
-                        <span class="text-base">💙</span>
-                        <div class="flex-1 text-[11.5px] text-gray-700">
-                            <strong class="text-blue-700">본사 담당자도 한 사람입니다.</strong>
-                            채널에 질문하면 부서원 누구나 답할 수 있어 한 명에게 부담이 집중되지 않아요. 한 번의 좋은 답변이 다음 분기에 같은 질문을 줄여 — <strong>본사가 같은 질문에 반복적으로 답하지 않아도 되는 환경</strong>이 만들어집니다.
+                    <!-- 담당자 섹션 -->
+                    <div class="px-6 py-5">
+                        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base">👤</span>
+                                <span class="font-black text-[13px] text-gray-800">영역별 담당자</span>
+                            </div>
+                            <span class="text-[11px] text-gray-400">영역이 모호하면 채널에 먼저 문의해주세요 — 부서원 누구나 답할 수 있어요</span>
                         </div>
+                        <div id="pm-detail-contacts" class="space-y-2">
+                            <!-- JS 렌더 -->
+                        </div>
+                    </div>
+
+                    <!-- 답변 안내 (하단 정보) -->
+                    <div class="px-6 py-3 border-t border-gray-100 flex items-center gap-2 text-[11.5px] text-gray-500 flex-wrap" style="background:#f8fafc">
+                        <span>⏱</span>
+                        <span><strong class="text-gray-700">채널 답변</strong>은 보통 1-2 영업일 안에 회신드려요</span>
+                        <span class="text-gray-300">·</span>
+                        <span><strong class="text-gray-700">직통 연락처</strong>는 마감 임박 건에만 부탁드려요</span>
                     </div>
                 </div>
 
-            </div><!-- /pm-dept-detail -->
+            </div><!-- /pm-detail -->
 
         </div>
-
-        <!-- ───────────── C. 즐겨찾기 뷰 ───────────── -->
-        <div id="pm-pane-fav" class="hidden px-6 py-4">
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-base">⭐</span>
-                    <span class="font-black text-sm text-gray-800">자주 찾는 담당자</span>
-                    <span class="text-[11px] text-gray-400 ml-2">자주 연락하는 담당자를 즐겨찾기에 추가하면 여기에 표시됩니다.</span>
-                </div>
-
-                <div class="space-y-2.5">
-                    <!-- 즐겨찾기 row #1 -->
-                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">최</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-baseline gap-1.5">
-                                <span class="font-black text-[13px] text-gray-800">최영준 과장</span>
-                                <span class="text-[11px] text-gray-500">· 장기보전부 보전팀</span>
-                            </div>
-                            <div class="text-[11px] text-gray-500 mt-0.5">청약 철회 · 단순 취소 처리 · 환급금 산정</div>
-                        </div>
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <span class="text-[10px] text-gray-400">최근 3일 전 연락</span>
-                            <button class="ecm-btn text-[11px]">📞 1220</button>
-                            <button class="ecm-btn text-[11px] text-white" style="background:#0ea5e9;border-color:#0284c7">💬</button>
-                        </div>
-                    </div>
-                    <!-- #2 -->
-                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">임</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-baseline gap-1.5">
-                                <span class="font-black text-[13px] text-gray-800">임도윤 차장</span>
-                                <span class="text-[11px] text-gray-500">· 장기보전부 환급팀 (시스템 담당)</span>
-                            </div>
-                            <div class="text-[11px] text-gray-500 mt-0.5">환급액 산정 오류 · 전산 보정</div>
-                        </div>
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <span class="text-[10px] text-gray-400">최근 어제 연락</span>
-                            <button class="ecm-btn text-[11px]">📞 1236</button>
-                            <button class="ecm-btn text-[11px] text-white" style="background:#0ea5e9;border-color:#0284c7">💬</button>
-                        </div>
-                    </div>
-                    <!-- #3 -->
-                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">강</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-baseline gap-1.5">
-                                <span class="font-black text-[13px] text-gray-800">강민지 과장</span>
-                                <span class="text-[11px] text-gray-500">· 자동차보상팀 · 일반 사고</span>
-                            </div>
-                            <div class="text-[11px] text-gray-500 mt-0.5">자차 사고 처리 · 렌트 한도 안내</div>
-                        </div>
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <span class="text-[10px] text-gray-400">최근 1주 전 연락</span>
-                            <button class="ecm-btn text-[11px]">📞 7720</button>
-                            <button class="ecm-btn text-[11px] text-white" style="background:#0ea5e9;border-color:#0284c7">💬</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 pt-3 border-t border-gray-100 text-center">
-                    <button onclick="pmSetMode('vc')" class="text-[12px] font-bold text-hi-navy hover:underline">밸류체인 뷰에서 더 추가하기 →</button>
-                </div>
-            </div>
-        </div>
-
-    </div><!-- /scroll area -->
+    </div>
 
 </div><!-- /view-persons -->
 
@@ -7259,321 +6177,380 @@ function setFaqDateRange(years) {
 }
 
 const ALL_VIEWS = ['home','list','upload','dashboard','market','field','faq','glossary','quest','admin','wiki','persons'];
-// ── 담당자 맵 (Person Map) ─────────────────────────────────────
-function pmSetMode(mode) {
-    // 부서 뷰에서 다른 모드로 전환 시 상세 → 목록으로 복귀
-    const deptDetail = document.getElementById('pm-dept-detail');
-    const deptList = document.getElementById('pm-dept-list');
-    if (deptDetail && deptList && mode !== 'dept') {
-        deptDetail.classList.add('hidden');
-        deptList.classList.remove('hidden');
-    }
-    ['vc','dept','fav'].forEach(m => {
-        const pane = document.getElementById('pm-pane-' + m);
-        const btn  = document.getElementById('pm-mode-' + m);
-        if (!pane || !btn) return;
-        if (m === mode) {
-            pane.classList.remove('hidden');
-            btn.classList.add('active','text-hi-navy','border-hi-navy','font-bold');
-            btn.classList.remove('text-gray-500','border-transparent','font-medium');
-        } else {
-            pane.classList.add('hidden');
-            btn.classList.remove('active','text-hi-navy','border-hi-navy','font-bold');
-            btn.classList.add('text-gray-500','border-transparent','font-medium');
-        }
-    });
-}
-function pmPickVC(el) {
-    const vc = el.getAttribute('data-vc');
-    // 시각 토글: 모든 카드의 active style 초기화
-    document.querySelectorAll('#view-persons .pm-vc-card').forEach(c => {
-        c.classList.remove('active');
-        const inner = c.firstElementChild;
-        if (!inner) return;
-        // 인라인 스타일 복원
-        inner.style.background = '';
-        inner.style.borderColor = '';
-        // 클래스에 의존하는 카드들도 처리
-        inner.classList.remove('shadow-md');
-    });
-    // 선택된 카드 하이라이트
-    el.classList.add('active');
-    const inner = el.firstElementChild;
-    if (inner) {
-        inner.style.background = '#fff7ed';
-        inner.style.borderColor = '#ff9e1b';
-        inner.style.borderWidth = '2px';
-        inner.style.borderStyle = 'solid';
-        inner.classList.add('shadow-md');
-    }
-    // 상세 영역 헤더 업데이트 (간단)
-    const title = document.getElementById('pm-detail-title');
-    if (title) title.textContent = vc.replace('/', ' / ');
-    showToast(vc + ' 영역의 담당자를 불러옵니다.', '👤');
-}
+// ────────────────────────────────────────────────────────────
+// 담당자 맵 v3 — 시범 운영 (마케팅/영업 · 마케팅지원파트)
+// 4원칙: 검색 먼저 / 채널 우선 / SLA 안내 / 양측 협력
+// ────────────────────────────────────────────────────────────
 
-// ── 담당자 맵 v2: 4원칙 인터랙션 ──────────────────────────
-// 검색 먼저: "더 자세한 답이 필요해요" 클릭 시 Stage A → Stage B
-function pmAskGate(cardId) {
-    const card = document.getElementById('pm-card-' + cardId);
-    if (card) {
-        card.classList.add('is-asking');
-        // 부드럽게 카드 위치로 스크롤
-        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
-    }
-}
-// 검색 먼저로 돌아가기
-function pmBackToSearch(cardId) {
-    const card = document.getElementById('pm-card-' + cardId);
-    if (card) card.classList.remove('is-asking');
-}
-// 지식 선순환: 자기해결 보상
-function pmSolvedSelf(cardId) {
-    showToast('자료로 해결됐다는 신호 감사합니다. 같은 질문이 본사 담당자에게 다시 가지 않게 됩니다 🙏 (+1P)', '✅');
-    const card = document.getElementById('pm-card-' + cardId);
-    if (card) {
-        card.classList.add('pm-solved-anim');
-        setTimeout(() => card.classList.remove('pm-solved-anim'), 1500);
-    }
-}
-// 채널 우선: 직통 연락처 접기/펼치기
-function pmToggleDirect(cardId) {
-    const el = document.getElementById('pm-direct-' + cardId);
-    const btn = document.getElementById('pm-direct-btn-' + cardId);
-    if (!el) return;
-    const isOpen = el.classList.contains('open');
-    if (isOpen) {
-        el.classList.remove('open');
-        if (btn) {
-            // 카드 #4는 "대행자 직통" 텍스트
-            const isBackup = cardId === 4;
-            btn.innerHTML = (isBackup ? '📞 대행자 직통 연락처' : '📞 직통 연락처 보기') + ' <span style="margin-left:4px">↓</span>';
-        }
-    } else {
-        el.classList.add('open');
-        if (btn) btn.innerHTML = '직통 연락처 접기 <span style="margin-left:4px">↑</span>';
-        showToast('직통 연락처는 긴급·마감 임박 건에만 사용해 주세요', '⚠️');
-    }
-}
-// 지식 선순환 + 채널 우선: 질문 전송 (FAQ 등재 동의 반영)
-function pmSendQuestion(cardId, channel) {
-    const ta = document.getElementById('pm-q-' + cardId);
-    if (!ta || !ta.value.trim()) {
-        showToast('질문 내용을 입력해 주세요', '⚠️');
-        return;
-    }
-    const faqOK = document.getElementById('pm-faq-' + cardId);
-    const willPublish = faqOK && faqOK.checked;
-    const msg = willPublish
-        ? '💬 ' + channel + ' 채널에 전달됐어요. 팀원 누구나 답할 수 있고, 도움이 된 답변은 FAQ로 누적됩니다 🙏'
-        : '💬 ' + channel + ' 채널에 전달됐어요. 개별 응답으로 처리됩니다 🙏';
-    showToast(msg, '✅');
-    ta.value = '';
-    // 1.5초 후 Stage A로 복귀
-    setTimeout(() => pmBackToSearch(cardId), 1500);
-}
-
-// ── 부서 뷰: 부서 상세 데이터 + 렌더 ──────────────────────────
-const pmDeptData = {
-    '장기보전부': {
-        head: '박OO 부장', ext: '1200', email: 'lt.contract@hi.co.kr',
-        channel: '#장기보전', vcBadge: '계약관리/보전 (주요)',
-        coverage: '계약관리/보전 · 갱신 · 환급 · 사후관리',
-        count: 24, sla: '평균 1-2 영업일',
-        stats: { solved: 142, faq: 23, decreased: 28, adopted: 11 },
-        areas: [
-            { name: '보전 처리', count: 8 },
-            { name: '환급', count: 5 },
-            { name: '계약 변경', count: 7 },
-            { name: '사후 관리', count: 2 },
-            { name: '갱신·부활', count: 2 }
-        ],
-        persons: [
-            { ini:'김', name:'김지훈 차장', team:'환급팀', area:'사후환급', status:'avail', faq:12 },
-            { ini:'박', name:'박서연 차장', team:'계약변경팀', area:'단체→개인 전환', status:'busy', faq:7 },
-            { ini:'최', name:'최영준 과장', team:'보전팀', area:'청약 철회·취소', status:'avail', faq:18, fast:true },
-            { ini:'윤', name:'윤재민 대리', team:'갱신팀', area:'실효 부활', status:'away', faq:5, backup:'조혜원 과장' },
-            { ini:'송', name:'송미라 과장', team:'사후관리팀', area:'증권 재발급', status:'avail', faq:14 },
-            { ini:'임', name:'임도윤 차장', team:'시스템팀', area:'환급액 산정 오류', status:'avail', faq:22, fast:true }
-        ]
-    },
-    '자동차보상팀': {
-        head: '김OO 부장', ext: '7700', email: 'auto.claim@hi.co.kr',
-        channel: '#자동차보상', vcBadge: '보상/손해사정 (주요)',
-        coverage: '자동차 보상 · 사고 처리 · 렌트/대차 · 구상',
-        count: 18, sla: '평균 1 영업일',
-        stats: { solved: 98, faq: 14, decreased: 19, adopted: 6 },
-        areas: [
-            { name: '대물 사고', count: 5 },
-            { name: '대인 사고', count: 4 },
-            { name: '렌트/대차', count: 3 },
-            { name: '구상', count: 4 },
-            { name: '보험사기 의심', count: 2 }
-        ],
-        persons: [
-            { ini:'강', name:'강민지 과장', team:'일반사고팀', area:'대물 사고 처리', status:'avail', faq:9 },
-            { ini:'오', name:'오재호 차장', team:'대인사고팀', area:'대인 보상금 산정', status:'busy', faq:11 },
-            { ini:'신', name:'신유진 대리', team:'렌트팀', area:'렌트/대차 한도', status:'avail', faq:7, fast:true },
-            { ini:'류', name:'류성훈 과장', team:'구상팀', area:'제3자 구상 청구', status:'avail', faq:8 },
-            { ini:'배', name:'배현주 과장', team:'사기조사팀', area:'보험사기 의심 케이스', status:'avail', faq:6 }
-        ]
-    },
-    '장기보상부': {
-        head: '이OO 부장', ext: '7800', email: 'lt.claim@hi.co.kr',
-        channel: '#장기보상', vcBadge: '보상/손해사정 (주요)',
-        coverage: '장기보험 보상 · 의료심사 · 진단서 검토',
-        count: 21, sla: '평균 1-2 영업일',
-        stats: { solved: 87, faq: 18, decreased: 22, adopted: 8 },
-        areas: [
-            { name: '의료심사', count: 8 },
-            { name: '진단서 검토', count: 6 },
-            { name: '비급여 보험금', count: 4 },
-            { name: '실손 보상', count: 3 }
-        ],
-        persons: [
-            { ini:'서', name:'서지혜 차장', team:'의료심사팀', area:'복합 위험 심사', status:'avail', faq:16, fast:true },
-            { ini:'한', name:'한도연 과장', team:'진단서팀', area:'진단서 적정성 검토', status:'avail', faq:11 },
-            { ini:'권', name:'권민서 과장', team:'실손팀', area:'비급여 보험금 산정', status:'avail', faq:9 },
-            { ini:'노', name:'노태현 대리', team:'실손팀', area:'실손 보상 일반', status:'busy', faq:5 }
-        ]
-    },
-    '상품기획부': {
-        head: '정OO 부장', ext: '5100', email: 'product@hi.co.kr',
-        channel: '#상품기획', vcBadge: '상품개발 (주요)',
-        coverage: '상품 인허가 · 요율 산출 · 신상품 R&D',
-        count: 12, sla: '평균 2 영업일',
-        stats: { solved: 54, faq: 9, decreased: 14, adopted: 3 },
-        areas: [
-            { name: '장기보험 상품', count: 4 },
-            { name: '일반보험 상품', count: 3 },
-            { name: '요율 산출', count: 3 },
-            { name: 'R&D', count: 2 }
-        ],
-        persons: [
-            { ini:'윤', name:'윤채영 차장', team:'장기상품팀', area:'장기보험 인허가', status:'avail', faq:8 },
-            { ini:'배', name:'배현우 과장', team:'요율팀', area:'IFRS17 요율 산출', status:'busy', faq:6 },
-            { ini:'고', name:'고은서 대리', team:'R&D팀', area:'신상품 R&D 트렌드', status:'avail', faq:4 }
-        ]
-    },
-    '마케팅지원파트': {
-        head: '조OO 파트장', ext: '3200', email: 'mkt.support@hi.co.kr',
-        channel: '#마케팅지원', vcBadge: '마케팅/영업 (주요) · 현장 소통 총괄',
-        coverage: '영업 화법 · 제안서 · 현장 소통 담당 (총괄)',
-        count: 9, sla: '평균 1 영업일',
-        stats: { solved: 71, faq: 17, decreased: 31, adopted: 9 },
-        areas: [
-            { name: '영업 화법', count: 3 },
-            { name: '제안서 큐레이션', count: 2 },
-            { name: '현장 소통', count: 4 }
-        ],
-        persons: [
-            { ini:'노', name:'노민지 과장', team:'화법팀', area:'실손 개정 화법', status:'avail', faq:14, fast:true },
-            { ini:'하', name:'하지윤 대리', team:'제안서팀', area:'VIP 제안서 큐레이션', status:'avail', faq:5 },
-            { ini:'문', name:'문상현 차장', team:'현장소통팀', area:'Q&A 큐레이션 · FAQ 승격', status:'avail', faq:23, fast:true },
-            { ini:'천', name:'천예린 대리', team:'현장소통팀', area:'현장 인터뷰', status:'avail', faq:8 }
-        ]
-    },
-    '디지털혁신부': {
-        head: '윤OO 부장', ext: '4400', email: 'digital@hi.co.kr',
-        channel: '#디지털혁신', vcBadge: 'IT/디지털 (지원)',
-        coverage: '하이카앱 · CRM · AI/RPA · 데이터 분석',
-        count: 16, sla: '평균 당일~1 영업일',
-        stats: { solved: 112, faq: 21, decreased: 35, adopted: 12 },
-        areas: [
-            { name: '하이카앱 운영', count: 5 },
-            { name: 'CRM/이탈방지', count: 3 },
-            { name: 'AI/RPA', count: 4 },
-            { name: '데이터 분석', count: 4 }
-        ],
-        persons: [
-            { ini:'오', name:'오태경 차장', team:'앱팀', area:'하이카앱 오류 대응', status:'avail', faq:19, fast:true },
-            { ini:'진', name:'진서진 과장', team:'CRM팀', area:'고객 이탈 시나리오', status:'busy', faq:8 },
-            { ini:'강', name:'강도현 대리', team:'RPA팀', area:'RPA 자동화 설계', status:'avail', faq:6 },
-            { ini:'표', name:'표지원 과장', team:'분석팀', area:'영업 데이터 분석', status:'avail', faq:11 }
-        ]
-    }
+const pmData = {
+    channel: '하이웍스 - 현장소통채널',
+    valuechains: [
+        // ═══ 활성 — 주요 밸류체인 6개 모두 ═══
+        {
+            key:'marketing', name:'마케팅/영업', group:'main', active:true,
+            dept:'마케팅지원파트', deptRole:'현장 소통 총괄',
+            resources: [
+                { icon:'📄', type:'정본', title:'26년 개정 실손의료비 화법 스크립트 v3.2', meta:'최신 · 활용 342회' },
+                { icon:'📄', type:'정본', title:'5세대 실손 상품 교육자료 (영업용)', meta:'최신 · 활용 687회' },
+                { icon:'❓', type:'FAQ', title:'단체→개인 전환 시 보험금 차이 처리', meta:'12건 채택 · 조회 234회' },
+                { icon:'❓', type:'FAQ', title:'법인 CEO 대상 종신보험 화법 모음', meta:'8건 채택 · 조회 198회' },
+                { icon:'📋', type:'케이스', title:'VIP 고객 종신보험 제안서 사례집', meta:'활용 156회' },
+                { icon:'📋', type:'케이스', title:'5세대 실손 전환 권유 표준 케이스', meta:'활용 47회' }
+            ],
+            contacts: [
+                { name:'노민지 과장', team:'마케팅지원파트 화법팀', tags:['영업화법','실손화법','5세대전환','법인화법','VIP화법','신규고객화법'] },
+                { name:'하지윤 대리', team:'마케팅지원파트 제안서팀', tags:['VIP제안서','법인제안서','수익자제안','신상품제안','경쟁사비교','연령대별제안'] },
+                { name:'문상현 차장', team:'마케팅지원파트 현장소통팀', tags:['Q&A큐레이션','FAQ승격','현장소통','인터뷰진행','담당자매칭','지식거래소운영'] },
+                { name:'천예린 대리', team:'마케팅지원파트 VIP팀', tags:['법인영업','VIP영업','종신보험','상속플랜','자산설계','CEO영업'], status:'busy' }
+            ]
+        },
+        {
+            key:'product', name:'상품개발', group:'main', active:true,
+            dept:'상품기획부', deptRole:'인허가·요율 산출',
+            resources: [
+                { icon:'📄', type:'정본', title:'장기보험 신상품 인허가 가이드 v4.1', meta:'최신 · 활용 218회' },
+                { icon:'📄', type:'정본', title:'일반보험 요율 산출 매뉴얼 v2.8', meta:'최신 · 활용 167회' },
+                { icon:'❓', type:'FAQ', title:'금융감독원 인허가 심사 기간 단축 방법', meta:'9건 채택 · 조회 178회' },
+                { icon:'❓', type:'FAQ', title:'IFRS17 요율 산출 시 핵심 주의사항', meta:'14건 채택 · 조회 312회' },
+                { icon:'📋', type:'케이스', title:'5세대 실손 인허가 통과 사례집', meta:'활용 92회' },
+                { icon:'📋', type:'케이스', title:'AI 기반 요율 자동화 도입 케이스', meta:'활용 41회' }
+            ],
+            contacts: [
+                { name:'윤채영 차장', team:'상품기획부 장기상품팀', tags:['장기보험인허가','상품기획','신상품R&D','약관설계','특약설계','보장범위'] },
+                { name:'배현우 과장', team:'상품기획부 요율팀', tags:['IFRS17','요율산출','보험수리','계리','손해율','준비금'], status:'busy' },
+                { name:'고은서 대리', team:'상품기획부 R&D팀', tags:['신상품R&D','트렌드분석','경쟁사분석','시장조사','고객니즈'] },
+                { name:'김도형 과장', team:'상품기획부 일반상품팀', tags:['일반보험인허가','자동차상품','화재상품','종합보험','특약개발'] }
+            ]
+        },
+        {
+            key:'underwriting', name:'언더라이팅/심사', group:'main', active:true,
+            dept:'언더라이팅부', deptRole:'청약 심사·고지의무',
+            resources: [
+                { icon:'📄', type:'정본', title:'청약 심사 표준 매뉴얼 v3.0', meta:'최신 · 활용 412회' },
+                { icon:'📄', type:'정본', title:'고지의무 위반 처리 가이드 v2.5', meta:'최신 · 활용 287회' },
+                { icon:'❓', type:'FAQ', title:'고지의무 위반 vs 통지의무 위반 구분', meta:'21건 채택 · 조회 654회' },
+                { icon:'❓', type:'FAQ', title:'복합 위험 인수 기준 (직업·건강)', meta:'15건 채택 · 조회 398회' },
+                { icon:'📋', type:'케이스', title:'AI 언더라이팅 도입 우수 사례', meta:'활용 73회' },
+                { icon:'📋', type:'케이스', title:'고위험군 인수 거절 케이스 모음', meta:'활용 156회' }
+            ],
+            contacts: [
+                { name:'강수진 차장', team:'언더라이팅부 일반심사팀', tags:['일반심사','고지의무','통지의무','표준약관','심사가이드','계약전알릴의무'] },
+                { name:'박지원 과장', team:'언더라이팅부 위험분류팀', tags:['위험분류','직업위험','건강고지','기왕증','복합위험','면책'] },
+                { name:'차민호 과장', team:'언더라이팅부 특수심사팀', tags:['고액인수','해외위험','특수직업','VIP인수','이상위험','수정청약'] },
+                { name:'한지수 대리', team:'언더라이팅부 AI심사팀', tags:['AI언더라이팅','자동심사','이상치탐지','심사규칙','RPA심사'] }
+            ]
+        },
+        {
+            key:'contract', name:'계약관리/보전', group:'main', active:true,
+            dept:'장기보전부', deptRole:'계약 보전·변경·환급',
+            resources: [
+                { icon:'📄', type:'정본', title:'사후환급 처리 매뉴얼 v2.4', meta:'최신 · 활용 521회' },
+                { icon:'📄', type:'정본', title:'단체→개인 전환 가이드 v3.0', meta:'최신 · 활용 298회' },
+                { icon:'❓', type:'FAQ', title:'청약철회 30일 기준 (vs 해지·취소)', meta:'18건 채택 · 조회 487회' },
+                { icon:'❓', type:'FAQ', title:'실효 후 부활 가능 기한은?', meta:'9건 채택 · 조회 167회' },
+                { icon:'📋', type:'케이스', title:'복잡한 환급 케이스 모음 (수익자 변경 등)', meta:'활용 134회' },
+                { icon:'📋', type:'케이스', title:'계약자 변경 시 세금 이슈 가이드', meta:'활용 87회' }
+            ],
+            contacts: [
+                { name:'김지훈 차장', team:'장기보전부 환급팀', tags:['사후환급','환급오류','전산처리','환급액산정','중도해지환급'] },
+                { name:'박서연 차장', team:'장기보전부 계약변경팀', tags:['계약자변경','단체전환','수익자변경','명의변경','법인계약'], status:'busy' },
+                { name:'최영준 과장', team:'장기보전부 보전팀', tags:['청약철회','해지','취소','30일기준','환급금','효력상실'] },
+                { name:'송미라 과장', team:'장기보전부 사후관리팀', tags:['증권재발급','수익자변경','계약자변경','세금이슈','상속'] },
+                { name:'임도윤 차장', team:'장기보전부 시스템팀', tags:['환급액오류','전산장애','화면번호','시스템연동','데이터정합성'] }
+            ]
+        },
+        {
+            key:'claim', name:'보상/손해사정', group:'main', active:true,
+            dept:'자동차보상팀 · 장기보상부', deptRole:'사고 보상·의료심사',
+            resources: [
+                { icon:'📄', type:'정본', title:'자동차 사고 처리 매뉴얼 v5.1', meta:'최신 · 활용 612회' },
+                { icon:'📄', type:'정본', title:'장기보험 의료심사 가이드 v3.4', meta:'최신 · 활용 387회' },
+                { icon:'❓', type:'FAQ', title:'구상 청구 절차 (제3자 가해 시)', meta:'11건 채택 · 조회 234회' },
+                { icon:'❓', type:'FAQ', title:'렌트/대차 한도 기준 (보험 종류별)', meta:'14건 채택 · 조회 412회' },
+                { icon:'📋', type:'케이스', title:'복잡한 대인 사고 보상 케이스', meta:'활용 187회' },
+                { icon:'📋', type:'케이스', title:'보험사기 의심 사례 분석집', meta:'활용 98회' }
+            ],
+            contacts: [
+                { name:'강민지 과장', team:'자동차보상팀 일반사고팀', tags:['대물사고','일반사고','초도조사','현장출동','과실비율'] },
+                { name:'오재호 차장', team:'자동차보상팀 대인사고팀', tags:['대인사고','보상금산정','치료비','후유장해','휴업손해'], status:'busy' },
+                { name:'신유진 대리', team:'자동차보상팀 렌트팀', tags:['렌트','대차','한도','동급차량','비교차종'] },
+                { name:'서지혜 차장', team:'장기보상부 의료심사팀', tags:['의료심사','진단서검토','복합위험','입원적정성','수술적정성'] },
+                { name:'권민서 과장', team:'장기보상부 실손팀', tags:['실손보상','비급여','보험금산정','한도확인','중복보상'] },
+                { name:'배현주 과장', team:'자동차보상팀 사기조사팀', tags:['보험사기','의심사고','조사','특수조사','금감원협력'] }
+            ]
+        },
+        {
+            key:'customer', name:'고객서비스', group:'main', active:true,
+            dept:'고객지원부', deptRole:'고객 접점·민원 대응',
+            resources: [
+                { icon:'📄', type:'정본', title:'민원 응대 표준 매뉴얼 v3.5', meta:'최신 · 활용 478회' },
+                { icon:'📄', type:'정본', title:'VOC 처리 가이드 v2.2', meta:'최신 · 활용 234회' },
+                { icon:'❓', type:'FAQ', title:'민원 등급 분류 기준 (1~3등급)', meta:'13건 채택 · 조회 312회' },
+                { icon:'❓', type:'FAQ', title:'VIP 고객 응대 표준 (Tier별)', meta:'7건 채택 · 조회 156회' },
+                { icon:'📋', type:'케이스', title:'VIP 응대 우수 사례 모음', meta:'활용 87회' },
+                { icon:'📋', type:'케이스', title:'SNS 민원 위기 대응 케이스', meta:'활용 64회' }
+            ],
+            contacts: [
+                { name:'한세영 차장', team:'고객지원부 콜센터팀', tags:['콜센터','1차응대','민원접수','상담품질','콜모니터링'] },
+                { name:'정유나 과장', team:'고객지원부 민원팀', tags:['민원처리','VOC분석','금감원민원','분쟁조정','민원이력'] },
+                { name:'임소율 대리', team:'고객지원부 VIP팀', tags:['VIP응대','프리미엄','케어','전담매니저','컴플레인'] },
+                { name:'김선우 과장', team:'고객지원부 디지털CS팀', tags:['챗봇','SNS민원','온라인응대','옴니채널','자동응답'], status:'busy' }
+            ]
+        },
+        // ═══ 비활성 — 지원 밸류체인 (향후 확대) ═══
+        { key:'planning', name:'경영기획/전략', group:'support', active:false },
+        { key:'finance', name:'재무·회계', group:'support', active:false },
+        { key:'it', name:'IT·디지털', group:'support', active:false },
+        { key:'hr', name:'인사·조직', group:'support', active:false },
+        { key:'risk', name:'리스크·내부통제', group:'support', active:false },
+        { key:'audit', name:'감사·준법', group:'support', active:false }
+    ],
+    depts: [
+        // 활성 — 주요 밸류체인 매핑 부서 모두
+        { key:'mktSupport', name:'마케팅지원파트', active:true, head:'조OO 파트장', vcKey:'marketing', valuechain:'마케팅/영업', role:'현장 소통 총괄' },
+        { key:'productPlanning', name:'상품기획부', active:true, head:'정OO 부장', vcKey:'product', valuechain:'상품개발', role:'인허가·요율 산출' },
+        { key:'underwriting', name:'언더라이팅부', active:true, head:'한OO 부장', vcKey:'underwriting', valuechain:'언더라이팅/심사', role:'청약 심사·고지의무' },
+        { key:'contract', name:'장기보전부', active:true, head:'박OO 부장', vcKey:'contract', valuechain:'계약관리/보전', role:'계약 보전·변경·환급' },
+        { key:'autoClaim', name:'자동차보상팀', active:true, head:'김OO 부장', vcKey:'claim', valuechain:'보상/손해사정', role:'자동차 사고 보상' },
+        { key:'ltClaim', name:'장기보상부', active:true, head:'이OO 부장', vcKey:'claim', valuechain:'보상/손해사정', role:'장기보험 의료심사' },
+        { key:'customer', name:'고객지원부', active:true, head:'송OO 부장', vcKey:'customer', valuechain:'고객서비스', role:'고객 접점·민원' },
+        // 비활성 — 지원 밸류체인 매핑
+        { key:'digital', name:'디지털혁신부', active:false, valuechain:'IT·디지털' }
+    ]
 };
 
-function pmShowDept(key) {
-    const d = pmDeptData[key];
-    if (!d) {
-        showToast(key + ' 정보 준비 중입니다', 'ℹ️');
+// ── 모드 전환 (밸류체인 / 부서 / 즐겨찾기) ──
+function pmSetMode(mode) {
+    pmCloseDetail();
+    ['vc','dept','fav'].forEach(m => {
+        const btn = document.getElementById('pm-mode-' + m);
+        const pane = document.getElementById('pm-pane-' + m);
+        if (!btn || !pane) return;
+        if (m === mode) {
+            btn.classList.add('active','text-hi-navy','border-hi-navy','font-bold');
+            btn.classList.remove('text-gray-500','border-transparent','font-medium');
+            pane.classList.remove('hidden');
+        } else {
+            btn.classList.remove('active','text-hi-navy','border-hi-navy','font-bold');
+            btn.classList.add('text-gray-500','border-transparent','font-medium');
+            pane.classList.add('hidden');
+        }
+    });
+}
+
+// ── 밸류체인 카드 클릭 ──
+function pmPickVC(key) {
+    const vc = pmData.valuechains.find(v => v.key === key);
+    if (!vc) return;
+    if (!vc.active) {
+        showToast('이 영역은 곧 운영을 시작합니다 — 2026 하반기 확대 예정', '🌱');
         return;
     }
-    // 패널 텍스트 채우기
-    document.getElementById('pm-dept-name').textContent = key;
-    document.getElementById('pm-dept-vc-badge').textContent = d.vcBadge;
-    document.getElementById('pm-dept-coverage').textContent = d.coverage;
-    document.getElementById('pm-dept-head').textContent = d.head;
-    document.getElementById('pm-dept-count').innerHTML = '<strong>' + d.count + '명</strong> 담당자';
-    document.getElementById('pm-dept-area-count').textContent = d.areas.length;
-    document.getElementById('pm-dept-channel-label').textContent = d.channel;
-    document.getElementById('pm-dept-ext').textContent = '내선 ' + d.ext;
-    document.getElementById('pm-dept-email').textContent = d.email;
-    // 채널 버튼 onclick 갱신
-    document.getElementById('pm-dept-channel-btn').onclick = function() {
-        showToast('하이웍스 ' + d.channel + ' 채널로 이동합니다', '💬');
-    };
-    // 직통박스 닫기
-    const dbox = document.getElementById('pm-dept-direct-box');
-    if (dbox && !dbox.classList.contains('hidden')) dbox.classList.add('hidden');
-    // 선순환 stats
-    document.getElementById('pm-dept-stat-solved').textContent = d.stats.solved + '건';
-    document.getElementById('pm-dept-stat-faq').textContent = d.stats.faq + '건';
-    document.getElementById('pm-dept-stat-decreased').textContent = '-' + d.stats.decreased + '%';
-    document.getElementById('pm-dept-stat-adopted').textContent = d.stats.adopted + '건';
-    // 담당 업무 영역 chips
-    const areasEl = document.getElementById('pm-dept-areas');
-    areasEl.innerHTML = d.areas.map(a =>
-        '<button onclick="showToast(\'' + a.name + ' 영역 담당자를 밸류체인 뷰에서 봅니다\',\'📂\'); pmSetMode(\'vc\');" '
-        + 'class="text-[11px] font-bold px-3 py-1.5 rounded-full border border-gray-200 bg-white text-gray-700 hover:border-hi-navy hover:bg-blue-50 transition flex items-center gap-1.5">'
-        + '<span>' + a.name + '</span>'
-        + '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:#e0e7ff;color:#3730a3">' + a.count + '명</span>'
-        + '</button>'
-    ).join('');
-    // 담당자 리스트
-    const personsEl = document.getElementById('pm-dept-persons');
-    document.getElementById('pm-dept-persons-shown').textContent = d.persons.length;
-    document.getElementById('pm-dept-persons-total').textContent = d.count;
-    personsEl.innerHTML = d.persons.map(p => {
-        let statusBadge = '';
-        // 부재 상태만 표기 (default 자리는 표기하지 않음 — 담당자 감시 인상 방지)
-        if (p.status === 'busy') statusBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:#fef3c7;color:#92400e">🟡 회의 중</span>';
-        else if (p.status === 'away') statusBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:#fee2e2;color:#b91c1c">🔴 휴가</span>';
-        const fastBadge = ''; // 빠른 응답 뱃지는 사용하지 않음 — 개인 SLA 노출 회피
-        const backupLine = p.backup ? '<div class="text-[10.5px] mt-0.5" style="color:#c2410c">⚡ 대행자 <strong>' + p.backup + '</strong>가 응대 중</div>' : '';
-        const avatarBg = p.status === 'away'
-            ? 'background:#e5e7eb;color:#6b7280'
-            : (p.status === 'busy' ? 'background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%)' : 'background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)');
-        const avatarColor = p.status === 'away' ? '' : 'color:#fff';
+    pmRenderDetail('vc', vc);
+}
+
+// ── 부서 카드 클릭 ──
+function pmPickDept(key) {
+    const d = pmData.depts.find(x => x.key === key);
+    if (!d) return;
+    if (!d.active) {
+        showToast('이 부서는 곧 운영을 시작합니다 — 2026 하반기 확대 예정', '🌱');
+        return;
+    }
+    // 부서 → 매칭되는 밸류체인 데이터 결합
+    const vc = pmData.valuechains.find(v => v.key === d.vcKey);
+    if (!vc) return;
+    pmRenderDetail('dept', { ...vc, dept: d.name, deptRole: d.role });
+}
+
+// ── 상세 패널 렌더 (공통) ──
+function pmRenderDetail(type, data) {
+    document.getElementById('pm-detail-type').textContent = type === 'vc' ? '주요 밸류체인' : '부서';
+    document.getElementById('pm-detail-title').textContent = data.name;
+    document.getElementById('pm-detail-sub').textContent = type === 'vc'
+        ? '담당 부서: ' + data.dept + ' (' + data.deptRole + ')'
+        : '담당 밸류체인: ' + data.name + ' · ' + data.deptRole;
+
+    // 자료 섹션
+    const resEl = document.getElementById('pm-detail-resources');
+    resEl.innerHTML = data.resources.map(r => {
+        const bg = r.type === '정본' ? 'background:#dbeafe;color:#1d4ed8'
+                 : r.type === 'FAQ' ? 'background:#fef3c7;color:#92400e'
+                 : 'background:#e0e7ff;color:#3730a3';
         return ''
-            + '<div class="flex items-center gap-3 p-3 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-100 transition">'
-            +     '<div class="w-9 h-9 rounded-full flex items-center justify-center font-black text-xs shrink-0" style="' + avatarBg + ';' + avatarColor + '">' + p.ini + '</div>'
+            + '<div class="flex items-center gap-2.5 p-2.5 bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 rounded-lg cursor-pointer transition" '
+            + 'onclick="showToast(\'' + r.title.replace(/'/g,"\\'") + ' 열기\',\'' + r.icon + '\')">'
+            +     '<div class="w-8 h-8 rounded flex items-center justify-center text-sm shrink-0" style="' + bg + '">' + r.icon + '</div>'
             +     '<div class="flex-1 min-w-0">'
-            +         '<div class="flex items-center gap-1.5 flex-wrap">'
-            +             '<span class="font-black text-[12.5px] text-gray-800' + (p.status==='away'?' line-through opacity-60':'') + '">' + p.name + '</span>'
-            +             '<span class="text-[10.5px] text-gray-500">· ' + p.team + '</span>'
-            +             statusBadge + fastBadge
+            +         '<div class="flex items-center gap-1 mb-0.5">'
+            +             '<span class="text-[9.5px] font-black px-1.5 py-0.5 rounded" style="' + bg + '">' + r.type + '</span>'
+            +             '<span class="text-[10px] text-gray-400">' + r.meta + '</span>'
             +         '</div>'
-            +         '<div class="text-[10.5px] text-gray-600 mt-0.5">담당 영역: <strong class="text-gray-800">' + p.area + '</strong></div>'
-            +         backupLine
+            +         '<div class="text-[11.5px] font-bold text-gray-800 truncate">' + r.title + '</div>'
             +     '</div>'
-            +     '<div class="flex items-center gap-1 shrink-0">'
-            +         '<button onclick="showToast(\'' + d.channel + ' 채널에서 ' + p.name + '를 멘션합니다\',\'💬\')" class="text-[10.5px] font-bold px-2.5 py-1.5 rounded text-white transition hover:opacity-90" style="background:#0ea5e9">💬 채널 멘션</button>'
-            +         '<button onclick="showToast(\'밸류체인 뷰에서 \\\'' + p.area + '\\\' 카드를 엽니다\',\'🔍\'); pmSetMode(\'vc\');" class="text-[10.5px] font-medium px-2.5 py-1.5 rounded border border-gray-300 text-gray-600 hover:bg-white transition">먼저 자료 보기</button>'
+            +     '<span class="text-[10px] text-blue-600 font-bold shrink-0">열기 →</span>'
+            + '</div>';
+    }).join('');
+
+    // 담당자 섹션
+    const conEl = document.getElementById('pm-detail-contacts');
+    conEl.innerHTML = data.contacts.map((c, idx) => {
+        let statusBadge = '';
+        if (c.status === 'busy') statusBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded ml-1" style="background:#fef3c7;color:#92400e">🟡 회의 중</span>';
+        else if (c.status === 'away') statusBadge = '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded ml-1" style="background:#fee2e2;color:#b91c1c">🔴 휴가</span>';
+        const initial = c.name.charAt(0);
+        const tagsHtml = (c.tags || []).map(t =>
+            '<button onclick="event.stopPropagation(); showToast(\'#' + t + ' 태그로 검색합니다\',\'🔍\')" class="text-[10.5px] font-bold px-2 py-0.5 rounded-full transition hover:opacity-80" style="background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe">#' + t + '</button>'
+        ).join('');
+        return ''
+            + '<div id="pm-contact-row-' + idx + '" class="pm-contact-row bg-white border border-gray-100 rounded-lg transition hover:border-blue-200 hover:shadow-sm overflow-hidden">'
+            +     '<div class="flex items-center gap-3 p-3 cursor-pointer" onclick="pmToggleContact(' + idx + ')">'
+            +         '<div class="w-9 h-9 rounded-full flex items-center justify-center font-black text-white text-xs shrink-0" style="background:linear-gradient(135deg,#00205b 0%,#0d3073 100%)">' + initial + '</div>'
+            +         '<div class="flex-1 min-w-0">'
+            +             '<div class="flex items-baseline flex-wrap gap-1 mb-1.5">'
+            +                 '<span class="font-black text-[13px] text-gray-800">' + c.name + '</span>'
+            +                 '<span class="text-[11px] text-gray-500">· ' + c.team + '</span>'
+            +                 statusBadge
+            +                 '<span id="pm-contact-chevron-' + idx + '" class="ml-auto text-[10px] text-gray-300 transition">▾</span>'
+            +             '</div>'
+            +             '<div class="flex flex-wrap gap-1">' + tagsHtml + '</div>'
+            +         '</div>'
+            +         '<button onclick="event.stopPropagation(); showToast(\'' + pmData.channel + '에서 ' + c.name + '를 멘션합니다\',\'💬\')" class="text-[10.5px] font-bold px-2.5 py-1.5 rounded text-white transition hover:opacity-90 shrink-0 self-center" style="background:#0ea5e9">💬 채널 멘션</button>'
+            +     '</div>'
+            +     '<div id="pm-contact-extra-' + idx + '" class="hidden border-t border-gray-100 px-3 py-2.5 flex items-center justify-between gap-2 flex-wrap" style="background:#f8fafc">'
+            +         '<div class="flex items-center gap-1.5 text-[10.5px] text-gray-500">'
+            +             '<span>💡</span>'
+            +             '<span><strong class="text-gray-700">' + c.name + '</strong>에게 직접 연결 — 채널보다 회신이 늦을 수 있어요</span>'
+            +         '</div>'
+            +         '<div class="flex gap-1.5">'
+            +             '<button onclick="showToast(\'하이웍스에서 ' + c.name + '에게 1:1 채팅을 시작합니다\',\'💬\')" class="text-[11px] font-bold px-3 py-1.5 rounded text-white transition hover:opacity-90 flex items-center gap-1 shadow-sm" style="background:#7c3aed">'
+            +                 '💬 하이웍스 채팅'
+            +             '</button>'
+            +             '<button onclick="showToast(\'하이웍스 메일로 ' + c.name + '에게 메일을 작성합니다\',\'✉\')" class="text-[11px] font-bold px-3 py-1.5 rounded transition hover:bg-gray-50 flex items-center gap-1" style="background:#fff;color:#4b5563;border:1px solid #d1d5db">'
+            +                 '✉ 하이웍스 메일'
+            +             '</button>'
+            +         '</div>'
             +     '</div>'
             + '</div>';
     }).join('');
-    // 토글 표시
-    document.getElementById('pm-dept-list').classList.add('hidden');
-    document.getElementById('pm-dept-detail').classList.remove('hidden');
-    // 스크롤 상단
-    const scrollArea = document.querySelector('#view-persons .flex-1.overflow-y-auto');
-    if (scrollArea) scrollArea.scrollTop = 0;
+
+    // 패널 표시 + 스크롤
+    const panel = document.getElementById('pm-detail');
+    panel.classList.remove('hidden');
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
-function pmBackToDeptList() {
-    document.getElementById('pm-dept-detail').classList.add('hidden');
-    document.getElementById('pm-dept-list').classList.remove('hidden');
+
+function pmCloseDetail() {
+    const panel = document.getElementById('pm-detail');
+    if (panel) panel.classList.add('hidden');
+}
+
+function pmOpenChannel() {
+    showToast(pmData.channel + '로 이동합니다 · 팀원 누구나 답할 수 있어요', '💬');
+}
+
+function pmSolvedSelf() {
+    showToast('자료로 해결됐다는 신호 감사합니다 🙏 (+1P)', '✅');
+}
+
+// 담당자 행 클릭 시: 하이웍스 채팅/메일 옵션 inline 토글
+function pmToggleContact(idx) {
+    const extra = document.getElementById('pm-contact-extra-' + idx);
+    const row = document.getElementById('pm-contact-row-' + idx);
+    const chevron = document.getElementById('pm-contact-chevron-' + idx);
+    if (!extra) return;
+    const isHidden = extra.classList.contains('hidden');
+    if (isHidden) {
+        extra.classList.remove('hidden');
+        if (row) { row.style.borderColor = '#93c5fd'; row.style.background = '#f8fafc'; }
+        if (chevron) { chevron.textContent = '▴'; chevron.style.color = '#3b82f6'; }
+    } else {
+        extra.classList.add('hidden');
+        if (row) { row.style.borderColor = ''; row.style.background = ''; }
+        if (chevron) { chevron.textContent = '▾'; chevron.style.color = ''; }
+    }
+}
+
+// ── 카드 그리드 렌더 (초기 로드 시) ──
+function pmInitGrids() {
+    // 주요 밸류체인
+    const mainGrid = document.getElementById('pm-vc-main-grid');
+    if (mainGrid) {
+        mainGrid.innerHTML = pmData.valuechains.filter(v => v.group === 'main').map(v => pmVcCardHtml(v)).join('');
+    }
+    // 지원 밸류체인
+    const supportGrid = document.getElementById('pm-vc-support-grid');
+    if (supportGrid) {
+        supportGrid.innerHTML = pmData.valuechains.filter(v => v.group === 'support').map(v => pmVcSupportCardHtml(v)).join('');
+    }
+    // 부서
+    const deptGrid = document.getElementById('pm-dept-grid');
+    if (deptGrid) {
+        deptGrid.innerHTML = pmData.depts.map(d => pmDeptCardHtml(d)).join('');
+    }
+}
+
+function pmVcCardHtml(v) {
+    if (v.active) {
+        return ''
+            + '<div onclick="pmPickVC(\'' + v.key + '\')" class="cursor-pointer p-3.5 rounded-xl border-2 transition hover:shadow-md" style="background:linear-gradient(135deg,#fff7ed 0%,#fffbf5 100%);border-color:#ff9e1b">'
+            +     '<div class="flex items-center justify-between mb-1.5">'
+            +         '<span class="text-[9.5px] font-black px-1.5 py-0.5 rounded" style="background:#ff9e1b;color:#fff">● 운영 중</span>'
+            +         '<span class="text-[10px] font-bold text-orange-600">→</span>'
+            +     '</div>'
+            +     '<div class="font-black text-[13px] text-gray-800 mb-0.5">' + v.name + '</div>'
+            +     '<div class="text-[10.5px] text-gray-500">' + v.dept + '</div>'
+            + '</div>';
+    } else {
+        return ''
+            + '<div onclick="pmPickVC(\'' + v.key + '\')" class="cursor-pointer p-3.5 rounded-xl border border-gray-200 bg-gray-50 transition hover:border-gray-300 opacity-60">'
+            +     '<div class="flex items-center justify-between mb-1.5">'
+            +         '<span class="text-[9.5px] font-bold px-1.5 py-0.5 rounded text-gray-500" style="background:#fff;border:1px solid #e5e7eb">○ 준비 중</span>'
+            +         '<span class="text-[10px] text-gray-300">🔒</span>'
+            +     '</div>'
+            +     '<div class="font-bold text-[13px] text-gray-500 mb-0.5">' + v.name + '</div>'
+            +     '<div class="text-[10px] text-gray-400">2026 하반기 확대 예정</div>'
+            + '</div>';
+    }
+}
+
+function pmVcSupportCardHtml(v) {
+    return ''
+        + '<div onclick="pmPickVC(\'' + v.key + '\')" class="cursor-pointer px-2.5 py-2 rounded-lg border border-gray-200 bg-white text-center transition hover:border-gray-300 opacity-50">'
+        +     '<div class="font-bold text-[11.5px] text-gray-500 mb-0.5">' + v.name + '</div>'
+        +     '<div class="text-[9.5px] text-gray-400">준비 중</div>'
+        + '</div>';
+}
+
+function pmDeptCardHtml(d) {
+    if (d.active) {
+        return ''
+            + '<div onclick="pmPickDept(\'' + d.key + '\')" class="cursor-pointer p-3.5 rounded-xl border-2 transition hover:shadow-md" style="background:linear-gradient(135deg,#fff7ed 0%,#fffbf5 100%);border-color:#ff9e1b">'
+            +     '<div class="flex items-center justify-between mb-1.5">'
+            +         '<span class="text-[9.5px] font-black px-1.5 py-0.5 rounded" style="background:#ff9e1b;color:#fff">● 운영 중</span>'
+            +         '<span class="text-[10px] font-bold text-orange-600">→</span>'
+            +     '</div>'
+            +     '<div class="font-black text-[13px] text-gray-800 mb-0.5">' + d.name + '</div>'
+            +     '<div class="text-[10.5px] text-gray-500">' + d.valuechain + ' · ' + d.role + '</div>'
+            + '</div>';
+    } else {
+        return ''
+            + '<div onclick="pmPickDept(\'' + d.key + '\')" class="cursor-pointer p-3.5 rounded-xl border border-gray-200 bg-gray-50 transition hover:border-gray-300 opacity-60">'
+            +     '<div class="flex items-center justify-between mb-1.5">'
+            +         '<span class="text-[9.5px] font-bold px-1.5 py-0.5 rounded text-gray-500" style="background:#fff;border:1px solid #e5e7eb">○ 준비 중</span>'
+            +         '<span class="text-[10px] text-gray-300">🔒</span>'
+            +     '</div>'
+            +     '<div class="font-bold text-[13px] text-gray-500 mb-0.5">' + d.name + '</div>'
+            +     '<div class="text-[10px] text-gray-400">' + d.valuechain + ' · 2026 하반기 확대 예정</div>'
+            + '</div>';
+    }
+}
+
+// 초기화: DOMContentLoaded 시 한 번
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', pmInitGrids);
+} else {
+    pmInitGrids();
 }
 
 // ── 담당자 맵 관리자 패널: 서브탭 전환 ─────────────────────────
