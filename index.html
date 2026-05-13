@@ -7460,6 +7460,19 @@ function showToast(msg, isWarn = false) {
     // ════════════════════════════════════════════════════════════════
 
     const MISSION_DATA = [
+        // ★ 전사 우선 추진 과제 — 사내 시스템 정착 노하우 (PDF 기획안 p.17)
+        { id:7, title:'하이드라이브 부서 폴더 정비 노하우 공유', dept:'데이터사이언스파트',
+          issuerType:'본사', status:'active', reward:100, heartAxis:'T', missionType:'multi',
+          featured:true, featuredLabel:'전사 우선 추진 과제 · 사내 시스템 정착',
+          desc:'클라우드 기반 전사 지식 저장소 하이드라이브(Hi-Drive)가 새로 도입되었습니다. 부서 폴더를 효율적으로 정비한 노하우를 공유해 주세요. 파일 네이밍 규칙, 폴더 계층 구조 설계, 불필요 파일 정리 기준 등 실제 적용 경험을 담아주시면 복수 채택됩니다.',
+          deadline:'2026-07-31', entries:2, target:20, created:'2026-05-13',
+          requirements:'① 정비 전/후 폴더 구조 비교 또는 설계 원칙 ② 파일 네이밍 규칙 ③ 팀원 공유 방법' },
+        { id:8, title:'하이웍스 채널 관리 노하우 공유', dept:'시스템관리파트',
+          issuerType:'본사', status:'active', reward:80, heartAxis:'A', missionType:'multi',
+          featured:true, featuredLabel:'전사 우선 추진 과제 · 사내 시스템 정착',
+          desc:'FLOW 기반 사내 메신저 협업 툴 하이웍스(Hi-Works)가 새로 도입되었습니다. 채널 분류 방법, 알림 관리 노하우, 업무 효율화 실전 팁을 공유해 주세요. 팀 규모나 업무 특성에 따라 다양한 활용법이 복수 채택될 수 있습니다.',
+          deadline:'2026-07-31', entries:0, target:20, created:'2026-05-13',
+          requirements:'① 사용 중인 채널 구조 설명 ② 알림/채널 관리 팁 ③ 도입 전/후 업무 효율 변화' },
         { id:1, title:'신상품 Hi2606 고객 거절 극복 화법을 구합니다!', dept:'마케팅팀',
           issuerType:'본사', status:'active', reward:500, heartAxis:'A', missionType:'multi',
           desc:'5월 출시 예정인 신상품에 대한 고객 반응과 거절 유형을 현장에서 직접 겪은 상황을 바탕으로 화법 스크립트를 작성해 주세요. 우수작은 전사 공공 자산으로 등재됩니다.',
@@ -7490,16 +7503,6 @@ function showToast(msg, isWarn = false) {
           desc:'5세대 실손 개정 이후 고객 반응과 현장 대응 사례를 정리한 보고서.',
           deadline:'2026-04-30', entries:23, target:20, created:'2026-03-01',
           requirements:'', winner:'이현대 과장' },
-        { id:7, title:'하이드라이브 부서 폴더 정비 노하우 공유', dept:'데이터사이언스파트',
-          issuerType:'본사', status:'active', reward:100, heartAxis:'T', missionType:'multi',
-          desc:'클라우드 기반 전사 지식 저장소 하이드라이브(Hi-Drive)가 새로 도입되었습니다. 부서 폴더를 효율적으로 정비한 노하우를 공유해 주세요. 파일 네이밍 규칙, 폴더 계층 구조 설계, 불필요 파일 정리 기준 등 실제 적용 경험을 담아주시면 복수 채택됩니다.',
-          deadline:'2026-07-31', entries:2, target:20, created:'2026-05-13',
-          requirements:'① 정비 전/후 폴더 구조 비교 또는 설계 원칙 ② 파일 네이밍 규칙 ③ 팀원 공유 방법' },
-        { id:8, title:'하이웍스 채널 관리 노하우 공유', dept:'시스템관리파트',
-          issuerType:'본사', status:'active', reward:80, heartAxis:'A', missionType:'multi',
-          desc:'FLOW 기반 사내 메신저 협업 툴 하이웍스(Hi-Works)가 새로 도입되었습니다. 채널 분류 방법, 알림 관리 노하우, 업무 효율화 실전 팁을 공유해 주세요. 팀 규모나 업무 특성에 따라 다양한 활용법이 복수 채택될 수 있습니다.',
-          deadline:'2026-07-31', entries:0, target:20, created:'2026-05-13',
-          requirements:'① 사용 중인 채널 구조 설명 ② 알림/채널 관리 팁 ③ 도입 전/후 업무 효율 변화' },
     ];
 
     // ── 미션 제출 목록 (복수채택 미션 전용) ─────────────────────────
@@ -7548,6 +7551,10 @@ function showToast(msg, isWarn = false) {
     function mSortedMissions(list) {
         const s = missionState.sort;
         return [...list].sort((a, b) => {
+            // ★ featured(전사 우선 추진 과제)는 정렬 옵션과 무관하게 항상 최상단
+            if (a.featured && !b.featured) return -1;
+            if (!a.featured && b.featured) return 1;
+            // 그 외에는 기존 정렬 옵션 적용
             if (s === 'deadline') return new Date(a.deadline) - new Date(b.deadline);
             if (s === 'reward')   return b.reward - a.reward;
             if (s === 'entries')  return b.entries - a.entries;
@@ -7651,10 +7658,24 @@ function showToast(msg, isWarn = false) {
                 myStatusHtml = `<span class="text-[9px] font-bold px-2 py-0.5 rounded ${sc[myApply.status]||sc.submitted}">내 응모: ${st[myApply.status]||'접수 완료'}</span>`;
             }
 
-            // 카드 테두리 (긴급 = 좌측 레드 라인)
-            const borderCls = urgent ? 'border-l-4 border-l-red-400 border-y border-r border-gray-200'
-                            : isDone ? 'border border-gray-200 opacity-70'
-                            : 'border border-gray-200';
+            // 카드 테두리 — featured(전사 우선) > 긴급 > 완료 > 일반 순으로 우선순위
+            let borderCls, cardOuterStyle = '', featuredBanner = '';
+            if (m.featured) {
+                borderCls = 'border-2 border-hi-navy';
+                cardOuterStyle = 'box-shadow:0 4px 16px -2px rgba(0,32,91,.18), 0 0 0 4px rgba(0,32,91,.04);';
+                const label = m.featuredLabel || '전사 우선 추진 과제';
+                featuredBanner = `<div style="background:linear-gradient(90deg,#00205b 0%,#0c447c 60%,#3eb49b 100%);color:white;padding:6px 18px;display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;letter-spacing:.02em">
+                    <span style="font-size:12px">📌</span>
+                    <span>${label}</span>
+                    <span style="margin-left:auto;font-size:9px;background:rgba(255,255,255,.18);padding:2px 8px;border-radius:10px;font-weight:600">전 직원 참여 권장</span>
+                </div>`;
+            } else if (urgent) {
+                borderCls = 'border-l-4 border-l-red-400 border-y border-r border-gray-200';
+            } else if (isDone) {
+                borderCls = 'border border-gray-200 opacity-70';
+            } else {
+                borderCls = 'border border-gray-200';
+            }
 
             // 미션 유형 뱃지
             const isMulti = m.missionType === 'multi';
@@ -7672,7 +7693,8 @@ function showToast(msg, isWarn = false) {
             const acceptedSubs = subs.filter(s => s.status === 'accepted');
             const subsSection = isMulti ? renderMissionSubmissions(m.id, subs) : '';
 
-            return `<div class="bg-white rounded-xl ${borderCls} shadow-sm transition hover:shadow-md" id="mission-card-${m.id}">
+            return `<div class="bg-white rounded-xl ${borderCls} shadow-sm transition hover:shadow-md overflow-hidden" id="mission-card-${m.id}" style="${cardOuterStyle}">
+                ${featuredBanner}
                 <div class="p-5">
                 <div class="flex items-start justify-between mb-2">
                     <div class="flex items-center gap-1.5 flex-wrap">
